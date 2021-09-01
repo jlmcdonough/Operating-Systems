@@ -234,7 +234,27 @@ module TSOS {
                     case "help":
                         _StdOut.putText("Help displays a list of (hopefully) valid commands.");
                         break;
+
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
+                    case "ver":
+                        _StdOut.putText("VER displays the current version for " + APP_NAME + ".");
+                        break;
+                    case "shutdown":
+                        _StdOut.putText("SHUTDOWN will shutdown " + APP_NAME + " while leaving the hardware running.");
+                        break;
+                    case "cls":
+                        _StdOut.putText("CLS will clear the canvas window and sets the cursor back to the start.");
+                        break;
+                    case "trace":
+                        _StdOut.putText("TRACE can be toggled ON or OFF. TRACE ON allows the host log to update and trace user inputs. TRACE OFF freezes the host log.");
+                        break;
+                    case "rot13":
+                        _StdOut.putText("ROT13 will shift all characters in the following string to the right by 13 characters.");
+                        break;
+                    case "prompt":
+                        _StdOut.putText("PROMPT will replace the current prompt (i.e. \">\" by default) with the following string.");
+                        break;
+
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
