@@ -73,6 +73,24 @@ module TSOS {
                                   "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
 
+            // date
+            sc = new ShellCommand(this.shellDate,
+                "date",
+                "- Displays the date and time.");
+            this.commandList[this.commandList.length] = sc;
+
+            // whereAmI
+            sc = new ShellCommand(this.shellWhereAmI,
+                "whereami",
+                "- Displays the users current location.");
+            this.commandList[this.commandList.length] = sc;
+
+            // diceRoll
+            sc = new ShellCommand(this.shellDiceRoll,
+                "diceroll",
+                "- Rolls two six-sided dice.");
+            this.commandList[this.commandList.length] = sc;
+
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -254,6 +272,15 @@ module TSOS {
                     case "prompt":
                         _StdOut.putText("PROMPT will replace the current prompt (i.e. \">\" by default) with the following string.");
                         break;
+                    case "date":
+                        _StdOut.putText("DATE displays the users current date and time based off their system location.");
+                        break;
+                    case "whereami":
+                        _StdOut.putText("WHEREAMI displays the users current physical location, not location in the OS.");
+                        break;
+                    case "diceroll":
+                        _StdOut.putText("DICEROLL rolls two six sided dice and then displays the result of each one and their sum.");
+                        break;
 
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -302,6 +329,20 @@ module TSOS {
             } else {
                 _StdOut.putText("Usage: prompt <string>  Please supply a string.");
             }
+        }
+
+        public shellDate(args: string[]) {
+            _StdOut.putText(Date());
+        }
+
+        public shellWhereAmI(args: string[]) {
+            _StdOut.putText("You are currently located at 47.615868°N 122.339850°W - nah, but that would be cool, unless... hi Jeff");
+        }
+
+        public shellDiceRoll(args: string[]) {
+            let die1 = Math.floor(Math.random() * 6) + 1
+            let die2 = Math.floor(Math.random() * 6) + 1
+            _StdOut.putText("Die 1: " + die1 + " Die 2: " + die2 + " TOTAL: " + (die1 + die2));
         }
 
     }
