@@ -45,6 +45,18 @@ var TSOS;
             // prompt <string>
             sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
+            // date
+            sc = new TSOS.ShellCommand(this.shellDate, "date", "- Displays the date and time.");
+            this.commandList[this.commandList.length] = sc;
+            // whereAmI
+            sc = new TSOS.ShellCommand(this.shellWhereAmI, "whereami", "- Displays the users current location.");
+            this.commandList[this.commandList.length] = sc;
+            // diceRoll
+            sc = new TSOS.ShellCommand(this.shellDiceRoll, "diceroll", "- Rolls two six-sided dice.");
+            this.commandList[this.commandList.length] = sc;
+            // status
+            sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Modifies the status message");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             // Display the initial prompt.
@@ -194,6 +206,36 @@ var TSOS;
                         _StdOut.putText("Help displays a list of (hopefully) valid commands.");
                         break;
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
+                    case "ver":
+                        _StdOut.putText("VER displays the current version for " + APP_NAME + ".");
+                        break;
+                    case "shutdown":
+                        _StdOut.putText("SHUTDOWN will shutdown " + APP_NAME + " while leaving the hardware running.");
+                        break;
+                    case "cls":
+                        _StdOut.putText("CLS will clear the canvas window and sets the cursor back to the start.");
+                        break;
+                    case "trace":
+                        _StdOut.putText("TRACE can be toggled ON or OFF. TRACE ON allows the host log to update and trace user inputs. TRACE OFF freezes the host log.");
+                        break;
+                    case "rot13":
+                        _StdOut.putText("ROT13 will shift all characters in the following string to the right by 13 characters.");
+                        break;
+                    case "prompt":
+                        _StdOut.putText("PROMPT will replace the current prompt (i.e. \">\" by default) with the following string.");
+                        break;
+                    case "date":
+                        _StdOut.putText("DATE displays the users current date and time based off their system location.");
+                        break;
+                    case "whereami":
+                        _StdOut.putText("WHEREAMI displays the users current physical location, not location in the OS.");
+                        break;
+                    case "diceroll":
+                        _StdOut.putText("DICEROLL rolls two six sided dice and then displays the result of each one and their sum.");
+                        break;
+                    case "status":
+                        _StdOut.putText("STATUS customizes the status message to the following string.");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -242,6 +284,30 @@ var TSOS;
             }
             else {
                 _StdOut.putText("Usage: prompt <string>  Please supply a string.");
+            }
+        }
+        shellDate(args) {
+            _StdOut.putText(Date());
+        }
+        shellWhereAmI(args) {
+            _StdOut.putText("You are currently located at 51.6032° N, 0.0657° W, nah don't actually know. That would be neat though");
+        }
+        shellDiceRoll(args) {
+            let die1 = Math.floor(Math.random() * 6) + 1;
+            let die2 = Math.floor(Math.random() * 6) + 1;
+            _StdOut.putText("Die 1: " + die1 + " Die 2: " + die2 + " TOTAL: " + (die1 + die2));
+        }
+        shellStatus(args) {
+            if (args.length > 0) {
+                let status = "";
+                args.forEach(function (char) {
+                    status += char;
+                });
+                _StdOut.putText("Status updated to: " + status);
+                TSOS.Control.hostStatus(status);
+            }
+            else {
+                _StdOut.putText("Status must contain at least one character.");
             }
         }
     }

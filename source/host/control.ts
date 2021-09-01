@@ -69,6 +69,17 @@ module TSOS {
             // TODO in the future: Optionally update a log database or some streaming service.
         }
 
+        //Date and Time for header
+        public static hostCurrDateTime(): void {
+            let dateTime = document.getElementById("dateTime");
+            dateTime.innerHTML = "Date - " + new Date().toLocaleDateString() + " Time - " + new Date().toLocaleTimeString();
+        }
+
+        //Status for header
+        public static hostStatus(status): void {
+            document.getElementById("status").innerHTML = "Status - " + status;
+        }
+
 
         //
         // Host Events

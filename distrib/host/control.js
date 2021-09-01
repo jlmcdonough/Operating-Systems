@@ -55,6 +55,15 @@ var TSOS;
             taLog.value = str + taLog.value;
             // TODO in the future: Optionally update a log database or some streaming service.
         }
+        //Date and Time for header
+        static hostCurrDateTime() {
+            let dateTime = document.getElementById("dateTime");
+            dateTime.innerHTML = "Date - " + new Date().toLocaleDateString() + " Time - " + new Date().toLocaleTimeString();
+        }
+        //Status for header
+        static hostStatus(status) {
+            document.getElementById("status").innerHTML = "Status - " + status;
+        }
         //
         // Host Events
         //

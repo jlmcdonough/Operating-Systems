@@ -91,6 +91,12 @@ module TSOS {
                 "- Rolls two six-sided dice.");
             this.commandList[this.commandList.length] = sc;
 
+            // status
+            sc = new ShellCommand(this.shellStatus,
+                "status",
+                "<string> - Modifies the status message");
+            this.commandList[this.commandList.length] = sc;
+
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -281,6 +287,9 @@ module TSOS {
                     case "diceroll":
                         _StdOut.putText("DICEROLL rolls two six sided dice and then displays the result of each one and their sum.");
                         break;
+                    case "status":
+                        _StdOut.putText("STATUS customizes the status message to the following string.");
+                        break;
 
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -336,7 +345,7 @@ module TSOS {
         }
 
         public shellWhereAmI(args: string[]) {
-            _StdOut.putText("You are currently located at 47.615868°N 122.339850°W - nah, but that would be cool, unless... hi Jeff");
+            _StdOut.putText("You are currently located at 51.6032° N, 0.0657° W, nah don't actually know. That would be neat though");
         }
 
         public shellDiceRoll(args: string[]) {
@@ -344,6 +353,20 @@ module TSOS {
             let die2 = Math.floor(Math.random() * 6) + 1
             _StdOut.putText("Die 1: " + die1 + " Die 2: " + die2 + " TOTAL: " + (die1 + die2));
         }
+
+        public shellStatus(args: string[]) {
+            if(args.length > 0) {
+                let status = "";
+                args.forEach(function (char) {
+                   status += char;
+                });
+                _StdOut.putText("Status updated to: " + status);
+                Control.hostStatus(status)
+            } else {
+                _StdOut.putText("Status must contain at least one character.");
+            }
+        }
+
 
     }
 }
