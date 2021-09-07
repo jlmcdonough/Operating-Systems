@@ -71,8 +71,7 @@ module TSOS {
 
         //Date and Time for header
         public static hostCurrDateTime(): void {
-            let dateTime = document.getElementById("dateTime");
-            dateTime.innerHTML = "Date - " + new Date().toLocaleDateString() + " Time - " + new Date().toLocaleTimeString();
+            document.getElementById("dateTime").innerHTML = "Date - " + new Date().toLocaleDateString() + " Time - " + new Date().toLocaleTimeString();
         }
 
         //Status for header

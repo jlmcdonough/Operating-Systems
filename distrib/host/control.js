@@ -57,8 +57,7 @@ var TSOS;
         }
         //Date and Time for header
         static hostCurrDateTime() {
-            let dateTime = document.getElementById("dateTime");
-            dateTime.innerHTML = "Date - " + new Date().toLocaleDateString() + " Time - " + new Date().toLocaleTimeString();
+            document.getElementById("dateTime").innerHTML = "Date - " + new Date().toLocaleDateString() + " Time - " + new Date().toLocaleTimeString();
         }
         //Status for header
         static hostStatus(status) {
