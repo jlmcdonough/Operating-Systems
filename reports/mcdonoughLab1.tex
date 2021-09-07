@@ -1,0 +1,115 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% CMPT 424
+% Fall 2021
+% Lab One
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from: http://www.LaTeXTemplates.com
+% Original author: % Frits Wenneker (http://www.howtotex.com)
+% License: CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+% Modified by Alan G. Labouseur  - alan@labouseur.com
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[letterpaper, 10pt,DIV=13]{scrartcl} 
+
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage[english]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm,xfrac} % Math packages
+\usepackage{sectsty} % Allows customizing section commands
+\usepackage{graphicx}
+\usepackage[lined,linesnumbered,commentsnumbered]{algorithm2e}
+\usepackage{listings}
+\usepackage{parskip}
+\usepackage{lastpage}
+
+\allsectionsfont{\normalfont\scshape} % Make all section titles in default font and small caps.
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{page \thepage\ of \pageref{LastPage}} % Page numbering for right footer
+
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs.
+
+\binoppenalty=3000
+\relpenalty=3000
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+   \normalfont \normalsize 
+   \textsc{CMPT 424 - Fall 2021 - Dr. Labouseur} \\[10pt] % Header stuff.
+   \horrule{0.5pt} \\[0.25cm] 	% Top horizontal rule
+   \huge Lab One  \\     	    % Assignment title
+   \horrule{0.5pt} \\[0.25cm] 	% Bottom horizontal rule
+}
+
+\author{Joseph McDonough \\ \normalsize Joseph.McDonough1@marist.edu}
+
+\date{\normalsize\today} 	% Today's date.
+
+\begin{document}
+\maketitle % Print the title
+
+%----------------------------------------------------------------------------------------
+%   start PROBLEM ONE
+%----------------------------------------------------------------------------------------
+\section{Problem One}
+
+What are the advantages and disadvantages of using the same system call interface for manipulating both files and devices?
+
+A system-call interface posses a table that has indexes for each system-call. Therefore, the user does not need to know anything about the indexes or how the interface is implemented. This can serve as an advantage because files and devices can be manipulated from the same point of contact. It increases simplicity for the programmer as there is no different calls to be made, regardless of if it is a file or device in question. An additional advantage is that the system-call interface acts as a sort of buffer between the user mode and kernel mode. Giving direct access to kernel mode can be dangerous, so by having the user and the applications interact with an interface, it protects the kernel. The system-call interface introduces a safer way to expand on the functionality of an operating system.
+
+One of the disadvantages to a system-call interface and its manipulation of both files and devices is that it handles two different things. Files and devices are not necessarily processed and manipulated in the same manner. Assuming that files are the simpler of the two to manipulate, the interface has to either add additional complexity to files to make up for what is needed for devices, or reduce the capabilities of devices to meet what is needed for files. Ultimately, having two different needs being met on one interface is not ideal.
+
+%----------------------------------------------------------------------------------------
+%   end PROBLEM ONE
+%----------------------------------------------------------------------------------------
+
+\pagebreak
+
+%----------------------------------------------------------------------------------------
+%   start PROBLEM TWO
+%----------------------------------------------------------------------------------------
+\section{Problem Two}
+
+Would	it	be	possible for	the	user	to	develop	a	new	command interpreter	using	the	system	call	interface	provide	by	the	operating	system?	How?
+
+The purpose of the command interpreter is to allow users to make requests and the system-call interface has functionality that would allow for that. Within the system-call interface, there are basic functions that allow for both process control and file and device manipulation. Here, there are services to allow for program control, status requests, and I/O request. As the system-call interface has a direct line into the kernel, it is possible to get and execute commands there. Through process control, scheduling can be done and programs can be ran when it is best. Additionally, as noted earlier, the system-call interface can manipulate files, therefore, developing a command interpreter using a system-call interface would allow for file manipulation. All the functionality that is required by the command interpreter can be serviced through the system-call interface. 
+
+
+%----------------------------------------------------------------------------------------
+%   end PROBLEM Two
+%----------------------------------------------------------------------------------------
+
+\pagebreak
+
+
+\end{document}
