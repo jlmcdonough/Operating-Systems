@@ -90,8 +90,8 @@ var TSOS;
                 }
                 _KernelInputQueue.enqueue(chr);
             }
-            // delete
-            else if (keyCode == 8) {
+            // delete, tab
+            else if (keyCode == 8 || keyCode == 9) {
                 chr = String.fromCharCode(keyCode);
                 _KernelInputQueue.enqueue(chr);
             }

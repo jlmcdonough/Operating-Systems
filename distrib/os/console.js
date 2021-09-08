@@ -38,10 +38,44 @@ var TSOS;
                     this.buffer = "";
                 }
                 else if (chr === String.fromCharCode(8)) { //the backspace key
-                    console.log("IN CHAR CODE = 8");
-                    let toBeDeleted = this.buffer[this.buffer.length - 1];
-                    console.log("TO BE DELETED:  " + toBeDeleted);
-                    this.deleteChr(toBeDeleted);
+                    if (this.buffer.length > 0) //save the trouble if nothing to be deleted
+                     {
+                        let toBeDeleted = this.buffer[this.buffer.length - 1];
+                        this.deleteChr(toBeDeleted);
+                        this.buffer = this.buffer.substring(0, this.buffer.length - 1); //reduces buffer size so cannot delete more than should be able to
+                    }
+                }
+                else if (chr == String.fromCharCode(9)) { //the tab key
+                    console.log("IN TAB");
+                    console.log(this.buffer.length);
+                    if (this.buffer.length > 0) {
+                        console.log("SUFFICIENT BUFFER");
+                        let myCommands = _OsShell.commandList;
+                        let matchCommands = [];
+                        let userInput = this.buffer;
+                        myCommands.forEach(function (cmd) {
+                            if (cmd.command.startsWith(userInput)) //substring(0, userInput.length) == userInput)
+                             {
+                                matchCommands[matchCommands.length] = cmd;
+                            }
+                        });
+                        if (matchCommands.length === 1) {
+                            this.deleteStr(this.buffer);
+                            this.putText(matchCommands[0].command);
+                            this.buffer = matchCommands[0].command;
+                        }
+                        else if (matchCommands.length > 1) {
+                            this.advanceLine();
+                            this.putText("The following commands begin with " + userInput + ":");
+                            this.advanceLine();
+                            for (let x = 0; x < matchCommands.length; x++) {
+                                this.putText(matchCommands[x].command);
+                                this.advanceLine();
+                            }
+                            _OsShell.putPrompt();
+                            this.putText(userInput);
+                        }
+                    }
                 }
                 else {
                     // This is a "normal" character, so ...
@@ -86,6 +120,12 @@ var TSOS;
                 let xAdjust = _DrawingContext.measureText(this.currentFont, this.currentFontSize, chr);
                 this.currentXPosition = this.currentXPosition - xAdjust;
                 _DrawingContext.deleteText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, chr);
+            }
+        }
+        deleteStr(str) {
+            while (str.length > 0) {
+                this.deleteChr(str[str.length - 1]);
+                str = str.slice(0, -1);
             }
         }
     }
