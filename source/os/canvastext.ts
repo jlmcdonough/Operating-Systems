@@ -160,11 +160,22 @@ module TSOS {
             ctx.strokeStyle = _DefaultFontColor;
 
 
-            for (var i = 0; i < len; i++) {
+            for (var i = 0; i < len; i++)
+            {
                 var c = CanvasTextFunctions.letter(str.charAt(i));
-                if (!c) {
+                if (!c)
+                {
                     continue;
                 }
+
+                // if text reaches the end of the canvas (horizontally), it will move to the next line (i.e. line wrapping)
+                if ( (x + this.measure(font, size, str.charAt(i))) > _Canvas.width)
+                {
+                    _Console.advanceLine();
+                    x = _Console.currentXPosition;
+                    y = _Console.currentYPosition;
+                }
+
                 ctx.beginPath();
                 var penUp = true;
                 var needStroke = 0;
