@@ -1,7 +1,7 @@
 /* TSOS.css */
 
 body {
-  background: #909193 url(distrib/images/linen.png) repeat;
+  background: #121212;
   font-family: Helvetica, Verdana, Arial, sans-serif;
   font-size: 12pt;
   font-weight: normal;
@@ -9,15 +9,15 @@ body {
 }
 
 h1 {
-  color: black;
+  color: #ffffff;
   font-size: 24pt;
   font-weight: normal;
   font-style: normal;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #ffffff;
 }
 
 h2 {
-  color: black;
+  color: #ffffff;
   font-size: 20pt;
   font-weight: normal;
   font-style: normal;
@@ -30,19 +30,57 @@ h3 {
   font-style: normal;
 }
 
+h2 {
+  color: #ffffff;
+  font-size: 20pt;
+  font-weight: normal;
+  font-style: normal;
+}
+
 #display {
-  background-color:#DFDBC3;
-  border: 2px solid red;
+  background-color:#2c2c2c;
+  border: 1px solid #018786;;
   cursor: default;
 }
 
 .normal_button {
   width: 100px;
+  color: #121212;
+  background-color: #018786;
 }
 
 .footerText {
-  color: black;
+  color: #ffffff;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 8pt;
   text-align: center;
+}
+
+.statusBar {
+  color: #ffffff;
+}
+
+.dateTimeBar {
+  color: #ffffff;
+}
+
+.hostLog {
+  color: #ffffff;
+}
+
+.hostLogText {
+  color: #ffffff;
+  background: #2c2c2c;
+  border-color: #018786;
+}
+
+
+.userProgramInput {
+  color: #ffffff;
+}
+
+.userProgramInputText {
+  color: #ffffff;
+  background: #2c2c2c;
+  border-color: #018786;
 }

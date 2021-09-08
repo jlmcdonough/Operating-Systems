@@ -39,11 +39,11 @@
 
 <div id="divMain" style="width:100%;">
 
-   <div id="dateTimeBar">
+   <div id="dateTimeBar" class="dateTimeBar">
       <p id = "dateTime"> Date -  Time - </p>
    </div>
 
-   <div id="statusBar">
+   <div id="statusBar" class="statusBar">
       <p id = "status"> Status - Running RhinOS Version 0.1</p>
    </div>
 
@@ -83,7 +83,7 @@
       </canvas>
    </div>
 
-   <div id="divLog" style="margin-left:520px;">
+   <div id="divLog" style="margin-left:520px;" class="hostLog">
       <label>
          Host Log
          <br>
@@ -91,11 +91,12 @@
                    id  ="taHostLog"
                    rows="26"
                    cols="48"
+                   class="hostLogText"
          ></textarea>
       </label>
    </div>
 
-   <div id="divUserProgramInput" style="margin-left:520px;">
+   <div id="divUserProgramInput" style="margin-left:520px;" class="userProgramInput">
       <label>
          User Program Input
          <br>
@@ -103,6 +104,7 @@
                    id  ="taProgramInput"
                    rows="8"
                    cols="48"
+                   class="userProgramInputText"
          ></textarea>
       </label>
    </div>
