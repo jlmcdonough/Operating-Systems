@@ -57,6 +57,9 @@ var TSOS;
             // status
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Modifies the status message");
             this.commandList[this.commandList.length] = sc;
+            // BSOD
+            sc = new TSOS.ShellCommand(this.shellBSOD, "bsod", "- Triggers blue screen of death.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             // Display the initial prompt.
@@ -236,6 +239,9 @@ var TSOS;
                     case "status":
                         _StdOut.putText("STATUS customizes the status message to the following string.");
                         break;
+                    case "bsod":
+                        _StdOut.putText("BSOD triggers a blue screen of death, the same way it would trap an OS error.");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -309,6 +315,10 @@ var TSOS;
             else {
                 _StdOut.putText("Status must contain at least one character.");
             }
+        }
+        shellBSOD(args) {
+            console.log("IN ERROR CALL");
+            _Kernel.krnTrapError("Manual trigger of BSOD.");
         }
     }
     TSOS.Shell = Shell;

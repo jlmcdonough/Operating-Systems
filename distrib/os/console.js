@@ -7,9 +7,10 @@
 var TSOS;
 (function (TSOS) {
     class Console {
-        constructor(currentFont = _DefaultFontFamily, currentFontSize = _DefaultFontSize, currentXPosition = 0, currentYPosition = _DefaultFontSize, buffer = "", inputHistory = [], inputHistoryIndex = 0) {
+        constructor(currentFont = _DefaultFontFamily, currentFontSize = _DefaultFontSize, currentFontColor = _DefaultFontColor, currentXPosition = 0, currentYPosition = _DefaultFontSize, buffer = "", inputHistory = [], inputHistoryIndex = 0) {
             this.currentFont = currentFont;
             this.currentFontSize = currentFontSize;
+            this.currentFontColor = currentFontColor;
             this.currentXPosition = currentXPosition;
             this.currentYPosition = currentYPosition;
             this.buffer = buffer;
@@ -81,9 +82,7 @@ var TSOS;
                 }
                 //up arrow wants the most recent
                 else if (chr == String.fromCharCode(38)) { //up arrow
-                    console.log(this.inputHistoryIndex);
                     if (this.inputHistoryIndex > 0) {
-                        console.log("UP");
                         this.inputHistoryIndex--;
                         this.deleteStr(this.buffer);
                         this.putText(this.inputHistory[this.inputHistoryIndex]);
@@ -92,10 +91,8 @@ var TSOS;
                 }
                 //down arrow goes back, cannot be first to be used
                 else if (chr == String.fromCharCode(40)) { //down arrow
-                    console.log(this.inputHistoryIndex);
                     if ((this.inputHistoryIndex < this.inputHistory.length - 1) &&
                         (this.inputHistoryIndex >= -1)) {
-                        console.log("DOWN");
                         this.inputHistoryIndex++;
                         this.deleteStr(this.buffer);
                         this.putText(this.inputHistory[this.inputHistoryIndex]);
@@ -152,6 +149,16 @@ var TSOS;
                 this.deleteChr(str[str.length - 1]);
                 str = str.slice(0, -1);
             }
+        }
+        BSOD() {
+            this.clearScreen();
+            _DrawingContext.fillStyle = "#85b0c4";
+            _DrawingContext.fillRect(0, 0, 500, 500); //dimensions set in div style divConsole in index.html
+            this.currentXPosition = 50;
+            this.currentYPosition = 50;
+            _DefaultFontColor = "#ffffff"; //temporary overrides default color to white, won't effect a reboot since the default default is black
+            this.putText("An error has occured. Shutting down...");
+            _OsShell.promptStr = ""; //remove cursor
         }
     }
     TSOS.Console = Console;
