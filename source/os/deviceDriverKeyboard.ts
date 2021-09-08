@@ -114,8 +114,11 @@ module TSOS {
                 _KernelInputQueue.enqueue(chr);
             }
 
-            // delete, tab
-            else if (keyCode == 8 || keyCode == 9)
+            // delete, tab, up arrow, down arrow
+            else if (keyCode == 8  ||
+                     keyCode == 9  ||
+                     keyCode == 38 ||
+                     keyCode == 40)
             {
                 chr = String.fromCharCode(keyCode);
                 _KernelInputQueue.enqueue(chr);

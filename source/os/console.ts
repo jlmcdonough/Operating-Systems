@@ -13,7 +13,9 @@ module TSOS {
                     public currentFontSize = _DefaultFontSize,
                     public currentXPosition = 0,
                     public currentYPosition = _DefaultFontSize,
-                    public buffer = "") {
+                    public buffer = "",
+                    public inputHistory = [],
+                    public inputHistoryIndex = 0) {
         }
 
         public init(): void {
@@ -39,6 +41,11 @@ module TSOS {
                     // The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
+
+                    //add to input history
+                    this.inputHistory[this.inputHistory.length] = this.buffer;
+                    this.inputHistoryIndex = this.inputHistory.length;
+
                     // ... and reset our buffer.
                     this.buffer = "";
                 }
@@ -52,11 +59,9 @@ module TSOS {
                     }
                 }
                 else if (chr == String.fromCharCode(9)) { //the tab key
-                    console.log("IN TAB");
-                    console.log(this.buffer.length);
+
                     if (this.buffer.length > 0)
                     {
-                        console.log("SUFFICIENT BUFFER");
                         let myCommands = _OsShell.commandList;
                         let matchCommands = [];
 
@@ -91,6 +96,33 @@ module TSOS {
                             _OsShell.putPrompt();
                             this.putText(userInput);
                         }
+                    }
+                }
+                //up arrow wants the most recent
+                else if (chr == String.fromCharCode(38)) {   //up arrow
+                    console.log(this.inputHistoryIndex);
+                    if(this.inputHistoryIndex > 0)
+                    {
+                        console.log("UP");
+                        this.inputHistoryIndex--;
+                        this.deleteStr(this.buffer);
+                        this.putText(this.inputHistory[this.inputHistoryIndex]);
+                        this.buffer = this.inputHistory[this.inputHistoryIndex];
+                    }
+                }
+
+                //down arrow goes back, cannot be first to be used
+                else if (chr == String.fromCharCode(40)) {   //down arrow
+                    console.log(this.inputHistoryIndex);
+                    if((this.inputHistoryIndex < this.inputHistory.length - 1) &&
+                       (this.inputHistoryIndex >= -1) )
+                    {
+                        console.log("DOWN")
+                        this.inputHistoryIndex ++;
+                        this.deleteStr(this.buffer);
+                        this.putText(this.inputHistory[this.inputHistoryIndex]);
+                        this.buffer = this.inputHistory[this.inputHistoryIndex];
+
                     }
                 }
 
