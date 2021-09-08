@@ -113,6 +113,13 @@ module TSOS {
                 }
                 _KernelInputQueue.enqueue(chr);
             }
+
+            // delete
+            else if (keyCode == 8)
+            {
+                chr = String.fromCharCode(keyCode);
+                _KernelInputQueue.enqueue(chr);
+            }
         }
     }
 }

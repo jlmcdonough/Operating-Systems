@@ -41,7 +41,13 @@ module TSOS {
                     _OsShell.handleInput(this.buffer);
                     // ... and reset our buffer.
                     this.buffer = "";
-                } else {
+                }
+                else if (chr === String.fromCharCode(8)) { //the backspace key
+                    let toBeDeleted = this.buffer[this.buffer.length - 1];
+                    this.deleteChr(toBeDeleted);
+                }
+
+                else {
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
                     this.putText(chr);
@@ -81,6 +87,15 @@ module TSOS {
                                      _FontHeightMargin;
 
             // TODO: Handle scrolling. (iProject 1)
+        }
+
+        public deleteChr(chr): void {
+            if (this.buffer.length > 0)
+            {
+                let xAdjust = _DrawingContext.measureText(this.currentFont, this.currentFontSize, chr);
+                this.currentXPosition = this.currentXPosition - xAdjust;
+                _DrawingContext.deleteText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, chr);
+            }
         }
     }
  }

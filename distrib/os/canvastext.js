@@ -79,6 +79,12 @@ var TSOS;
             ctx.restore();
             return total;
         }
+        static delete(ctx, font, size, x, y, chr) {
+            let w = this.measure(font, size, chr);
+            let h = size + this.descent(font, size) + _FontHeightMargin;
+            let yAdjust = y - size - _FontHeightMargin;
+            ctx.clearRect(x, yAdjust, w, h);
+        }
         static enable(ctx) {
             ctx.drawText = function (font, size, x, y, text) { return CanvasTextFunctions.draw(ctx, font, size, x, y, text); };
             ctx.measureText = function (font, size, text) { return CanvasTextFunctions.measure(font, size, text); };
@@ -92,6 +98,7 @@ var TSOS;
                 var w = CanvasTextFunctions.measure(font, size, text);
                 return CanvasTextFunctions.draw(ctx, font, size, x - w / 2, y, text);
             };
+            ctx.deleteText = function (font, size, x, y, chr) { return CanvasTextFunctions.delete(ctx, font, size, x, y, chr); };
         }
     }
     CanvasTextFunctions.symbols = {

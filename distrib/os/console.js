@@ -37,6 +37,12 @@ var TSOS;
                     // ... and reset our buffer.
                     this.buffer = "";
                 }
+                else if (chr === String.fromCharCode(8)) { //the backspace key
+                    console.log("IN CHAR CODE = 8");
+                    let toBeDeleted = this.buffer[this.buffer.length - 1];
+                    console.log("TO BE DELETED:  " + toBeDeleted);
+                    this.deleteChr(toBeDeleted);
+                }
                 else {
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
@@ -74,6 +80,13 @@ var TSOS;
                 _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                 _FontHeightMargin;
             // TODO: Handle scrolling. (iProject 1)
+        }
+        deleteChr(chr) {
+            if (this.buffer.length > 0) {
+                let xAdjust = _DrawingContext.measureText(this.currentFont, this.currentFontSize, chr);
+                this.currentXPosition = this.currentXPosition - xAdjust;
+                _DrawingContext.deleteText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, chr);
+            }
         }
     }
     TSOS.Console = Console;
