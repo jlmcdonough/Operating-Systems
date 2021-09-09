@@ -38,8 +38,10 @@ var TSOS;
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
                     //add to input history
-                    this.inputHistory[this.inputHistory.length] = this.buffer;
-                    this.inputHistoryIndex = this.inputHistory.length;
+                    if (this.buffer.length > 0) {
+                        this.inputHistory[this.inputHistory.length] = this.buffer;
+                        this.inputHistoryIndex = this.inputHistory.length;
+                    }
                     // ... and reset our buffer.
                     this.buffer = "";
                 }
@@ -81,7 +83,7 @@ var TSOS;
                     }
                 }
                 //up arrow wants the most recent
-                else if (chr == String.fromCharCode(38)) { //up arrow
+                else if (chr == String.fromCharCode(38)) {
                     if (this.inputHistoryIndex > 0) {
                         this.inputHistoryIndex--;
                         this.deleteStr(this.buffer);
@@ -90,13 +92,21 @@ var TSOS;
                     }
                 }
                 //down arrow goes back, cannot be first to be used
-                else if (chr == String.fromCharCode(40)) { //down arrow
+                else if (chr == String.fromCharCode(40)) {
                     if ((this.inputHistoryIndex < this.inputHistory.length - 1) &&
                         (this.inputHistoryIndex >= -1)) {
                         this.inputHistoryIndex++;
                         this.deleteStr(this.buffer);
                         this.putText(this.inputHistory[this.inputHistoryIndex]);
                         this.buffer = this.inputHistory[this.inputHistoryIndex];
+                    }
+                    else if (this.inputHistoryIndex == this.inputHistory.length - 1) //already showing most recent command
+                     {
+                        console.log("IN NEW IF");
+                        this.inputHistoryIndex++;
+                        this.deleteStr(this.buffer);
+                        this.putText("");
+                        this.buffer = "";
                     }
                 }
                 else {
@@ -132,10 +142,18 @@ var TSOS;
              * Font descent measures from the baseline to the lowest point in the font.
              * Font height margin is extra spacing between the lines.
              */
-            this.currentYPosition += _DefaultFontSize +
+            //this will allow for a buffer for new line at the bottom
+            let fontHeight = _DefaultFontSize +
                 _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                 _FontHeightMargin;
+            this.currentYPosition += fontHeight;
             // TODO: Handle scrolling. (iProject 1)
+            if (this.currentYPosition > _Canvas.height) {
+                var prevText = _DrawingContext.getImageData(0, fontHeight, _Canvas.width, _Canvas.height);
+                this.clearScreen();
+                _DrawingContext.putImageData(prevText, 0, 0);
+                this.currentYPosition -= fontHeight;
+            }
         }
         deleteChr(chr) {
             if (this.buffer.length > 0) {
@@ -156,7 +174,6 @@ var TSOS;
             _DrawingContext.fillRect(0, 0, 500, 500); //dimensions set in div style divConsole in index.html
             this.currentXPosition = 50;
             this.currentYPosition = 50;
-            _DefaultFontColor = "#ffffff"; //temporary overrides default color to white, won't effect a reboot since the default default is black
             this.putText("An error has occured. Shutting down...");
             _OsShell.promptStr = ""; //remove cursor
         }

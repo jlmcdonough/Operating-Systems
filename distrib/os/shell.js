@@ -60,6 +60,9 @@ var TSOS;
             // BSOD
             sc = new TSOS.ShellCommand(this.shellBSOD, "bsod", "- Triggers blue screen of death.");
             this.commandList[this.commandList.length] = sc;
+            // load
+            sc = new TSOS.ShellCommand(this.shellLoad, "load", "<priority> - Loads the specified user program.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             // Display the initial prompt.
@@ -242,6 +245,9 @@ var TSOS;
                     case "bsod":
                         _StdOut.putText("BSOD triggers a blue screen of death, the same way it would trap an OS error.");
                         break;
+                    case "load":
+                        _StdOut.putText("LOAD will load specified user program and will be verified such that only hex code and spaces are valid.");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -317,8 +323,71 @@ var TSOS;
             }
         }
         shellBSOD(args) {
-            console.log("IN ERROR CALL");
             _Kernel.krnTrapError("Manual trigger of BSOD.");
+        }
+        shellLoad(args) {
+            console.log(_taProgramInput.value.length);
+            console.log(_taProgramInput.value);
+            //do not want the input to either be blank or just spaces
+            if (_taProgramInput.value.length > 0 && _taProgramInput.value.trim()) {
+                //ensures that only Strings are present
+                if (!isNaN(Number(args[0]))) {
+                    let priority = Number(args[0]);
+                    let validHex = true;
+                    let charArray = Array.from(_taProgramInput.value.toLocaleUpperCase());
+                    charArray.forEach(function (char) {
+                        switch (char) { //checks to make sure only hex digits were entered
+                            case " ":
+                                break;
+                            case "0":
+                                break;
+                            case "1":
+                                break;
+                            case "2":
+                                break;
+                            case "3":
+                                break;
+                            case "4":
+                                break;
+                            case "5":
+                                break;
+                            case "6":
+                                break;
+                            case "7":
+                                break;
+                            case "8":
+                                break;
+                            case "9":
+                                break;
+                            case "A":
+                                break;
+                            case "B":
+                                break;
+                            case "C":
+                                break;
+                            case "D":
+                                break;
+                            case "E":
+                                break;
+                            case "F":
+                                break;
+                            default: validHex = false;
+                        }
+                    });
+                    if (validHex) {
+                        _StdOut.putText("Successfully loaded user program with priority " + priority);
+                    }
+                    else {
+                        _StdOut.putText("Please enter valid hex in the program input area.");
+                    }
+                }
+                else {
+                    _StdOut.putText("The load function must contain be entered with a priority number after it");
+                }
+            }
+            else {
+                _StdOut.putText("Populate the user program input area with code before running the load command");
+            }
         }
     }
     TSOS.Shell = Shell;

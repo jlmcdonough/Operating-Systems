@@ -127,7 +127,6 @@ module TSOS {
                     }
                     else if (this.inputHistoryIndex == this.inputHistory.length - 1) //already showing most recent command
                     {
-                        console.log("IN NEW IF");
                         this.inputHistoryIndex++;
                         this.deleteStr(this.buffer);
                         this.putText("");

@@ -24,6 +24,7 @@ module TSOS {
 
         public static hostInit(): void {
             // This is called from index.html's onLoad event via the onDocumentLoad function pointer.
+            _taProgramInput = <HTMLTextAreaElement>document.getElementById('taProgramInput');
 
             // Get a global reference to the canvas.  TODO: Should we move this stuff into a Display Device Driver?
             _Canvas = <HTMLCanvasElement>document.getElementById('display');
