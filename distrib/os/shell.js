@@ -326,15 +326,15 @@ var TSOS;
             _Kernel.krnTrapError("Manual trigger of BSOD.");
         }
         shellLoad(args) {
-            console.log(_taProgramInput.value.length);
-            console.log(_taProgramInput.value);
             //do not want the input to either be blank or just spaces
             if (_taProgramInput.value.length > 0 && _taProgramInput.value.trim()) {
-                //ensures that only Strings are present
+                //ensures that the load priority is a number
                 if (!isNaN(Number(args[0]))) {
                     let priority = Number(args[0]);
                     let validHex = true;
-                    let charArray = Array.from(_taProgramInput.value.toLocaleUpperCase());
+                    let trimmedInput = _taProgramInput.value.replace(/(\r\n|\n|\r)/gm, "").replace(/\s/g, ""); //removes whitespace
+                    trimmedInput = trimmedInput.replace(/.{1,2}(?=(.{2})+$)/g, '$& '); //add space after every second character
+                    let charArray = Array.from(trimmedInput.toLocaleUpperCase());
                     charArray.forEach(function (char) {
                         switch (char) { //checks to make sure only hex digits were entered
                             case " ":

@@ -398,9 +398,13 @@ module TSOS {
                 //ensures that the load priority is a number
                 if (!isNaN(Number(args[0])))
                 {
-                    let priority = Number(args[0])
+                    let priority = Number(args[0]);
                     let validHex = true;
-                    let charArray = Array.from(_taProgramInput.value.toLocaleUpperCase());
+                    let trimmedInput = _taProgramInput.value.replace(/(\r\n|\n|\r)/gm,"").replace(/\s/g,"");  //removes whitespace
+
+                    trimmedInput = trimmedInput.replace(/.{1,2}(?=(.{2})+$)/g, '$& ');  //add space after every second character
+
+                    let charArray = Array.from(trimmedInput.toLocaleUpperCase());
 
                     charArray.forEach(function (char)
                     {
@@ -463,5 +467,5 @@ module TSOS {
                 _StdOut.putText("Populate the user program input area with code before running the load command");
             }
         }
-
+    }
 }
