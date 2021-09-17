@@ -100,6 +100,37 @@ var TSOS;
             // be reloaded from the server. If it is false or not specified the browser may reload the
             // page from its cache, which is not what we want.
         }
+        static cpuUpdateTable() {
+            if (_CPU.isExecuting) {
+                document.getElementById("cpuPC").innerHTML = _CPU.PC.toString(16);
+                document.getElementById("cpuAcc").innerHTML = _CPU.Acc.toString(16);
+                document.getElementById("cpuX").innerHTML = _CPU.Xreg.toString(16);
+                document.getElementById("cpuY").innerHTML = _CPU.Yreg.toString(16);
+                document.getElementById("cpuZ").innerHTML = _CPU.Zflag.toString(16);
+            }
+            else {
+                document.getElementById("cpuPC").innerHTML = "-";
+                document.getElementById("cpuAcc").innerHTML = "-";
+                document.getElementById("cpuX").innerHTML = "-";
+                document.getElementById("cpuY").innerHTML = "-";
+                document.getElementById("cpuZ").innerHTML = "-";
+            }
+        }
+        static memoryUpdateTable() {
+            for (let i = 0; i < _Memory.memoryBlock.length; i++) {
+                document.getElementById("memory" + i).innerHTML = _Memory.memoryBlock[i];
+            }
+        }
+        static pcbUpdateTable() {
+            document.getElementById("pcbPC").innerHTML = "-";
+            document.getElementById("pcbAcc").innerHTML = "-";
+            document.getElementById("pcbX").innerHTML = "-";
+            document.getElementById("pcbY").innerHTML = "-";
+            document.getElementById("pcbZ").innerHTML = "-";
+            document.getElementById("pcbPriority").innerHTML = "-";
+            document.getElementById("pcbState").innerHTML = "-";
+            document.getElementById("pcbLocation").innerHTML = "-";
+        }
     }
     TSOS.Control = Control;
 })(TSOS || (TSOS = {}));

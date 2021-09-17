@@ -70,7 +70,11 @@ var _krnKeyboardDriver: TSOS.DeviceDriverKeyboard  = null;
 
 var _hardwareClockID: number = null;
 
+// Sections to show on HTML
 var _taProgramInput: HTMLTextAreaElement;
+var _cpuDisplay: HTMLTextAreaElement;
+var _memoryDisplay: HTMLTextAreaElement;
+var _PCBdisplay: HTMLTextAreaElement;
 
 // For testing (and enrichment)...
 var Glados: any = null;  // This is the function Glados() in glados-ip*.js http://alanclasses.github.io/TSOS/test/ .
