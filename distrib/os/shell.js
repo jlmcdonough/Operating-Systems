@@ -63,6 +63,9 @@ var TSOS;
             // load
             sc = new TSOS.ShellCommand(this.shellLoad, "load", "<priority> - Loads the specified user program.");
             this.commandList[this.commandList.length] = sc;
+            // run
+            sc = new TSOS.ShellCommand(this.shellRun, "run", "<pid> - Runs the specified user program.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             // Display the initial prompt.
@@ -246,7 +249,10 @@ var TSOS;
                         _StdOut.putText("BSOD triggers a blue screen of death, the same way it would trap an OS error.");
                         break;
                     case "load":
-                        _StdOut.putText("LOAD will load specified user program and will be verified such that only hex code and spaces are valid.");
+                        _StdOut.putText("LOAD will load the specified user program and will be verified such that only hex code and spaces are valid.");
+                        break;
+                    case "run":
+                        _StdOut.putText("RUN will run the specified user program, denoted by the process ID that was assigned when loaded.");
                         break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -394,6 +400,9 @@ var TSOS;
             else {
                 _StdOut.putText("Populate the user program input area with code before running the load command");
             }
+        }
+        shellRun(args) {
+            _StdOut.putText("Running the program stored at: " + args[0]);
         }
     }
     TSOS.Shell = Shell;

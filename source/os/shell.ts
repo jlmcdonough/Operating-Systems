@@ -110,6 +110,12 @@ module TSOS {
                 "<priority> - Loads the specified user program.");
             this.commandList[this.commandList.length] = sc;
 
+            // run
+            sc = new ShellCommand(this.shellRun,
+                "run",
+                "<pid> - Runs the specified user program.");
+            this.commandList[this.commandList.length] = sc;
+
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -307,7 +313,10 @@ module TSOS {
                         _StdOut.putText("BSOD triggers a blue screen of death, the same way it would trap an OS error.");
                         break;
                     case "load":
-                        _StdOut.putText("LOAD will load specified user program and will be verified such that only hex code and spaces are valid.");
+                        _StdOut.putText("LOAD will load the specified user program and will be verified such that only hex code and spaces are valid.");
+                        break;
+                    case "run":
+                        _StdOut.putText("RUN will run the specified user program, denoted by the process ID that was assigned when loaded.");
                         break;
 
                     default:
@@ -474,6 +483,10 @@ module TSOS {
             {
                 _StdOut.putText("Populate the user program input area with code before running the load command");
             }
+        }
+
+        public shellRun(args: string[]) {
+            _StdOut.putText("Running the program stored at: " + args[0]);
         }
     }
 }
