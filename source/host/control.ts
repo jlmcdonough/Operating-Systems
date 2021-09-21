@@ -99,6 +99,13 @@ module TSOS {
             _CPU = new Cpu();  // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.
             _CPU.init();       //       There's more to do, like dealing with scheduling and such, but this would be a start. Pretty cool.
 
+            _Memory = new Memory();
+            _Memory.init();
+
+            _MemoryAccessor = new MemoryAccessor();
+
+            _PCB = new Pcb();
+
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.
@@ -126,17 +133,19 @@ module TSOS {
 
         public static cpuUpdateTable(): void
         {
-            if (_CPU.isExecuting)
+            if (true)  //_CPU.isExecuting
             {
-                document.getElementById("cpuPC").innerHTML = _CPU.PC.toString(16);
-                document.getElementById("cpuAcc").innerHTML = _CPU.Acc.toString(16);
-                document.getElementById("cpuX").innerHTML = _CPU.Xreg.toString(16);
-                document.getElementById("cpuY").innerHTML = _CPU.Yreg.toString(16);
-                document.getElementById("cpuZ").innerHTML = _CPU.Zflag.toString(16);
+                document.getElementById("cpuPC").innerHTML = _CPU.pc.toString(16);
+                document.getElementById("cpuIR").innerHTML = _CPU.ir;
+                document.getElementById("cpuAcc").innerHTML = _CPU.acc.toString(16);
+                document.getElementById("cpuX").innerHTML = _CPU.xReg.toString(16);
+                document.getElementById("cpuY").innerHTML = _CPU.yReg.toString(16);
+                document.getElementById("cpuZ").innerHTML = _CPU.zFlag.toString(16);
             }
             else
             {
                 document.getElementById("cpuPC").innerHTML = "-";
+                document.getElementById("cpuIR").innerHTML = "-";
                 document.getElementById("cpuAcc").innerHTML = "-";
                 document.getElementById("cpuX").innerHTML = "-";
                 document.getElementById("cpuY").innerHTML = "-";
@@ -146,7 +155,7 @@ module TSOS {
 
         public static memoryUpdateTable(): void
         {
-            for(let i = 0; i < _Memory.memoryBlock.length; i++)
+            for(let i = 0; i < 8; i++)  //_Memory.memoryBlock.length
             {
                 document.getElementById("memory" + i).innerHTML = _Memory.memoryBlock[i];
             }
@@ -154,14 +163,14 @@ module TSOS {
 
         public static pcbUpdateTable(): void
         {
-            document.getElementById("pcbPC").innerHTML = "-";
-            document.getElementById("pcbAcc").innerHTML = "-";
-            document.getElementById("pcbX").innerHTML = "-";
-            document.getElementById("pcbY").innerHTML = "-";
-            document.getElementById("pcbZ").innerHTML = "-";
-            document.getElementById("pcbPriority").innerHTML = "-";
-            document.getElementById("pcbState").innerHTML = "-";
-            document.getElementById("pcbLocation").innerHTML = "-";
+            document.getElementById("pcbPC").innerHTML = _PCB.pc.toString(16);
+            document.getElementById("pcbAcc").innerHTML = _PCB.acc.toString(16);
+            document.getElementById("pcbX").innerHTML = _PCB.xReg.toString(16);
+            document.getElementById("pcbY").innerHTML = _PCB.yReg.toString(16);
+            document.getElementById("pcbZ").innerHTML = _PCB.zFlag.toString(16);
+            document.getElementById("pcbPriority").innerHTML = _PCB.priority.toString(16);
+            document.getElementById("pcbState").innerHTML = _PCB.state;
+            document.getElementById("pcbLocation").innerHTML = _PCB.location;
         }
     }
 }

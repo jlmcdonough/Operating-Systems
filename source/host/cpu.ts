@@ -15,21 +15,25 @@ module TSOS {
 
     export class Cpu {
 
-        constructor(public PC: number = 0,
-                    public Acc: number = 0,
-                    public Xreg: number = 0,
-                    public Yreg: number = 0,
-                    public Zflag: number = 0,
+        constructor(public pc: number = 0,
+                    public ir: string = "",
+                    public acc: number = 0,
+                    public xReg: number = 0,
+                    public yReg: number = 0,
+                    public zFlag: number = 0,
                     public isExecuting: boolean = false) {
         }
 
         public init(): void {
-            this.PC = 0;
-            this.Acc = 0;
-            this.Xreg = 0;
-            this.Yreg = 0;
-            this.Zflag = 0;
+            this.pc = 0;
+            this.ir = "00";
+            this.acc = 0;
+            this.xReg = 0;
+            this.yReg = 0;
+            this.zFlag = 0;
             this.isExecuting = false;
+
+            Control.cpuUpdateTable();
         }
 
         public cycle(): void {

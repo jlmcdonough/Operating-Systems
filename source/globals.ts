@@ -32,7 +32,9 @@ var _Memory: TSOS.Memory;
 var _MemoryAccessor: TSOS.MemoryAccessor;
 
 //Software
-var _MemoryManager: any = null;
+var _MemoryManager: TSOS.MemoryManager;
+var _PCB: TSOS.Pcb;
+var _ProcessID: number = 0;
 
 
 var _OSclock: number = 0;  // Page 23.

@@ -450,7 +450,12 @@ module TSOS {
 
                     if(validHex)
                     {
+                        _PCB = new Pcb();
+                        _PCB.init(priority);
+
                         _StdOut.putText("Successfully loaded user program with priority " + priority);
+                        _StdOut.advanceLine();
+                        _StdOut.putText("Your program is stored at process ID " + (_ProcessID - 1) );
                     }
                     else
                     {
