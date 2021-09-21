@@ -88,10 +88,36 @@ h2 {
   color: #ffffff;
 }
 
+tr:nth-child(even) {
+  background-color: rgb(60, 60, 60);
+}
+
 .hostDisplayTable {
   color: #ffffff;
   background: #2c2c2c;
   border: 1px solid #018786;
-  width: 350px;
+  width: 470px;
   text-align: center;
+}
+
+#divMemoryTable {
+  width: 470px;
+  max-height: 211px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  border-bottom: 1px solid #018786;
+}
+
+#divMemoryTable:hover {
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+}
+
+::-webkit-scrollbar {
+  width: 1px;
+}
+
+::-webkit-scrollbar-track {
+  display: none;
 }

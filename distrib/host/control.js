@@ -78,6 +78,10 @@ var TSOS;
             // ... Create and initialize the CPU (because it's part of the hardware)  ...
             _CPU = new TSOS.Cpu(); // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.
             _CPU.init(); //       There's more to do, like dealing with scheduling and such, but this would be a start. Pretty cool.
+            _Memory = new TSOS.Memory();
+            _Memory.init();
+            _MemoryAccessor = new TSOS.MemoryAccessor();
+            _PCB = new TSOS.Pcb();
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(TSOS.Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.
@@ -101,15 +105,18 @@ var TSOS;
             // page from its cache, which is not what we want.
         }
         static cpuUpdateTable() {
-            if (_CPU.isExecuting) {
-                document.getElementById("cpuPC").innerHTML = _CPU.PC.toString(16);
-                document.getElementById("cpuAcc").innerHTML = _CPU.Acc.toString(16);
-                document.getElementById("cpuX").innerHTML = _CPU.Xreg.toString(16);
-                document.getElementById("cpuY").innerHTML = _CPU.Yreg.toString(16);
-                document.getElementById("cpuZ").innerHTML = _CPU.Zflag.toString(16);
+            if (true) //_CPU.isExecuting
+             {
+                document.getElementById("cpuPC").innerHTML = _CPU.pc.toString(16);
+                document.getElementById("cpuIR").innerHTML = _CPU.ir;
+                document.getElementById("cpuAcc").innerHTML = _CPU.acc.toString(16);
+                document.getElementById("cpuX").innerHTML = _CPU.xReg.toString(16);
+                document.getElementById("cpuY").innerHTML = _CPU.yReg.toString(16);
+                document.getElementById("cpuZ").innerHTML = _CPU.zFlag.toString(16);
             }
             else {
                 document.getElementById("cpuPC").innerHTML = "-";
+                document.getElementById("cpuIR").innerHTML = "-";
                 document.getElementById("cpuAcc").innerHTML = "-";
                 document.getElementById("cpuX").innerHTML = "-";
                 document.getElementById("cpuY").innerHTML = "-";
@@ -117,19 +124,31 @@ var TSOS;
             }
         }
         static memoryUpdateTable() {
-            for (let i = 0; i < _Memory.memoryBlock.length; i++) {
-                document.getElementById("memory" + i).innerHTML = _Memory.memoryBlock[i];
+            let table = document.getElementById("memoryTable");
+            let tableBody = "<tbody>";
+            for (let i = 0; i < _Memory.memorySize; i += 0x8) {
+                let stringHex = i.toString(16);
+                let longHex = "000" + stringHex; //0 would be 000, so assume worst case, best case is FFF and then the 000 would be removed anyways
+                let normalizedHex = longHex.substring(longHex.length - 3); //take last 3 elements
+                let row = "0x" + normalizedHex;
+                tableBody += `<tr><td>${row}</td>`;
+                for (let j = i; j < i + 8; j += 0x1) {
+                    tableBody += `<td>${_Memory.memoryBlock[j]}</td>`;
+                }
+                tableBody += "</tr>";
             }
+            tableBody += "</tbody>";
+            table.innerHTML = tableBody;
         }
         static pcbUpdateTable() {
-            document.getElementById("pcbPC").innerHTML = "-";
-            document.getElementById("pcbAcc").innerHTML = "-";
-            document.getElementById("pcbX").innerHTML = "-";
-            document.getElementById("pcbY").innerHTML = "-";
-            document.getElementById("pcbZ").innerHTML = "-";
-            document.getElementById("pcbPriority").innerHTML = "-";
-            document.getElementById("pcbState").innerHTML = "-";
-            document.getElementById("pcbLocation").innerHTML = "-";
+            document.getElementById("pcbPC").innerHTML = _PCB.pc.toString(16);
+            document.getElementById("pcbAcc").innerHTML = _PCB.acc.toString(16);
+            document.getElementById("pcbX").innerHTML = _PCB.xReg.toString(16);
+            document.getElementById("pcbY").innerHTML = _PCB.yReg.toString(16);
+            document.getElementById("pcbZ").innerHTML = _PCB.zFlag.toString(16);
+            document.getElementById("pcbPriority").innerHTML = _PCB.priority.toString(16);
+            document.getElementById("pcbState").innerHTML = _PCB.state;
+            document.getElementById("pcbLocation").innerHTML = _PCB.location;
         }
     }
     TSOS.Control = Control;

@@ -155,10 +155,28 @@ module TSOS {
 
         public static memoryUpdateTable(): void
         {
-            for(let i = 0; i < 8; i++)  //_Memory.memoryBlock.length
+            let table = document.getElementById("memoryTable");
+            let tableBody = "<tbody>";
+
+            for (let i = 0; i < _Memory.memorySize; i += 0x8)
             {
-                document.getElementById("memory" + i).innerHTML = _Memory.memoryBlock[i];
+                let stringHex = i.toString(16);
+                let longHex = "000" + stringHex;        //0 would be 000, so assume worst case, best case is FFF and then the 000 would be removed anyways
+                let normalizedHex = longHex.substring(longHex.length - 3); //take last 3 elements
+                let row = "0x" + normalizedHex;
+
+                tableBody += `<tr><td>${row}</td>`;
+
+                for (let j = i; j < i + 8; j += 0x1)
+                {
+                    tableBody +=`<td>${_Memory.memoryBlock[j]}</td>`;
+                }
+
+                tableBody += "</tr>";
             }
+
+            tableBody += "</tbody>";
+            table.innerHTML = tableBody;
         }
 
         public static pcbUpdateTable(): void

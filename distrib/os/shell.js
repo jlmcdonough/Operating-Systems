@@ -375,7 +375,13 @@ var TSOS;
                         }
                     });
                     if (validHex) {
+                        _PCB = new TSOS.Pcb();
+                        _PCB.init(priority);
+                        _Memory.loadMemory(trimmedInput);
+                        TSOS.Control.memoryUpdateTable();
                         _StdOut.putText("Successfully loaded user program with priority " + priority);
+                        _StdOut.advanceLine();
+                        _StdOut.putText("Your program is stored at process ID " + (_ProcessID - 1));
                     }
                     else {
                         _StdOut.putText("Please enter valid hex in the program input area.");

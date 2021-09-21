@@ -13,21 +13,24 @@
 var TSOS;
 (function (TSOS) {
     class Cpu {
-        constructor(PC = 0, Acc = 0, Xreg = 0, Yreg = 0, Zflag = 0, isExecuting = false) {
-            this.PC = PC;
-            this.Acc = Acc;
-            this.Xreg = Xreg;
-            this.Yreg = Yreg;
-            this.Zflag = Zflag;
+        constructor(pc = 0, ir = "", acc = 0, xReg = 0, yReg = 0, zFlag = 0, isExecuting = false) {
+            this.pc = pc;
+            this.ir = ir;
+            this.acc = acc;
+            this.xReg = xReg;
+            this.yReg = yReg;
+            this.zFlag = zFlag;
             this.isExecuting = isExecuting;
         }
         init() {
-            this.PC = 0;
-            this.Acc = 0;
-            this.Xreg = 0;
-            this.Yreg = 0;
-            this.Zflag = 0;
+            this.pc = 0;
+            this.ir = "00";
+            this.acc = 0;
+            this.xReg = 0;
+            this.yReg = 0;
+            this.zFlag = 0;
             this.isExecuting = false;
+            TSOS.Control.cpuUpdateTable();
         }
         cycle() {
             _Kernel.krnTrace('CPU cycle');

@@ -16,5 +16,15 @@ module TSOS {
             Control.memoryUpdateTable();
         }
 
+        public loadMemory(userEntry: string): void
+        {
+            let userArr = userEntry.split(" ");
+
+            for(let i = 0; i < this.memorySize; i++)
+            {
+                this.memoryBlock[i] = userArr[i];
+            }
+        }
+
     }
 }
