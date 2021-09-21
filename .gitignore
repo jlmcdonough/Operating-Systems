@@ -3,3 +3,4 @@
 *.iml
 distrib
 /distrib
+*distrib
