@@ -31,12 +31,18 @@ module TSOS {
             // Parse the params.  TODO: Check that the params are valid and osTrapError if not.
             var keyCode = params[0];
             var isShifted = params[1];
-            _Kernel.krnTrace("Key code:" + keyCode + " shifted:" + isShifted);
+            var isControlled = params[2];
+            _Kernel.krnTrace("Key code:" + keyCode + " shifted:" + isShifted + " controlled:" + isControlled);
             var chr = "";
             // Check to see if we even want to deal with the key that was pressed.
 
+            // control and c (don't care about shifted) --> done first because stopping is most important
+            if (isControlled && (keyCode == 67) )
+            {
+                _KernelInputQueue.enqueue("ctrl+c")
+            }
             // letters
-            if ((keyCode >= 65) && (keyCode <= 90))
+            else if ((keyCode >= 65) && (keyCode <= 90))
             {
                 // Uppercase A-Z
                 if (isShifted === true)

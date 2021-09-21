@@ -486,6 +486,7 @@ module TSOS {
         }
 
         public shellRun(args: string[]) {
+            _CPU.isExecuting = true;
             _StdOut.putText("Running the program stored at: " + args[0]);
         }
     }

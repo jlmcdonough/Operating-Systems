@@ -37,8 +37,10 @@ module TSOS {
             while (_KernelInputQueue.getSize() > 0) {
                 // Get the next character from the kernel input queue.
                 var chr = _KernelInputQueue.dequeue();
-                // Check to see if it's "special" (enter or ctrl-c) or "normal" (anything else that the keyboard device driver gave us).
-                if (chr === String.fromCharCode(13)) { // the Enter key
+                // Check to see if it's "special" (enter or ctrl+c) or "normal" (anything else that the keyboard device driver gave us).
+                // the Enter key
+                if (chr === String.fromCharCode(13))
+                {
                     // The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
@@ -53,7 +55,29 @@ module TSOS {
                     // ... and reset our buffer.
                     this.buffer = "";
                 }
-                else if (chr === String.fromCharCode(8)) { //the backspace key
+                // the control key and the c key
+                else if (chr === "ctrl+c")
+                {
+                    if (_CPU.isExecuting)  //if no programs are running, don't care
+                    {
+                        _CPU.isExecuting = false;
+                        Control.cpuUpdateTable();
+
+                        _PCB.state = "STOPPED";
+                        Control.pcbUpdateTable();
+
+                        this.advanceLine();
+                        this.putText("Running process " + _PCB.pid + " stopped by user.");
+                        this.advanceLine();
+                        _OsShell.putPrompt();
+                    }
+
+                }
+
+
+                //the backspace key
+                else if (chr === String.fromCharCode(8))
+                {
                     if (this.buffer.length > 0) //save the trouble if nothing to be deleted
                     {
                         let toBeDeleted = this.buffer[this.buffer.length - 1];
@@ -141,7 +165,7 @@ module TSOS {
                     // ... and add it to our buffer.
                     this.buffer += chr;
                 }
-                // TODO: Add a case for Ctrl-C that would allow the user to break the current program.
+                // TODO: Add a case for ctrl+c that would allow the user to break the current program.
             }
         }
 

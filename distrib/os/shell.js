@@ -402,6 +402,7 @@ var TSOS;
             }
         }
         shellRun(args) {
+            _CPU.isExecuting = true;
             _StdOut.putText("Running the program stored at: " + args[0]);
         }
     }
