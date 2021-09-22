@@ -132,20 +132,34 @@ var TSOS;
             // 1. Remove leading and trailing spaces.
             buffer = TSOS.Utils.trim(buffer);
             // 2. Lower-case it.
-            buffer = buffer.toLowerCase();
+            //buffer = buffer.toLowerCase();
             // 3. Separate on spaces so we can determine the command and command-line args, if any.
             var tempList = buffer.split(" ");
             // 4. Take the first (zeroth) element and use that as the command.
             var cmd = tempList.shift(); // Yes, you can do that to an array in JavaScript. See the Queue class.
             // 4.1 Remove any left-over spaces.
             cmd = TSOS.Utils.trim(cmd);
-            // 4.2 Record it in the return value.
+            // 4.2 Make only the command lowercase
+            cmd = cmd.toLowerCase();
+            // 4.3 Record it in the return value.
             retVal.command = cmd;
-            // 5. Now create the args array from what's left.
-            for (var i in tempList) {
-                var arg = TSOS.Utils.trim(tempList[i]);
-                if (arg != "") {
-                    retVal.args[retVal.args.length] = tempList[i];
+            // 5.1 if status, want to keep spaces
+            if (retVal.command == "status") {
+                let statusMessage = "";
+                for (let j in tempList) {
+                    statusMessage += tempList[j] + " ";
+                }
+                statusMessage = statusMessage.trim();
+                retVal.args[0] = statusMessage;
+            }
+            // 5.2 Now create the args array from what's left (if not status)
+            else {
+                for (var i in tempList) {
+                    var arg = TSOS.Utils.trim(tempList[i]);
+                    if (arg != "") {
+                        retVal.args[retVal.args.length] = tempList[i];
+                        console.log("argsLength: " + retVal.args.length);
+                    }
                 }
             }
             return retVal;
@@ -382,7 +396,7 @@ var TSOS;
                     }
                 }
                 else {
-                    _StdOut.putText("The load function must contain be entered with a priority number after it");
+                    _StdOut.putText("The load function must be entered with a priority number after it");
                 }
             }
             else {
