@@ -20,10 +20,25 @@ module TSOS {
         {
             let userArr = userEntry.split(" ");
 
-            for(let i = 0; i < this.memorySize; i++)
+            for(let i = 0; i < userArr.length; i++)
             {
                 this.memoryBlock[i] = userArr[i];
             }
+        }
+
+        public getAtAddress(atAddress: string): string
+        {
+            return this.memoryBlock[Utils.hexToDecimal(atAddress)];
+        }
+
+        public getAtPC(atPC: string): string
+        {
+            return this.memoryBlock[atPC];
+        }
+
+        public override(atAddress: string, newData: string): void
+        {
+            this.memoryBlock[Utils.hexToDecimal(atAddress)] = newData;
         }
 
     }

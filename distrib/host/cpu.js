@@ -13,7 +13,7 @@
 var TSOS;
 (function (TSOS) {
     class Cpu {
-        constructor(pc = 0, ir = "", acc = 0, xReg = 0, yReg = 0, zFlag = 0, isExecuting = false) {
+        constructor(pc = 0, ir = "", acc = "", xReg = "", yReg = "", zFlag = 0, isExecuting = false) {
             this.pc = pc;
             this.ir = ir;
             this.acc = acc;
@@ -25,9 +25,9 @@ var TSOS;
         init() {
             this.pc = 0;
             this.ir = "00";
-            this.acc = 0;
-            this.xReg = 0;
-            this.yReg = 0;
+            this.acc = "00";
+            this.xReg = "00";
+            this.yReg = "00";
             this.zFlag = 0;
             this.isExecuting = false;
             TSOS.Control.cpuUpdateTable();
@@ -36,7 +36,278 @@ var TSOS;
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
+            console.log("PC: " + this.pc);
+            if (_CPU.isExecuting) {
+                this.fetch();
+                this.decode();
+            }
             TSOS.Control.cpuUpdateTable();
+            this.updatePcbMatchCpu();
+            TSOS.Control.pcbUpdateTable();
+            TSOS.Control.memoryUpdateTable();
+        }
+        updatePcbMatchCpu() {
+            _PCB.pc = this.pc;
+            _PCB.ir = this.ir;
+            _PCB.acc = this.acc;
+            _PCB.xReg = this.xReg;
+            _PCB.yReg = this.yReg;
+            _PCB.zFlag = this.zFlag;
+        }
+        fetch() {
+            let command = _MemoryAccessor.readPC(this.pc.toString());
+            this.ir = command;
+            console.log("THIS IR: " + this.ir);
+        }
+        decode() {
+            switch (this.ir) {
+                case "00":
+                    this.brk();
+                    break;
+                case "01":
+                    this.opcode();
+                    break;
+                case "02":
+                    this.opcode();
+                    break;
+                case "03":
+                    this.opcode();
+                    break;
+                case "05":
+                    this.opcode();
+                    break;
+                case "20":
+                    this.opcode();
+                    break;
+                case "33":
+                    this.opcode();
+                    break;
+                case "49":
+                    this.opcode();
+                    break;
+                case "65":
+                    this.opcode();
+                    break;
+                case "69":
+                    this.opcode();
+                    break;
+                case "6D":
+                    this.adc();
+                    break;
+                case "6E":
+                    this.opcode();
+                    break;
+                case "6F":
+                    this.opcode();
+                    break;
+                case "72":
+                    this.opcode();
+                    break;
+                case "74":
+                    this.opcode();
+                    break;
+                case "75":
+                    this.opcode();
+                    break;
+                case "8D":
+                    this.staMemory();
+                    break;
+                case "A0":
+                    this.ldaYConstant();
+                    break;
+                case "A2":
+                    this.ldaXConstant();
+                    break;
+                case "A4":
+                    this.opcode();
+                    break;
+                case "A9":
+                    this.ldaConstant();
+                    break;
+                case "AC":
+                    this.ldaYMemory();
+                    break;
+                case "AD":
+                    this.ldaMemory();
+                    break;
+                case "AE":
+                    this.ldaXMemory();
+                    break;
+                case "BA":
+                    this.opcode();
+                    break;
+                case "D0":
+                    this.bne();
+                    break;
+                case "EA":
+                    this.noOperation();
+                    break;
+                case "EC":
+                    this.cpx();
+                    break;
+                case "ED":
+                    this.opcode();
+                    break;
+                case "EE":
+                    this.inc();
+                    break;
+                case "EF":
+                    this.opcode();
+                    break;
+                case "F1":
+                    this.opcode();
+                    break;
+                case "F8":
+                    this.opcode();
+                    break;
+                case "FF":
+                    this.sys();
+                    break;
+                default:
+                    this.opcode();
+            }
+        }
+        // A9
+        // Load the accumulator with the constant that appears next
+        ldaConstant() {
+            console.log("LDA CONSTANT");
+            this.pc++;
+            this.acc = _MemoryAccessor.read(this.pc.toString());
+            this.pc++;
+        }
+        //AD
+        //
+        ldaMemory() {
+            console.log("LDAMEMORY");
+            this.pc++;
+            console.log("SECOND PC: " + this.pc);
+            let second = _MemoryAccessor.readPC(this.pc.toString());
+            let secondValue = _MemoryAccessor.read(second);
+            let first = _MemoryAccessor.readPC((this.pc + 1).toString());
+            this.acc = secondValue;
+            this.pc++;
+            this.pc++;
+        }
+        //8D
+        staMemory() {
+            console.log("STAMEMORY");
+            this.pc++;
+            let second = _MemoryAccessor.readPC(this.pc.toString());
+            let first = _MemoryAccessor.readPC((this.pc + 1).toString());
+            _MemoryAccessor.write(second, this.acc);
+            this.pc++;
+            this.pc++;
+        }
+        //6D
+        adc() {
+            console.log("ADC");
+            this.pc++;
+            let second = _MemoryAccessor.readPC(this.pc.toString());
+            let first = _MemoryAccessor.readPC((this.pc + 1).toString());
+            this.acc = TSOS.Utils.decimalToHex((TSOS.Utils.hexToDecimal(_MemoryAccessor.read(second))) +
+                (TSOS.Utils.hexToDecimal(this.acc)));
+            this.pc++;
+            this.pc++;
+        }
+        //A2
+        ldaXConstant() {
+            console.log("LDA X CONSTANT");
+            this.pc++;
+            this.xReg = _MemoryAccessor.readPC(this.pc.toString());
+            this.pc++;
+        }
+        //AE
+        ldaXMemory() {
+            console.log("LDA X MEMORY");
+            this.pc++;
+            let second = _MemoryAccessor.readPC(this.pc.toString());
+            let secondValue = _MemoryAccessor.read(second);
+            let first = _MemoryAccessor.readPC((this.pc + 1).toString());
+            this.xReg = secondValue;
+            this.pc++;
+            this.pc++;
+        }
+        //A0
+        ldaYConstant() {
+            console.log("LDA Y CONSTANT");
+            this.pc++;
+            this.yReg = _MemoryAccessor.readPC(this.pc.toString());
+            this.pc++;
+        }
+        //AC
+        ldaYMemory() {
+            console.log("LDA Y MEMORY");
+            this.pc++;
+            let second = _MemoryAccessor.readPC(this.pc.toString());
+            let secondValue = _MemoryAccessor.read(second);
+            let first = _MemoryAccessor.readPC((this.pc + 1).toString());
+            this.yReg = secondValue;
+            this.pc++;
+            this.pc++;
+        }
+        //EA
+        noOperation() {
+            this.pc++;
+        }
+        //00
+        brk() {
+            console.log(this.acc);
+            console.log("BRK");
+            _StdOut.advanceLine();
+            _StdOut.putText("Process " + _PCB.pid + " has finished");
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
+            _CPU.isExecuting = false;
+            _PCB.state = "Finished";
+        }
+        //EC
+        cpx() {
+            this.pc++;
+            let second = _MemoryAccessor.readPC(this.pc.toString());
+            let secondValue = _MemoryAccessor.read(second);
+            let first = _MemoryAccessor.readPC((this.pc + 1).toString());
+            if (secondValue == this.xReg) {
+                this.zFlag = 1;
+            }
+            else {
+                this.zFlag = 0;
+            }
+            this.pc++;
+            this.pc++;
+        }
+        //D0
+        bne() {
+            this.pc++;
+            if (this.zFlag == 0) {
+                let fastForward = TSOS.Utils.hexToDecimal(_MemoryAccessor.readPC(this.pc.toString()));
+                this.pc += fastForward;
+            }
+            else {
+                this.pc++;
+            }
+        }
+        //EE
+        inc() {
+            this.pc++;
+            let byteToInc = TSOS.Utils.hexToDecimal(_MemoryAccessor.readPC(this.pc.toString()));
+            console.log("PRE: " + byteToInc);
+            byteToInc++;
+            console.log("POST: " + byteToInc);
+            let byteAsHex = TSOS.Utils.decimalToHex(byteToInc);
+            console.log("HEX: " + byteAsHex);
+            _MemoryAccessor.write((this.pc + 1).toString(), byteAsHex);
+            this.pc++;
+        }
+        //FF
+        sys() {
+            this.pc++;
+        }
+        //Remainder
+        //these are the op codes that appeared on https://www.labouseur.com/courses/os/ under the example
+        //the above op codes are defined in the resource provided https://www.labouseur.com/commondocs/6502alan-instruction-set.pdf
+        //so far only working with the explicitly defined ones
+        opcode() {
+            console.log("OpCode " + this.ir + " not yet added.");
         }
     }
     TSOS.Cpu = Cpu;

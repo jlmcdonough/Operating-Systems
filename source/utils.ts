@@ -43,5 +43,15 @@ module TSOS {
             }
             return retVal;
         }
+
+        public static hexToDecimal(hexStr: string): number
+        {
+            return parseInt(hexStr, 16);
+        }
+
+        public static decimalToHex(dec: number): string
+        {
+            return dec.toString(16);
+        }
     }
 }

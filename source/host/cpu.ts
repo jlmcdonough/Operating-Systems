@@ -17,9 +17,9 @@ module TSOS {
 
         constructor(public pc: number = 0,
                     public ir: string = "",
-                    public acc: number = 0,
-                    public xReg: number = 0,
-                    public yReg: number = 0,
+                    public acc: string = "",
+                    public xReg: string = "",
+                    public yReg: string = "",
                     public zFlag: number = 0,
                     public isExecuting: boolean = false) {
         }
@@ -27,9 +27,9 @@ module TSOS {
         public init(): void {
             this.pc = 0;
             this.ir = "00";
-            this.acc = 0;
-            this.xReg = 0;
-            this.yReg = 0;
+            this.acc = "00";
+            this.xReg = "00";
+            this.yReg = "00";
             this.zFlag = 0;
             this.isExecuting = false;
 
@@ -40,7 +40,373 @@ module TSOS {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
+            console.log("PC: " + this.pc);
+
+            if(_CPU.isExecuting)
+            {
+                this.fetch();
+                this.decode();
+            }
+
             Control.cpuUpdateTable();
+            this.updatePcbMatchCpu();
+            Control.pcbUpdateTable();
+            Control.memoryUpdateTable();
         }
+
+        public updatePcbMatchCpu(): void
+        {
+            _PCB.pc = this.pc;
+            _PCB.ir = this.ir;
+            _PCB.acc = this.acc;
+            _PCB.xReg = this.xReg;
+            _PCB.yReg = this.yReg;
+            _PCB.zFlag = this.zFlag;
+        }
+
+        public fetch(): void
+        {
+            let command = _MemoryAccessor.readPC(this.pc.toString());
+            this.ir = command;
+            console.log("THIS IR: " + this.ir);
+        }
+
+        public decode(): void
+        {
+            switch (this.ir)
+            {
+                case "00":
+                    this.brk();
+                    break;
+                case "01":
+                    this.opcode();
+                    break;
+                case "02":
+                    this.opcode();
+                    break;
+                case "03":
+                    this.opcode();
+                    break;
+                case "05":
+                    this.opcode();
+                    break;
+                case "20":
+                    this.opcode();
+                    break;
+                case "33":
+                    this.opcode();
+                    break;
+                case "49":
+                    this.opcode();
+                    break;
+                case "65":
+                    this.opcode();
+                    break;
+                case "69":
+                    this.opcode();
+                    break;
+                case "6D":
+                    this.adc();
+                    break;
+                case "6E":
+                    this.opcode();
+                    break;
+                case "6F":
+                    this.opcode();
+                    break;
+                case "72":
+                    this.opcode();
+                    break;
+                case "74":
+                    this.opcode();
+                    break;
+                case "75":
+                    this.opcode();
+                    break;
+                case "8D":
+                    this.staMemory();
+                    break;
+                case "A0":
+                    this.ldaYConstant();
+                    break;
+                case "A2":
+                    this.ldaXConstant();
+                    break;
+                case "A4":
+                    this.opcode();
+                    break;
+                case "A9":
+                    this.ldaConstant();
+                    break;
+                case "AC":
+                    this.ldaYMemory();
+                    break;
+                case "AD":
+                    this.ldaMemory();
+                    break;
+                case "AE":
+                    this.ldaXMemory();
+                    break;
+                case "BA":
+                    this.opcode();
+                    break;
+                case "D0":
+                    this.bne();
+                    break;
+                case "EA":
+                    this.noOperation();
+                    break;
+                case "EC":
+                    this.cpx();
+                    break;
+                case "ED":
+                    this.opcode();
+                    break;
+                case "EE":
+                    this.inc();
+                    break;
+                case "EF":
+                    this.opcode();
+                    break;
+                case "F1":
+                    this.opcode();
+                    break;
+                case "F8":
+                    this.opcode();
+                    break;
+                case "FF":
+                    this.sys();
+                    break;
+                default:
+                    this.opcode();
+            }
+        }
+
+
+
+        // A9
+        // Load the accumulator with the constant that appears next
+        public ldaConstant(): void
+        {
+            console.log("LDA CONSTANT");
+
+            this.pc++
+
+            this.acc = _MemoryAccessor.read(this.pc.toString());
+
+            this.pc++;
+        }
+
+        //AD
+        //
+        public ldaMemory(): void
+        {
+            console.log("LDAMEMORY");
+
+            this.pc++;
+            console.log("SECOND PC: " + this.pc);
+            let second = _MemoryAccessor.readPC(this.pc.toString());
+            let secondValue = _MemoryAccessor.read(second);
+
+            let first = _MemoryAccessor.readPC((this.pc + 1).toString());
+
+            this.acc = secondValue;
+
+            this.pc++;
+            this.pc++;
+
+        }
+
+        //8D
+        public staMemory(): void
+        {
+            console.log("STAMEMORY");
+
+            this.pc++;
+
+            let second = _MemoryAccessor.readPC(this.pc.toString());
+            let first = _MemoryAccessor.readPC((this.pc + 1).toString());
+
+            _MemoryAccessor.write(second, this.acc);
+
+            this.pc++;
+            this.pc++;
+
+        }
+
+        //6D
+        public adc(): void
+        {
+            console.log("ADC");
+
+            this.pc++;
+
+            let second = _MemoryAccessor.readPC(this.pc.toString());
+            let first = _MemoryAccessor.readPC((this.pc + 1).toString());
+
+            this.acc = Utils.decimalToHex(
+                (Utils.hexToDecimal(_MemoryAccessor.read(second))) +
+                (Utils.hexToDecimal(this.acc)));
+
+            this.pc++;
+            this.pc++;
+
+        }
+
+        //A2
+        public ldaXConstant(): void
+        {
+            console.log("LDA X CONSTANT");
+
+            this.pc++;
+
+            this.xReg = _MemoryAccessor.readPC(this.pc.toString());
+
+            this.pc++;
+        }
+
+        //AE
+        public ldaXMemory(): void
+        {
+            console.log("LDA X MEMORY");
+
+            this.pc++;
+
+            let second = _MemoryAccessor.readPC(this.pc.toString());
+            let secondValue = _MemoryAccessor.read(second);
+
+            let first = _MemoryAccessor.readPC((this.pc + 1).toString());
+
+            this.xReg = secondValue;
+
+            this.pc++;
+            this.pc++;
+
+        }
+
+        //A0
+        public ldaYConstant(): void
+        {
+            console.log("LDA Y CONSTANT");
+
+            this.pc++
+
+            this.yReg = _MemoryAccessor.readPC(this.pc.toString());
+
+            this.pc++;
+        }
+
+        //AC
+        public ldaYMemory(): void
+        {
+            console.log("LDA Y MEMORY");
+
+            this.pc++;
+
+            let second = _MemoryAccessor.readPC(this.pc.toString());
+            let secondValue = _MemoryAccessor.read(second);
+            let first = _MemoryAccessor.readPC((this.pc + 1).toString());
+
+            this.yReg = secondValue;
+
+            this.pc++;
+            this.pc++;
+        }
+
+        //EA
+        public noOperation(): void
+        {
+            this.pc++;
+        }
+
+        //00
+        public brk(): void
+        {
+            console.log(this.acc);
+            console.log("BRK");
+
+            _StdOut.advanceLine();
+            _StdOut.putText("Process " + _PCB.pid + " has finished");
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
+
+            _CPU.isExecuting = false;
+            _PCB.state = "Finished";
+
+        }
+
+        //EC
+        public cpx(): void
+        {
+            this.pc++;
+
+            let second = _MemoryAccessor.readPC(this.pc.toString());
+            let secondValue = _MemoryAccessor.read(second);
+            let first = _MemoryAccessor.readPC((this.pc + 1).toString());
+
+            if (secondValue == this.xReg)
+            {
+                this.zFlag = 1;
+            }
+            else
+            {
+                this.zFlag = 0;
+            }
+
+            this.pc++;
+            this.pc++;
+        }
+
+        //D0
+        public bne(): void
+        {
+            this.pc++;
+
+            if (this.zFlag == 0)
+            {
+                let fastForward = Utils.hexToDecimal(_MemoryAccessor.readPC(this.pc.toString()));
+                this.pc += fastForward;
+            }
+            else
+            {
+                this.pc++;
+            }
+
+        }
+
+        //EE
+        public inc(): void
+        {
+            this.pc++;
+
+
+            let byteToInc = Utils.hexToDecimal(_MemoryAccessor.readPC(this.pc.toString()));
+            console.log("PRE: " + byteToInc);
+            byteToInc++;
+            console.log("POST: " + byteToInc);
+            let byteAsHex = Utils.decimalToHex(byteToInc);
+            console.log("HEX: " + byteAsHex);
+
+            _MemoryAccessor.write((this.pc + 1).toString(), byteAsHex);
+
+            this.pc++;
+        }
+
+        //FF
+        public sys(): void
+        {
+            this.pc++;
+            
+        }
+        
+        //Remainder
+        //these are the op codes that appeared on https://www.labouseur.com/courses/os/ under the example
+        //the above op codes are defined in the resource provided https://www.labouseur.com/commondocs/6502alan-instruction-set.pdf
+        //so far only working with the explicitly defined ones
+        public opcode(): void
+        {
+            console.log("OpCode " + this.ir + " not yet added.");
+        }
+
     }
 }

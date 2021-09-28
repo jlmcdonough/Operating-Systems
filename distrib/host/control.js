@@ -99,20 +99,19 @@ var TSOS;
         }
         static hostBtnReset_click(btn) {
             // The easiest and most thorough way to do this is to reload (not refresh) the document.
-            location.reload(true);
+            location.reload();
             // That boolean parameter is the 'forceget' flag. When it is true it causes the page to always
             // be reloaded from the server. If it is false or not specified the browser may reload the
             // page from its cache, which is not what we want.
         }
         static cpuUpdateTable() {
-            if (true) //_CPU.isExecuting
-             {
-                document.getElementById("cpuPC").innerHTML = _CPU.pc.toString(16);
+            if (_CPU.isExecuting) {
+                document.getElementById("cpuPC").innerHTML = _CPU.pc.toString();
                 document.getElementById("cpuIR").innerHTML = _CPU.ir;
-                document.getElementById("cpuAcc").innerHTML = _CPU.acc.toString(16);
-                document.getElementById("cpuX").innerHTML = _CPU.xReg.toString(16);
-                document.getElementById("cpuY").innerHTML = _CPU.yReg.toString(16);
-                document.getElementById("cpuZ").innerHTML = _CPU.zFlag.toString(16);
+                document.getElementById("cpuAcc").innerHTML = _CPU.acc;
+                document.getElementById("cpuX").innerHTML = _CPU.xReg;
+                document.getElementById("cpuY").innerHTML = _CPU.yReg;
+                document.getElementById("cpuZ").innerHTML = _CPU.zFlag.toString();
             }
             else {
                 document.getElementById("cpuPC").innerHTML = "-";
@@ -141,12 +140,12 @@ var TSOS;
             table.innerHTML = tableBody;
         }
         static pcbUpdateTable() {
-            document.getElementById("pcbPC").innerHTML = _PCB.pc.toString(16);
-            document.getElementById("pcbAcc").innerHTML = _PCB.acc.toString(16);
-            document.getElementById("pcbX").innerHTML = _PCB.xReg.toString(16);
-            document.getElementById("pcbY").innerHTML = _PCB.yReg.toString(16);
-            document.getElementById("pcbZ").innerHTML = _PCB.zFlag.toString(16);
-            document.getElementById("pcbPriority").innerHTML = _PCB.priority.toString(16);
+            document.getElementById("pcbPC").innerHTML = _PCB.pc.toString();
+            document.getElementById("pcbAcc").innerHTML = _PCB.acc;
+            document.getElementById("pcbX").innerHTML = _PCB.xReg;
+            document.getElementById("pcbY").innerHTML = _PCB.yReg;
+            document.getElementById("pcbZ").innerHTML = _PCB.zFlag.toString();
+            document.getElementById("pcbPriority").innerHTML = _PCB.priority.toString();
             document.getElementById("pcbState").innerHTML = _PCB.state;
             document.getElementById("pcbLocation").innerHTML = _PCB.location;
         }

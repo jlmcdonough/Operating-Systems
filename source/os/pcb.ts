@@ -5,9 +5,9 @@ module TSOS {
         constructor(public pid: number = 0,
                     public pc: number = 0,
                     public ir: string = "",
-                    public acc: number = 0,
-                    public xReg: number = 0,
-                    public yReg: number = 0,
+                    public acc: string = "",
+                    public xReg: string = "",
+                    public yReg: string = "",
                     public zFlag: number = 0,
                     public priority: number = 0,
                     public state: string = "",
@@ -20,9 +20,9 @@ module TSOS {
             _ProcessID++;
             this.pc = 0;
             this.ir = "00",
-            this.acc = 0;
-            this.xReg = 0;
-            this.yReg = 0;
+            this.acc = "00";
+            this.xReg = "00";
+            this.yReg = "00";
             this.zFlag = 0;
             this.priority = priorityNum;
             this.state = "Waiting";
