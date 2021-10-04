@@ -55,7 +55,6 @@ var TSOS;
                 let symbols = [")", "!", "@", "#", "$", "%", "^", "&", "*", "("];
                 if (isShifted && (keyCode >= 48) && (keyCode <= 57)) {
                     chr = symbols[keyCode - 48]; //48 is 0 and ) is shifted 0
-                    console.log("PUNC: " + chr);
                 }
                 else {
                     chr = String.fromCharCode(keyCode);
@@ -103,12 +102,10 @@ var TSOS;
             }
             //up arrow
             else if (keyCode == 38) {
-                console.log("UARROW: " + chr);
                 _KernelInputQueue.enqueue("upArrow");
             }
             //down arrow
             else if (keyCode == 40) {
-                console.log("DARROW: " + chr);
                 _KernelInputQueue.enqueue("downArrow");
             }
         }

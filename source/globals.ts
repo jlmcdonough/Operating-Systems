@@ -79,6 +79,10 @@ var _cpuDisplay: HTMLTextAreaElement;
 var _memoryDisplay: HTMLTextAreaElement;
 var _PCBdisplay: HTMLTextAreaElement;
 
+// For Single Step
+var _SingleStep: boolean = false;
+var _SingleStepStep: boolean = false;
+
 // For testing (and enrichment)...
 var Glados: any = null;  // This is the function Glados() in glados-ip*.js http://alanclasses.github.io/TSOS/test/ .
 var _GLaDOS: any = null; // If the above is linked in, this is the instantiated instance of Glados.

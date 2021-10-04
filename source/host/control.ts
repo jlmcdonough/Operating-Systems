@@ -92,6 +92,12 @@ module TSOS {
             (<HTMLButtonElement>document.getElementById("btnHaltOS")).disabled = false;
             (<HTMLButtonElement>document.getElementById("btnReset")).disabled = false;
 
+            // .. enable the Single Step buttons
+            (<HTMLButtonElement>document.getElementById("btnSingleStepOff")).disabled = true;
+            (<HTMLButtonElement>document.getElementById("btnSingleStepOn")).disabled = false;
+            (<HTMLButtonElement>document.getElementById("btnSingleStepStep")).disabled = false;
+
+
             // .. set focus on the OS console display ...
             document.getElementById("display").focus();
 
@@ -125,10 +131,36 @@ module TSOS {
 
         public static hostBtnReset_click(btn): void {
             // The easiest and most thorough way to do this is to reload (not refresh) the document.
+            console.log("RESET CLICKED");
             location.reload();
             // That boolean parameter is the 'forceget' flag. When it is true it causes the page to always
             // be reloaded from the server. If it is false or not specified the browser may reload the
             // page from its cache, which is not what we want.
+        }
+
+        public static hostBtnSSOff_click(btn): void
+        {
+            _SingleStep = false;
+
+            (<HTMLButtonElement>document.getElementById("btnSingleStepOff")).disabled = true;
+            (<HTMLButtonElement>document.getElementById("btnSingleStepOn")).disabled = false;
+            (<HTMLButtonElement>document.getElementById("btnSingleStepStep")).disabled = true;
+
+        }
+
+        public static hostBtnSSOn_click(btn): void
+        {
+            _SingleStep = true;
+
+            (<HTMLButtonElement>document.getElementById("btnSingleStepOff")).disabled = false;
+            (<HTMLButtonElement>document.getElementById("btnSingleStepOn")).disabled = true;
+            (<HTMLButtonElement>document.getElementById("btnSingleStepStep")).disabled = false;
+
+        }
+
+        public static hostBtnSSStep_click(btn): void
+        {
+            _SingleStepStep = true;
         }
 
         public static cpuUpdateTable(): void

@@ -32,7 +32,6 @@ var TSOS;
             while (_KernelInputQueue.getSize() > 0) {
                 // Get the next character from the kernel input queue.
                 var chr = _KernelInputQueue.dequeue();
-                console.log("DEQUEUED: " + chr);
                 // Check to see if it's "special" (enter or ctrl+c) or "normal" (anything else that the keyboard device driver gave us).
                 // the Enter key
                 if (chr === String.fromCharCode(13)) {
@@ -101,8 +100,6 @@ var TSOS;
                 }
                 //up arrow wants the most recent
                 else if (chr == "upArrow") {
-                    console.log("IN UP ARROW");
-                    console.log("UA: " + String.fromCharCode(38));
                     if (this.inputHistoryIndex > 0) {
                         this.inputHistoryIndex--;
                         this.deleteStr(this.buffer);
@@ -112,8 +109,6 @@ var TSOS;
                 }
                 //down arrow goes back, cannot be first to be used
                 else if (chr == "downArrow") {
-                    console.log("IN DOWN ARROW");
-                    console.log("DA: " + String.fromCharCode(40));
                     if ((this.inputHistoryIndex < this.inputHistory.length - 1) &&
                         (this.inputHistoryIndex >= -1)) {
                         this.inputHistoryIndex++;

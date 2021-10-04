@@ -73,6 +73,10 @@ var TSOS;
             // .. enable the Halt and Reset buttons ...
             document.getElementById("btnHaltOS").disabled = false;
             document.getElementById("btnReset").disabled = false;
+            // .. enable the Single Step buttons
+            document.getElementById("btnSingleStepOff").disabled = true;
+            document.getElementById("btnSingleStepOn").disabled = false;
+            document.getElementById("btnSingleStepStep").disabled = false;
             // .. set focus on the OS console display ...
             document.getElementById("display").focus();
             // ... Create and initialize the CPU (because it's part of the hardware)  ...
@@ -99,10 +103,26 @@ var TSOS;
         }
         static hostBtnReset_click(btn) {
             // The easiest and most thorough way to do this is to reload (not refresh) the document.
+            console.log("RESET CLICKED");
             location.reload();
             // That boolean parameter is the 'forceget' flag. When it is true it causes the page to always
             // be reloaded from the server. If it is false or not specified the browser may reload the
             // page from its cache, which is not what we want.
+        }
+        static hostBtnSSOff_click(btn) {
+            _SingleStep = false;
+            document.getElementById("btnSingleStepOff").disabled = true;
+            document.getElementById("btnSingleStepOn").disabled = false;
+            document.getElementById("btnSingleStepStep").disabled = true;
+        }
+        static hostBtnSSOn_click(btn) {
+            _SingleStep = true;
+            document.getElementById("btnSingleStepOff").disabled = false;
+            document.getElementById("btnSingleStepOn").disabled = true;
+            document.getElementById("btnSingleStepStep").disabled = false;
+        }
+        static hostBtnSSStep_click(btn) {
+            _SingleStepStep = true;
         }
         static cpuUpdateTable() {
             if (_CPU.isExecuting) {

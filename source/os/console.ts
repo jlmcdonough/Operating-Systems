@@ -37,7 +37,6 @@ module TSOS {
             while (_KernelInputQueue.getSize() > 0) {
                 // Get the next character from the kernel input queue.
                 var chr = _KernelInputQueue.dequeue();
-                console.log("DEQUEUED: " + chr);
                 // Check to see if it's "special" (enter or ctrl+c) or "normal" (anything else that the keyboard device driver gave us).
                 // the Enter key
                 if (chr === String.fromCharCode(13))
