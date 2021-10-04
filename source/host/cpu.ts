@@ -184,7 +184,7 @@ module TSOS {
 
 
 
-        // A9
+        //A9
         // Load the accumulator with the constant that appears next
         public ldaConstant(): void
         {
@@ -192,7 +192,9 @@ module TSOS {
 
             this.pc++
 
-            this.acc = _MemoryAccessor.read(this.pc.toString());
+            console.log("LOADING INTO ACCUM: " + this.pc.toString());
+
+            this.acc = _MemoryAccessor.readPC(this.pc.toString());
 
             this.pc++;
         }
@@ -229,6 +231,8 @@ module TSOS {
 
             _MemoryAccessor.write(second, this.acc);
 
+            console.log("STORING: " + this.acc + " AT " + second);
+
             this.pc++;
             this.pc++;
 
@@ -260,7 +264,7 @@ module TSOS {
 
             this.pc++;
 
-            this.xReg = _MemoryAccessor.readPC(this.pc.toString());
+            this.xReg = Utils.padHex(Number(_MemoryAccessor.readPC(this.pc.toString())));
 
             this.pc++;
         }
@@ -277,7 +281,7 @@ module TSOS {
 
             let first = _MemoryAccessor.readPC((this.pc + 1).toString());
 
-            this.xReg = secondValue;
+            this.xReg = Utils.padHex(Number(secondValue));
 
             this.pc++;
             this.pc++;
@@ -344,6 +348,10 @@ module TSOS {
             let secondValue = _MemoryAccessor.read(second);
             let first = _MemoryAccessor.readPC((this.pc + 1).toString());
 
+            console.log("IN CPX");
+            console.log("SV: " + secondValue);
+            console.log("X: " + this.xReg);
+
             if (secondValue == this.xReg)
             {
                 this.zFlag = 1;
@@ -361,17 +369,26 @@ module TSOS {
         public bne(): void
         {
             this.pc++;
-
+            console.log("BRANCHING");
+            console.log("z flag: " + this.zFlag);
+            console.log("true?: " + (this.zFlag == 0));
             if (this.zFlag == 0)
             {
+                console.log("PC READING: " + _MemoryAccessor.readPC(this.pc.toString()));
                 let fastForward = Utils.hexToDecimal(_MemoryAccessor.readPC(this.pc.toString()));
+                console.log("FF: " + fastForward);
                 this.pc += fastForward;
+
+                if(this.pc > 256)
+                {
+                    this.pc = this.pc % 256;
+                    this.pc++;
+                }
             }
             else
             {
                 this.pc++;
             }
-
         }
 
         //EE
@@ -379,24 +396,51 @@ module TSOS {
         {
             this.pc++;
 
+            let byteLookingFor = _MemoryAccessor.readPC(this.pc.toString());
+            let valueToInc = _MemoryAccessor.read(byteLookingFor);
+            let asDeci = Utils.hexToDecimal(valueToInc);
+            asDeci++;
+            let asHex = Utils.decimalToHex(asDeci);
+            _MemoryAccessor.write(byteLookingFor, asHex.toString());
 
-            let byteToInc = Utils.hexToDecimal(_MemoryAccessor.readPC(this.pc.toString()));
-            console.log("PRE: " + byteToInc);
-            byteToInc++;
-            console.log("POST: " + byteToInc);
-            let byteAsHex = Utils.decimalToHex(byteToInc);
-            console.log("HEX: " + byteAsHex);
-
-            _MemoryAccessor.write((this.pc + 1).toString(), byteAsHex);
-
+            this.pc++;
             this.pc++;
         }
 
         //FF
         public sys(): void
         {
+            console.log("IN SYS");
             this.pc++;
-            
+            let outputs: string[] = [];
+
+            if(Number(this.xReg) == 1)
+            {
+                _StdOut.putText(this.yReg);
+            }
+            else if(Number(this.xReg) == 2)
+            {
+                let location = Utils.hexToDecimal(this.yReg);
+                let output: string = "";
+                let byteString: string;
+                for (let i = 0; i + location < _Memory.memorySize; i++)
+                {
+                    console.log("I: " + i);
+                    console.log("L: " + location);
+                    byteString = _Memory.memoryBlock[location + i];
+                    console.log("B STR: " + byteString);
+                    if (byteString == "00")
+                    {
+                        break;
+                    } else
+                    {
+                        output += String.fromCharCode(Utils.hexToDecimal(byteString));
+                        console.log("OUT: " + output);
+                    }
+                }
+
+                _StdOut.putText(output);
+            }
         }
         
         //Remainder

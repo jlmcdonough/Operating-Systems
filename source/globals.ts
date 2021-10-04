@@ -35,6 +35,7 @@ var _MemoryAccessor: TSOS.MemoryAccessor;
 var _MemoryManager: TSOS.MemoryManager;
 var _PCB: TSOS.Pcb;
 var _ProcessID: number = 0;
+var _ReadyQueue: TSOS.Pcb[] = [];
 
 
 var _OSclock: number = 0;  // Page 23.

@@ -167,12 +167,13 @@ var TSOS;
                     this.opcode();
             }
         }
-        // A9
+        //A9
         // Load the accumulator with the constant that appears next
         ldaConstant() {
             console.log("LDA CONSTANT");
             this.pc++;
-            this.acc = _MemoryAccessor.read(this.pc.toString());
+            console.log("LOADING INTO ACCUM: " + this.pc.toString());
+            this.acc = _MemoryAccessor.readPC(this.pc.toString());
             this.pc++;
         }
         //AD
@@ -195,6 +196,7 @@ var TSOS;
             let second = _MemoryAccessor.readPC(this.pc.toString());
             let first = _MemoryAccessor.readPC((this.pc + 1).toString());
             _MemoryAccessor.write(second, this.acc);
+            console.log("STORING: " + this.acc + " AT " + second);
             this.pc++;
             this.pc++;
         }
@@ -213,7 +215,7 @@ var TSOS;
         ldaXConstant() {
             console.log("LDA X CONSTANT");
             this.pc++;
-            this.xReg = _MemoryAccessor.readPC(this.pc.toString());
+            this.xReg = TSOS.Utils.padHex(Number(_MemoryAccessor.readPC(this.pc.toString())));
             this.pc++;
         }
         //AE
@@ -223,7 +225,7 @@ var TSOS;
             let second = _MemoryAccessor.readPC(this.pc.toString());
             let secondValue = _MemoryAccessor.read(second);
             let first = _MemoryAccessor.readPC((this.pc + 1).toString());
-            this.xReg = secondValue;
+            this.xReg = TSOS.Utils.padHex(Number(secondValue));
             this.pc++;
             this.pc++;
         }
@@ -266,6 +268,9 @@ var TSOS;
             let second = _MemoryAccessor.readPC(this.pc.toString());
             let secondValue = _MemoryAccessor.read(second);
             let first = _MemoryAccessor.readPC((this.pc + 1).toString());
+            console.log("IN CPX");
+            console.log("SV: " + secondValue);
+            console.log("X: " + this.xReg);
             if (secondValue == this.xReg) {
                 this.zFlag = 1;
             }
@@ -278,9 +283,18 @@ var TSOS;
         //D0
         bne() {
             this.pc++;
+            console.log("BRANCHING");
+            console.log("z flag: " + this.zFlag);
+            console.log("true?: " + (this.zFlag == 0));
             if (this.zFlag == 0) {
+                console.log("PC READING: " + _MemoryAccessor.readPC(this.pc.toString()));
                 let fastForward = TSOS.Utils.hexToDecimal(_MemoryAccessor.readPC(this.pc.toString()));
+                console.log("FF: " + fastForward);
                 this.pc += fastForward;
+                if (this.pc > 256) {
+                    this.pc = this.pc % 256;
+                    this.pc++;
+                }
             }
             else {
                 this.pc++;
@@ -289,18 +303,42 @@ var TSOS;
         //EE
         inc() {
             this.pc++;
-            let byteToInc = TSOS.Utils.hexToDecimal(_MemoryAccessor.readPC(this.pc.toString()));
-            console.log("PRE: " + byteToInc);
-            byteToInc++;
-            console.log("POST: " + byteToInc);
-            let byteAsHex = TSOS.Utils.decimalToHex(byteToInc);
-            console.log("HEX: " + byteAsHex);
-            _MemoryAccessor.write((this.pc + 1).toString(), byteAsHex);
+            let byteLookingFor = _MemoryAccessor.readPC(this.pc.toString());
+            let valueToInc = _MemoryAccessor.read(byteLookingFor);
+            let asDeci = TSOS.Utils.hexToDecimal(valueToInc);
+            asDeci++;
+            let asHex = TSOS.Utils.decimalToHex(asDeci);
+            _MemoryAccessor.write(byteLookingFor, asHex.toString());
+            this.pc++;
             this.pc++;
         }
         //FF
         sys() {
+            console.log("IN SYS");
             this.pc++;
+            let outputs = [];
+            if (Number(this.xReg) == 1) {
+                _StdOut.putText(this.yReg);
+            }
+            else if (Number(this.xReg) == 2) {
+                let location = TSOS.Utils.hexToDecimal(this.yReg);
+                let output = "";
+                let byteString;
+                for (let i = 0; i + location < _Memory.memorySize; i++) {
+                    console.log("I: " + i);
+                    console.log("L: " + location);
+                    byteString = _Memory.memoryBlock[location + i];
+                    console.log("B STR: " + byteString);
+                    if (byteString == "00") {
+                        break;
+                    }
+                    else {
+                        output += String.fromCharCode(TSOS.Utils.hexToDecimal(byteString));
+                        console.log("OUT: " + output);
+                    }
+                }
+                _StdOut.putText(output);
+            }
         }
         //Remainder
         //these are the op codes that appeared on https://www.labouseur.com/courses/os/ under the example

@@ -48,6 +48,10 @@ var TSOS;
         static decimalToHex(dec) {
             return dec.toString(16);
         }
+        static padHex(hexNum) {
+            let withPadding = "00" + hexNum;
+            return withPadding.substr(withPadding.length - 2).toUpperCase();
+        }
     }
     TSOS.Utils = Utils;
 })(TSOS || (TSOS = {}));

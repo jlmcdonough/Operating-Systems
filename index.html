@@ -5,7 +5,7 @@
    <meta name="author"             content="Alan G. Labouseur" />
    <link rel="stylesheet" href="tsos.css" type="text/css" media="screen" />
    <title>
-      TSOS - a browser-based virtual Operating System in TypeScript
+      rhinOS - a browser-based virtual Operating System in TypeScript
    </title>
 
    <!-- Globals CONSTANTS and _Variables. Must included be first. -->
@@ -45,14 +45,34 @@
 <body onload="onDocumentLoad()">
 
 <div id="divMain" style="width:100%;">
+  <!-- <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> -->
 
-   <div id="dateTimeBar" class="dateTimeBar">
+   <!--   <div>
+      <img src="rhino.png" style="vertical-align: middle;" width="100px"/>
+      <span style="vertical-align: middle; color: white">rhinOS</span>
+   </div>-->
+
+<!--   <div>
+      <img src="rhino.png" style="vertical-align: middle;" width="100px"/>
+      <span id = "dateTime" style="vertical-align: middle; color: white"> Date -  Time -</span>
+      <span id = "status" style="vertical-align: middle; color: white"> Status - Running RhinOS Version 0.2</span>
+   </div>-->
+
+   <div>
+      <img src="rhino.png" style="vertical-align: middle; width:100px; float:left;"/>
+      <br>
+      <p id = "dateTime" style="color: #ffffff">  Date -  Time - </p>
+      <p id = "status" style="color: #ffffff"> Status - Running RhinOS Version 0.2</p>
+   </div>
+   <br>
+
+<!--   <div id="dateTimeBar" class="dateTimeBar">
       <p id = "dateTime"> Date -  Time - </p>
    </div>
 
    <div id="statusBar" class="statusBar">
       <p id = "status"> Status - Running RhinOS Version 0.2</p>
-   </div>
+   </div> -->
 
    <div id="divButtonBar" style="margin:4px;">
       <input type="button"
