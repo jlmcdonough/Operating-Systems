@@ -35,12 +35,12 @@ module TSOS {
             _Kernel.krnTrace("Key code:" + keyCode + " shifted:" + isShifted + " controlled:" + isControlled);
             var chr = "";
             // Check to see if we even want to deal with the key that was pressed.
-
             // control and c (don't care about shifted) --> done first because stopping is most important
             if (isControlled && (keyCode == 67) )
             {
                 _KernelInputQueue.enqueue("ctrl+c")
             }
+
             // letters
             else if ((keyCode >= 65) && (keyCode <= 90))
             {
@@ -56,13 +56,15 @@ module TSOS {
                 // TODO: Check for caps-lock and handle as shifted if so.
                 _KernelInputQueue.enqueue(chr);
             }
+
             //digits, space, enter
             else if (((keyCode >= 48) && (keyCode <= 57)) ||
                         (keyCode == 32)                   ||
                         (keyCode == 13))
             {
                 //symbols above numbers
-                let symbols = [")", "!", "@", "#", "$", "%", "^", "&", "*", "("]
+                let symbols = [")", "!", "@", "#", "$", "%", "^", "&", "*", "("];
+
                 if (isShifted && (keyCode >= 48) && (keyCode <=57))
                 {
                     chr = symbols[keyCode - 48] //48 is 0 and ) is shifted 0
@@ -79,6 +81,7 @@ module TSOS {
             {
                 let punctuation =        [";", "=", ",", "-", ".", "/"]
                 let shiftedPunctuation = [":", "+", "<", "_", ">", "?"]
+
                 if (isShifted && (keyCode >= 186) && (keyCode <=191))
                 {
                     chr = shiftedPunctuation[keyCode - 186] //186 is ; and ; is shifted :
@@ -120,14 +123,23 @@ module TSOS {
                 _KernelInputQueue.enqueue(chr);
             }
 
-            // delete, tab, up arrow, down arrow
-            else if (keyCode == 8  ||
-                     keyCode == 9  ||
-                     keyCode == 38 ||
-                     keyCode == 40)
+            // delete, tab
+            else if (keyCode == 8 || keyCode == 9)
             {
                 chr = String.fromCharCode(keyCode);
                 _KernelInputQueue.enqueue(chr);
+            }
+
+            //up arrow
+            else if (keyCode == 38)
+            {
+                _KernelInputQueue.enqueue("upArrow");
+            }
+
+            //down arrow
+            else if (keyCode == 40)
+            {
+                _KernelInputQueue.enqueue("downArrow");
             }
         }
     }

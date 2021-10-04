@@ -37,6 +37,7 @@ module TSOS {
             while (_KernelInputQueue.getSize() > 0) {
                 // Get the next character from the kernel input queue.
                 var chr = _KernelInputQueue.dequeue();
+                console.log("DEQUEUED: " + chr);
                 // Check to see if it's "special" (enter or ctrl+c) or "normal" (anything else that the keyboard device driver gave us).
                 // the Enter key
                 if (chr === String.fromCharCode(13))
@@ -127,7 +128,7 @@ module TSOS {
                     }
                 }
                 //up arrow wants the most recent
-                else if (chr == String.fromCharCode(38))
+                else if (chr == "upArrow")
                 {
                     if(this.inputHistoryIndex > 0)
                     {
@@ -139,7 +140,7 @@ module TSOS {
                 }
 
                 //down arrow goes back, cannot be first to be used
-                else if (chr == String.fromCharCode(40))
+                else if (chr == "downArrow")
                 {
                     if ((this.inputHistoryIndex < this.inputHistory.length - 1) &&
                        (this.inputHistoryIndex >= -1) )
