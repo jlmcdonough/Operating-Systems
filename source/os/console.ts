@@ -63,7 +63,7 @@ module TSOS {
                         _CPU.isExecuting = false;
                         Control.cpuUpdateTable();
 
-                        _PCB.state = "STOPPED";
+                        _PCB.state = "Stopped";
                         Control.pcbUpdateTable();
 
                         this.advanceLine();

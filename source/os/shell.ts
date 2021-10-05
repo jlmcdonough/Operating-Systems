@@ -523,6 +523,7 @@ module TSOS {
                     console.log("PL LENGTH: " + _ReadyQueue.length);
                     console.log("PARAM: " + Number(args[0]));
                     _CPU.isExecuting = true;
+                    _PCB.state = "Running";
                     _StdOut.putText("Running the program stored at: " + args[0]);
                 }
                 else

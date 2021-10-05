@@ -52,7 +52,7 @@ var TSOS;
                      {
                         _CPU.isExecuting = false;
                         TSOS.Control.cpuUpdateTable();
-                        _PCB.state = "STOPPED";
+                        _PCB.state = "Stopped";
                         TSOS.Control.pcbUpdateTable();
                         this.advanceLine();
                         this.putText("Running process " + _PCB.pid + " stopped by user.");

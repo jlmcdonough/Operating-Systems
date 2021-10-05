@@ -49,6 +49,12 @@ var TSOS;
         krnShutdown() {
             this.krnTrace("begin shutdown OS");
             // TODO: Check for running processes.  If there are some, alert and stop. Else...
+            if (_CPU.isExecuting) {
+                _CPU.isExecuting = false;
+                TSOS.Control.cpuUpdateTable();
+                _PCB.state = "SHUTDOWN";
+                TSOS.Control.pcbUpdateTable();
+            }
             // ... Disable the Interrupts.
             this.krnTrace("Disabling the interrupts.");
             this.krnDisableInterrupts();
