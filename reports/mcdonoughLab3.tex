@@ -1,0 +1,162 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% CMPT 424
+% Fall 2021
+% Lab Three
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from: http://www.LaTeXTemplates.com
+% Original author: % Frits Wenneker (http://www.howtotex.com)
+% License: CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+% Modified by Alan G. Labouseur  - alan@labouseur.com
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[letterpaper, 10pt,DIV=13]{scrartcl} 
+
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage[english]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm,xfrac} % Math packages
+\usepackage{sectsty} % Allows customizing section commands
+\usepackage{graphicx}
+\usepackage[lined,linesnumbered,commentsnumbered]{algorithm2e}
+\usepackage{listings}
+\usepackage{parskip}
+\usepackage{lastpage}
+\usepackage{etoolbox}
+\AtBeginEnvironment{quote}{\par\singlespacing\normalsize\normalfont}
+
+\allsectionsfont{\normalfont\scshape} % Make all section titles in default font and small caps.
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{page \thepage\ of \pageref{LastPage}} % Page numbering for right footer
+
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs.
+
+\binoppenalty=3000
+\relpenalty=3000
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+   \normalfont \normalsize 
+   \textsc{CMPT 424 - Fall 2021 - Dr. Labouseur} \\[10pt] % Header stuff.
+   \horrule{0.5pt} \\[0.25cm] 	% Top horizontal rule
+   \huge Lab Three  \\     	    % Assignment title
+   \horrule{0.5pt} \\[0.25cm] 	% Bottom horizontal rule
+}
+
+\author{Joseph McDonough \\ \normalsize Joseph.McDonough1@marist.edu}
+
+\date{\normalsize\today} 	% Today's date.
+
+\begin{document}
+\maketitle % Print the title
+
+%----------------------------------------------------------------------------------------
+%   start PROBLEM ONE
+%----------------------------------------------------------------------------------------
+\section{Problem One}
+
+Explain	the	difference	between	internal	and	external	fragmentation.
+
+\begin{quote}
+
+    Internal fragmentation can occur when the allocated memory may be larger than requested memory. The size difference is memory internal to the partition but is not used. Therefore, the smaller the block size, the lower the amount of internal fragmentation to be had. 
+
+    External fragmentation is when the total memory space exists to satisfy a request, but is not contiguous, such that memory must be broken up to fit in the available blocks.
+
+    When memory in storage is partitioned into chunks of a pre-determined amount, both internal and external fragmentation can occur. If the chunks are of size 10, then a program of only size 6 will "create" a chunk of size 4. That space is the internal fragmentation. In the same memory space, a program of size 12 cannot fully fit into the open chunk spot of size 10. To fit into memory, the program can external fragment such that it can divide itself up so that it can fit into available spaces in memory. One way would be to divide into 2 sections, of size 10 and 2, where they each can now fit into a free space in memory. 
+
+\end{quote}
+
+
+%----------------------------------------------------------------------------------------
+%   start PROBLEM TWO
+%----------------------------------------------------------------------------------------
+\section{Problem Two}
+Given	five	(5)	memory	partitions	of	100KB,	500KB,	200KB,	300KB,	and	600KB	(in	that	
+order),	how	would	optimal,	first-fit,	best-fit,	and	worst-fit	algorithms	place	processes	
+of	212KB,	417KB,	112KB,	and	426KB	(in	that	order)?
+
+\subsection{First-Fit}
+\begin{quote}
+
+    \begin{itemize}
+      \item {First free partition that 212KB fits into is 500KB}
+      \item {First free partition that 417KB fits into is 600KB}
+      \item {First free partition that 112KB fits into is 200KB}
+      \item {First free partition that 426KB fits into is none}
+      \begin{itemize}
+        \item {As a result, it must wait for either the process of size 212KB or 417KB to finish}
+        \end{itemize}
+    \end{itemize}
+
+\end{quote}
+
+
+\subsection{Best-Fit}
+\begin{quote}
+   
+    \begin{itemize}
+      \item {Best free partition that 212KB fits into is 300KB}
+      \item {Best free partition that 417KB fits into is 500KB}
+      \item {Best free partition that 112KB fits into is 200KB}
+      \item {Best free partition that 426KB fits into is 600KB}
+    \end{itemize}
+    
+\end{quote}
+
+\subsection{Worst-Fit}
+\begin{quote}
+
+    \begin{itemize}
+      \item {Worst fitting free partition that 212KB fits into is 600KB}
+      \item {Worst fitting free partition that 417KB fits into is 500KB}
+      \item {Worst fitting free partition that 112KB fits into is 388KB}
+        \begin{itemize}
+            \item {The 388KB partition is a result of the leftover space created by the 212KB process in the 600KB partition}
+        \end{itemize}
+      \item {Worst fitting free partition that 426KB fits into is none}
+      \begin{itemize}
+        \item {As a result, it must wait for either the process of size 417KB or both the 212KB and 112KB processes to finish}
+        \end{itemize}
+    \end{itemize}    
+
+\end{quote}
+
+\subsection{Optimal}
+\begin{quote}
+   
+    Given the exact situation outlined above, the optimal solution is the best-fit algorithm. This is mainly due to the fact that all four processes can be given a space in memory initially and do not have to wait for programs to finish before they can be admitted. 
+    
+\end{quote}
+
+\end{document}
