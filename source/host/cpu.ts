@@ -206,16 +206,10 @@ module TSOS {
             console.log("LDAMEMORY");
 
             this.pc++;
-            console.log("SECOND PC: " + this.pc);
-            let second = _MemoryAccessor.readPC(this.pc.toString());
-            console.log("SECOND: " + second);
-            console.log("SECOND DECI: " + Utils.hexToDecimal(second));
 
-            let secondValue = _MemoryAccessor.readPC(Utils.hexToDecimal(second).toString());
+            let param = this.littleEndian(this.pc);
 
-            let first = _MemoryAccessor.readPC((this.pc + 1).toString());
-
-            this.acc = secondValue;
+            this.acc = _MemoryAccessor.readPC(Utils.hexToDecimal(param).toString());
 
             this.pc++;
             this.pc++;
@@ -229,12 +223,11 @@ module TSOS {
 
             this.pc++;
 
-            let second = _MemoryAccessor.readPC(this.pc.toString());
-            let first = _MemoryAccessor.readPC((this.pc + 1).toString());
+            let param = this.littleEndian(this.pc);
 
-            _MemoryAccessor.write(second, this.acc);
+            _MemoryAccessor.write(param, this.acc);
 
-            console.log("STORING: " + this.acc + " AT " + second);
+            console.log("STORING: " + this.acc + " AT " + param);
 
             this.pc++;
             this.pc++;
@@ -248,13 +241,14 @@ module TSOS {
 
             this.pc++;
 
-            let second = _MemoryAccessor.readPC(this.pc.toString());
-            let first = _MemoryAccessor.readPC((this.pc + 1).toString());
+            let param = this.littleEndian(this.pc);
 
             let p2 = (Utils.hexToDecimal(this.acc));
 
-            let p15 = Utils.hexToDecimal(_MemoryAccessor.readPC(Utils.hexToDecimal(second).toString()));
+            let p15 = Utils.hexToDecimal(_MemoryAccessor.readPC(Utils.hexToDecimal(param).toString()));
 
+            console.log("ACCUM: " + p2);
+            console.log("P15: " + p15);
 
             this.acc = Utils.padHex(Utils.decimalToHex(p15 + p2));
 
@@ -282,13 +276,9 @@ module TSOS {
 
             this.pc++;
 
-            let second = _MemoryAccessor.readPC(this.pc.toString());
-            console.log("SECOND: " + second);
-            console.log("SECOND DECI: " + Utils.hexToDecimal(second));
+            let param = this.littleEndian(this.pc);
 
-            let secondValue = _MemoryAccessor.readPC(Utils.hexToDecimal(second).toString());
-
-            let first = _MemoryAccessor.readPC((this.pc + 1).toString());
+            let secondValue = _MemoryAccessor.readPC(Utils.hexToDecimal(param).toString());
 
             this.xReg = Utils.padHex(secondValue);
 
@@ -316,13 +306,9 @@ module TSOS {
 
             this.pc++;
 
-            let second = _MemoryAccessor.readPC(this.pc.toString());
-            console.log("SECOND: " + second);
-            console.log("SECOND DECI: " + Utils.hexToDecimal(second));
+            let param = this.littleEndian(this.pc);
 
-            let secondValue = _MemoryAccessor.readPC(Utils.hexToDecimal(second).toString());
-
-            let first = _MemoryAccessor.readPC((this.pc + 1).toString());
+            let secondValue = _MemoryAccessor.readPC(Utils.hexToDecimal(param).toString());
 
             this.yReg = secondValue;
 
@@ -357,13 +343,10 @@ module TSOS {
         {
             this.pc++;
 
-            let second = _MemoryAccessor.readPC(this.pc.toString());
-            console.log("SECOND: " + second);
-            console.log("SECOND DECI: " + Utils.hexToDecimal(second));
+            let param = this.littleEndian(this.pc);
 
-            let secondValue = _MemoryAccessor.readPC(Utils.hexToDecimal(second).toString());
+            let secondValue = _MemoryAccessor.readPC(Utils.hexToDecimal(param).toString());
 
-            let first = _MemoryAccessor.readPC((this.pc + 1).toString());
 
             console.log("IN CPX");
             console.log("SV: " + secondValue);
@@ -467,6 +450,16 @@ module TSOS {
         public opcode(): void
         {
             console.log("OpCode " + this.ir + " not yet added.");
+        }
+
+        public littleEndian(programCounter: number) : string
+        {
+            let second = _MemoryAccessor.readPC(programCounter.toString());
+            let first = _MemoryAccessor.readPC((programCounter + 1).toString());
+
+            let result = first + second;
+
+            return result;
         }
 
     }
