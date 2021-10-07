@@ -36,7 +36,6 @@ var TSOS;
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
-            console.log("PC: " + this.pc);
             if (_CPU.isExecuting) {
                 this.fetch();
                 this.decode();
@@ -55,9 +54,7 @@ var TSOS;
             _PCB.zFlag = this.zFlag;
         }
         fetch() {
-            let command = _MemoryAccessor.read(this.pc);
-            this.ir = command;
-            console.log("THIS IR: " + this.ir);
+            this.ir = _MemoryAccessor.read(this.pc);
         }
         decode() {
             switch (this.ir) {
@@ -167,10 +164,10 @@ var TSOS;
                     this.opcode();
             }
         }
+        // EXECUTE
         //A9
         // Load the accumulator with the constant that appears next
         ldaConstant() {
-            console.log("LDA CONSTANT");
             this.pc++;
             this.acc = _MemoryAccessor.read(this.pc);
             this.pc++;
@@ -178,7 +175,6 @@ var TSOS;
         //AD
         //
         ldaMemory() {
-            console.log("LDAMEMORY");
             this.pc++;
             this.acc = _MemoryAccessor.read(TSOS.Utils.hexToDecimal(this.littleEndian(this.pc)));
             this.pc++;
@@ -186,15 +182,13 @@ var TSOS;
         }
         //8D
         staMemory() {
-            console.log("STAMEMORY");
             this.pc++;
-            _MemoryAccessor.write(this.littleEndian(this.pc), this.acc);
+            _MemoryAccessor.write(this.littleEndian(this.pc), TSOS.Utils.padHex(this.acc));
             this.pc++;
             this.pc++;
         }
         //6D
         adc() {
-            console.log("ADC");
             this.pc++;
             let param = this.littleEndian(this.pc);
             let accumulator = (TSOS.Utils.hexToDecimal(this.acc));
@@ -205,14 +199,12 @@ var TSOS;
         }
         //A2
         ldaXConstant() {
-            console.log("LDA X CONSTANT");
             this.pc++;
             this.xReg = TSOS.Utils.padHex(_MemoryAccessor.read(this.pc));
             this.pc++;
         }
         //AE
         ldaXMemory() {
-            console.log("LDA X MEMORY");
             this.pc++;
             let secondValue = _MemoryAccessor.read(TSOS.Utils.hexToDecimal(this.littleEndian(this.pc)));
             this.xReg = TSOS.Utils.padHex(secondValue);
@@ -221,14 +213,12 @@ var TSOS;
         }
         //A0
         ldaYConstant() {
-            console.log("LDA Y CONSTANT");
             this.pc++;
             this.yReg = _MemoryAccessor.read(this.pc);
             this.pc++;
         }
         //AC
         ldaYMemory() {
-            console.log("LDA Y MEMORY");
             this.pc++;
             let secondValue = _MemoryAccessor.read(TSOS.Utils.hexToDecimal(this.littleEndian(this.pc)));
             this.yReg = secondValue;
@@ -241,8 +231,6 @@ var TSOS;
         }
         //00
         brk() {
-            console.log(this.acc);
-            console.log("BRK");
             _StdOut.advanceLine();
             _StdOut.putText("Process " + _PCB.pid + " has finished");
             _StdOut.advanceLine();
@@ -292,9 +280,7 @@ var TSOS;
         }
         //FF
         sys() {
-            console.log("IN SYS");
             this.pc++;
-            let outputs = [];
             if (Number(this.xReg) == 1) {
                 _StdOut.putText(this.yReg);
             }
@@ -303,16 +289,12 @@ var TSOS;
                 let output = "";
                 let byteString;
                 for (let i = 0; i + location < _Memory.memorySize; i++) {
-                    console.log("I: " + i);
-                    console.log("L: " + location);
                     byteString = _Memory.memoryBlock[location + i];
-                    console.log("B STR: " + byteString);
                     if (byteString == "00") {
                         break;
                     }
                     else {
                         output += String.fromCharCode(TSOS.Utils.hexToDecimal(byteString));
-                        console.log("OUT: " + output);
                     }
                 }
                 _StdOut.putText(output);

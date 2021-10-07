@@ -66,6 +66,8 @@ module TSOS {
                         _PCB.state = "Stopped";
                         Control.pcbUpdateTable();
 
+                        _CPU.pc = 0;
+
                         this.advanceLine();
                         this.putText("Running process " + _PCB.pid + " stopped by user.");
                         this.advanceLine();

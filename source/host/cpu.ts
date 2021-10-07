@@ -40,7 +40,6 @@ module TSOS {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
-            console.log("PC: " + this.pc);
 
             if(_CPU.isExecuting)
             {
@@ -66,9 +65,7 @@ module TSOS {
 
         public fetch(): void
         {
-            let command = _MemoryAccessor.read(this.pc);
-            this.ir = command;
-            console.log("THIS IR: " + this.ir);
+            this.ir = _MemoryAccessor.read(this.pc);
         }
 
         public decode(): void
@@ -183,13 +180,12 @@ module TSOS {
         }
 
 
+        // EXECUTE
 
         //A9
         // Load the accumulator with the constant that appears next
         public ldaConstant(): void
         {
-            console.log("LDA CONSTANT");
-
             this.pc++
 
             this.acc = _MemoryAccessor.read(this.pc);
@@ -201,8 +197,6 @@ module TSOS {
         //
         public ldaMemory(): void
         {
-            console.log("LDAMEMORY");
-
             this.pc++;
 
             this.acc = _MemoryAccessor.read(
@@ -216,8 +210,6 @@ module TSOS {
         //8D
         public staMemory(): void
         {
-            console.log("STAMEMORY");
-
             this.pc++;
 
             _MemoryAccessor.write(this.littleEndian(this.pc), Utils.padHex(this.acc));
@@ -230,8 +222,6 @@ module TSOS {
         //6D
         public adc(): void
         {
-            console.log("ADC");
-
             this.pc++;
 
             let param = this.littleEndian(this.pc);
@@ -249,8 +239,6 @@ module TSOS {
         //A2
         public ldaXConstant(): void
         {
-            console.log("LDA X CONSTANT");
-
             this.pc++;
 
             this.xReg = Utils.padHex(_MemoryAccessor.read(this.pc));
@@ -261,8 +249,6 @@ module TSOS {
         //AE
         public ldaXMemory(): void
         {
-            console.log("LDA X MEMORY");
-
             this.pc++;
 
             let secondValue = _MemoryAccessor.read(
@@ -278,8 +264,6 @@ module TSOS {
         //A0
         public ldaYConstant(): void
         {
-            console.log("LDA Y CONSTANT");
-
             this.pc++
 
             this.yReg = _MemoryAccessor.read(this.pc);
@@ -290,8 +274,6 @@ module TSOS {
         //AC
         public ldaYMemory(): void
         {
-            console.log("LDA Y MEMORY");
-
             this.pc++;
 
             let secondValue = _MemoryAccessor.read(
@@ -312,9 +294,6 @@ module TSOS {
         //00
         public brk(): void
         {
-            console.log(this.acc);
-            console.log("BRK");
-
             _StdOut.advanceLine();
             _StdOut.putText("Process " + _PCB.pid + " has finished");
             _StdOut.advanceLine();
@@ -388,9 +367,7 @@ module TSOS {
         //FF
         public sys(): void
         {
-            console.log("IN SYS");
             this.pc++;
-            let outputs: string[] = [];
 
             if(Number(this.xReg) == 1)
             {
@@ -403,17 +380,15 @@ module TSOS {
                 let byteString: string;
                 for (let i = 0; i + location < _Memory.memorySize; i++)
                 {
-                    console.log("I: " + i);
-                    console.log("L: " + location);
                     byteString = _Memory.memoryBlock[location + i];
-                    console.log("B STR: " + byteString);
+
                     if (byteString == "00")
                     {
                         break;
-                    } else
+                    }
+                    else
                     {
                         output += String.fromCharCode(Utils.hexToDecimal(byteString));
-                        console.log("OUT: " + output);
                     }
                 }
 
