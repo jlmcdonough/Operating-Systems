@@ -222,7 +222,6 @@ module TSOS {
                     var arg = Utils.trim(tempList[i]);
                     if (arg != "") {
                         retVal.args[retVal.args.length] = tempList[i];
-                        console.log("argsLength: " + retVal.args.length);
                     }
                 }
             }
@@ -486,7 +485,6 @@ module TSOS {
                         {
                             _PCB = new Pcb();
                             _PCB.init(priority);
-                            console.log(trimmedInput);
                             _ReadyQueue[_PCB.pid] = _PCB;
 
                             _Memory.loadMemory(trimmedInput);
@@ -520,8 +518,6 @@ module TSOS {
             {
                 if( (_ReadyQueue.length - 1) >= Number(args[0]) )
                 {
-                    console.log("PL LENGTH: " + _ReadyQueue.length);
-                    console.log("PARAM: " + Number(args[0]));
                     _CPU.isExecuting = true;
                     _PCB.state = "Running";
                     _StdOut.putText("Running the program stored at: " + args[0]);

@@ -161,7 +161,6 @@ var TSOS;
                     var arg = TSOS.Utils.trim(tempList[i]);
                     if (arg != "") {
                         retVal.args[retVal.args.length] = tempList[i];
-                        console.log("argsLength: " + retVal.args.length);
                     }
                 }
             }
@@ -401,7 +400,6 @@ var TSOS;
                         else {
                             _PCB = new TSOS.Pcb();
                             _PCB.init(priority);
-                            console.log(trimmedInput);
                             _ReadyQueue[_PCB.pid] = _PCB;
                             _Memory.loadMemory(trimmedInput);
                             TSOS.Control.memoryUpdateTable();
@@ -426,8 +424,6 @@ var TSOS;
             //ensures that the run is a number
             if (!isNaN(Number(args[0]))) {
                 if ((_ReadyQueue.length - 1) >= Number(args[0])) {
-                    console.log("PL LENGTH: " + _ReadyQueue.length);
-                    console.log("PARAM: " + Number(args[0]));
                     _CPU.isExecuting = true;
                     _PCB.state = "Running";
                     _StdOut.putText("Running the program stored at: " + args[0]);

@@ -86,9 +86,6 @@ module TSOS {
                that it has to look for interrupts and process them if it finds any.                          
             */
 
-            //console.log("SS: " + _SingleStep);
-            //console.log("STEP: " + _SingleStepStep);
-
             // Check for an interrupt, if there are any. Page 560
             if (_KernelInterruptQueue.getSize() > 0) {
                 // Process the first interrupt on the interrupt queue.
