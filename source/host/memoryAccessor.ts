@@ -10,7 +10,7 @@ module TSOS {
             _Memory.override(atAddress, newData);
         }
 
-        public readPC(atAddress: string) : string
+        public readPC(atAddress: number) : string
         {
             return _Memory.getAtPC(atAddress);
         }

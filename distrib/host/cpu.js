@@ -55,7 +55,7 @@ var TSOS;
             _PCB.zFlag = this.zFlag;
         }
         fetch() {
-            let command = _MemoryAccessor.readPC(this.pc.toString());
+            let command = _MemoryAccessor.readPC(this.pc);
             this.ir = command;
             console.log("THIS IR: " + this.ir);
         }
@@ -172,8 +172,7 @@ var TSOS;
         ldaConstant() {
             console.log("LDA CONSTANT");
             this.pc++;
-            console.log("LOADING INTO ACCUM: " + this.pc.toString());
-            this.acc = _MemoryAccessor.readPC(this.pc.toString());
+            this.acc = _MemoryAccessor.readPC(this.pc);
             this.pc++;
         }
         //AD
@@ -182,7 +181,7 @@ var TSOS;
             console.log("LDAMEMORY");
             this.pc++;
             let param = this.littleEndian(this.pc);
-            this.acc = _MemoryAccessor.readPC(TSOS.Utils.hexToDecimal(param).toString());
+            this.acc = _MemoryAccessor.readPC(TSOS.Utils.hexToDecimal(param));
             this.pc++;
             this.pc++;
         }
@@ -200,11 +199,9 @@ var TSOS;
         adc() {
             console.log("ADC");
             this.pc++;
-            // let second = _MemoryAccessor.readPC(this.pc.toString());
-            // let first = _MemoryAccessor.readPC((this.pc + 1).toString());
             let param = this.littleEndian(this.pc);
             let p2 = (TSOS.Utils.hexToDecimal(this.acc));
-            let p15 = TSOS.Utils.hexToDecimal(_MemoryAccessor.readPC(TSOS.Utils.hexToDecimal(param).toString()));
+            let p15 = TSOS.Utils.hexToDecimal(_MemoryAccessor.readPC(TSOS.Utils.hexToDecimal(param)));
             console.log("ACCUM: " + p2);
             console.log("P15: " + p15);
             this.acc = TSOS.Utils.padHex(TSOS.Utils.decimalToHex(p15 + p2));
@@ -215,7 +212,7 @@ var TSOS;
         ldaXConstant() {
             console.log("LDA X CONSTANT");
             this.pc++;
-            this.xReg = TSOS.Utils.padHex(_MemoryAccessor.readPC(this.pc.toString()));
+            this.xReg = TSOS.Utils.padHex(_MemoryAccessor.readPC(this.pc));
             this.pc++;
         }
         //AE
@@ -223,7 +220,7 @@ var TSOS;
             console.log("LDA X MEMORY");
             this.pc++;
             let param = this.littleEndian(this.pc);
-            let secondValue = _MemoryAccessor.readPC(TSOS.Utils.hexToDecimal(param).toString());
+            let secondValue = _MemoryAccessor.readPC(TSOS.Utils.hexToDecimal(param));
             this.xReg = TSOS.Utils.padHex(secondValue);
             this.pc++;
             this.pc++;
@@ -232,7 +229,7 @@ var TSOS;
         ldaYConstant() {
             console.log("LDA Y CONSTANT");
             this.pc++;
-            this.yReg = _MemoryAccessor.readPC(this.pc.toString());
+            this.yReg = _MemoryAccessor.readPC(this.pc);
             this.pc++;
         }
         //AC
@@ -240,7 +237,7 @@ var TSOS;
             console.log("LDA Y MEMORY");
             this.pc++;
             let param = this.littleEndian(this.pc);
-            let secondValue = _MemoryAccessor.readPC(TSOS.Utils.hexToDecimal(param).toString());
+            let secondValue = _MemoryAccessor.readPC(TSOS.Utils.hexToDecimal(param));
             this.yReg = secondValue;
             this.pc++;
             this.pc++;
@@ -264,7 +261,7 @@ var TSOS;
         cpx() {
             this.pc++;
             let param = this.littleEndian(this.pc);
-            let secondValue = _MemoryAccessor.readPC(TSOS.Utils.hexToDecimal(param).toString());
+            let secondValue = _MemoryAccessor.readPC(TSOS.Utils.hexToDecimal(param));
             console.log("IN CPX");
             console.log("SV: " + secondValue);
             console.log("X: " + this.xReg);
@@ -282,16 +279,18 @@ var TSOS;
             this.pc++;
             console.log("BRANCHING");
             console.log("z flag: " + this.zFlag);
-            console.log("true?: " + (this.zFlag == 0));
             if (this.zFlag == 0) {
-                console.log("PC READING: " + _MemoryAccessor.readPC(this.pc.toString()));
-                let fastForward = TSOS.Utils.hexToDecimal(_MemoryAccessor.readPC(this.pc.toString()));
-                console.log("FF: " + fastForward);
+                console.log("PC READING: " + _MemoryAccessor.readPC(this.pc));
+                let fastForward = TSOS.Utils.hexToDecimal(_MemoryAccessor.readPC(this.pc));
+                console.log("to jump: " + fastForward);
                 this.pc += fastForward;
+                console.log("THE PC: " + this.pc);
                 if (this.pc > 256) {
                     this.pc = this.pc % 256;
-                    this.pc++;
+                    //this.pc++;
+                    console.log("NEW PC: " + this.pc);
                 }
+                this.pc += 1;
             }
             else {
                 this.pc++;
@@ -300,8 +299,8 @@ var TSOS;
         //EE
         inc() {
             this.pc++;
-            let byteLookingFor = _MemoryAccessor.readPC(this.pc.toString());
-            let valueToInc = _MemoryAccessor.readPC(TSOS.Utils.hexToDecimal(byteLookingFor).toString());
+            let byteLookingFor = _MemoryAccessor.readPC(this.pc);
+            let valueToInc = _MemoryAccessor.readPC(TSOS.Utils.hexToDecimal(byteLookingFor));
             let asDeci = TSOS.Utils.hexToDecimal(valueToInc);
             asDeci++;
             let asHex = TSOS.Utils.decimalToHex(asDeci);
@@ -345,8 +344,8 @@ var TSOS;
             console.log("OpCode " + this.ir + " not yet added.");
         }
         littleEndian(programCounter) {
-            let second = _MemoryAccessor.readPC(programCounter.toString());
-            let first = _MemoryAccessor.readPC((programCounter + 1).toString());
+            let second = _MemoryAccessor.readPC(programCounter);
+            let first = _MemoryAccessor.readPC((programCounter + 1));
             let result = first + second;
             return result;
         }
