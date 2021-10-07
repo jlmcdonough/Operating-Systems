@@ -25,7 +25,7 @@ module TSOS {
             this.yReg = "00";
             this.zFlag = 0;
             this.priority = priorityNum;
-            this.state = "Waiting";
+            this.state = "Resident";
             this.location = "Memory";
 
             Control.pcbUpdateTable();

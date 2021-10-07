@@ -183,7 +183,9 @@ var TSOS;
             this.pc++;
             console.log("SECOND PC: " + this.pc);
             let second = _MemoryAccessor.readPC(this.pc.toString());
-            let secondValue = _MemoryAccessor.read(second);
+            console.log("SECOND: " + second);
+            console.log("SECOND DECI: " + TSOS.Utils.hexToDecimal(second));
+            let secondValue = _MemoryAccessor.readPC(TSOS.Utils.hexToDecimal(second).toString());
             let first = _MemoryAccessor.readPC((this.pc + 1).toString());
             this.acc = secondValue;
             this.pc++;
@@ -206,8 +208,9 @@ var TSOS;
             this.pc++;
             let second = _MemoryAccessor.readPC(this.pc.toString());
             let first = _MemoryAccessor.readPC((this.pc + 1).toString());
-            this.acc = TSOS.Utils.decimalToHex((TSOS.Utils.hexToDecimal(_MemoryAccessor.read(second))) +
-                (TSOS.Utils.hexToDecimal(this.acc)));
+            let p2 = (TSOS.Utils.hexToDecimal(this.acc));
+            let p15 = TSOS.Utils.hexToDecimal(_MemoryAccessor.readPC(TSOS.Utils.hexToDecimal(second).toString()));
+            this.acc = TSOS.Utils.padHex(TSOS.Utils.decimalToHex(p15 + p2));
             this.pc++;
             this.pc++;
         }
@@ -215,7 +218,7 @@ var TSOS;
         ldaXConstant() {
             console.log("LDA X CONSTANT");
             this.pc++;
-            this.xReg = TSOS.Utils.padHex(Number(_MemoryAccessor.readPC(this.pc.toString())));
+            this.xReg = TSOS.Utils.padHex(_MemoryAccessor.readPC(this.pc.toString()));
             this.pc++;
         }
         //AE
@@ -223,9 +226,11 @@ var TSOS;
             console.log("LDA X MEMORY");
             this.pc++;
             let second = _MemoryAccessor.readPC(this.pc.toString());
-            let secondValue = _MemoryAccessor.read(second);
+            console.log("SECOND: " + second);
+            console.log("SECOND DECI: " + TSOS.Utils.hexToDecimal(second));
+            let secondValue = _MemoryAccessor.readPC(TSOS.Utils.hexToDecimal(second).toString());
             let first = _MemoryAccessor.readPC((this.pc + 1).toString());
-            this.xReg = TSOS.Utils.padHex(Number(secondValue));
+            this.xReg = TSOS.Utils.padHex(secondValue);
             this.pc++;
             this.pc++;
         }
@@ -241,7 +246,9 @@ var TSOS;
             console.log("LDA Y MEMORY");
             this.pc++;
             let second = _MemoryAccessor.readPC(this.pc.toString());
-            let secondValue = _MemoryAccessor.read(second);
+            console.log("SECOND: " + second);
+            console.log("SECOND DECI: " + TSOS.Utils.hexToDecimal(second));
+            let secondValue = _MemoryAccessor.readPC(TSOS.Utils.hexToDecimal(second).toString());
             let first = _MemoryAccessor.readPC((this.pc + 1).toString());
             this.yReg = secondValue;
             this.pc++;
@@ -266,7 +273,9 @@ var TSOS;
         cpx() {
             this.pc++;
             let second = _MemoryAccessor.readPC(this.pc.toString());
-            let secondValue = _MemoryAccessor.read(second);
+            console.log("SECOND: " + second);
+            console.log("SECOND DECI: " + TSOS.Utils.hexToDecimal(second));
+            let secondValue = _MemoryAccessor.readPC(TSOS.Utils.hexToDecimal(second).toString());
             let first = _MemoryAccessor.readPC((this.pc + 1).toString());
             console.log("IN CPX");
             console.log("SV: " + secondValue);
@@ -304,7 +313,7 @@ var TSOS;
         inc() {
             this.pc++;
             let byteLookingFor = _MemoryAccessor.readPC(this.pc.toString());
-            let valueToInc = _MemoryAccessor.read(byteLookingFor);
+            let valueToInc = _MemoryAccessor.readPC(TSOS.Utils.hexToDecimal(byteLookingFor).toString());
             let asDeci = TSOS.Utils.hexToDecimal(valueToInc);
             asDeci++;
             let asHex = TSOS.Utils.decimalToHex(asDeci);

@@ -54,7 +54,7 @@ module TSOS {
             return dec.toString(16);
         }
 
-        public static padHex(hexNum: number)
+        public static padHex(hexNum: string)
         {
             let withPadding = "00" + hexNum;
             return withPadding.substr(withPadding.length - 2).toUpperCase();

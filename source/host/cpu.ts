@@ -208,7 +208,10 @@ module TSOS {
             this.pc++;
             console.log("SECOND PC: " + this.pc);
             let second = _MemoryAccessor.readPC(this.pc.toString());
-            let secondValue = _MemoryAccessor.read(second);
+            console.log("SECOND: " + second);
+            console.log("SECOND DECI: " + Utils.hexToDecimal(second));
+
+            let secondValue = _MemoryAccessor.readPC(Utils.hexToDecimal(second).toString());
 
             let first = _MemoryAccessor.readPC((this.pc + 1).toString());
 
@@ -248,9 +251,12 @@ module TSOS {
             let second = _MemoryAccessor.readPC(this.pc.toString());
             let first = _MemoryAccessor.readPC((this.pc + 1).toString());
 
-            this.acc = Utils.decimalToHex(
-                (Utils.hexToDecimal(_MemoryAccessor.read(second))) +
-                (Utils.hexToDecimal(this.acc)));
+            let p2 = (Utils.hexToDecimal(this.acc));
+
+            let p15 = Utils.hexToDecimal(_MemoryAccessor.readPC(Utils.hexToDecimal(second).toString()));
+
+
+            this.acc = Utils.padHex(Utils.decimalToHex(p15 + p2));
 
             this.pc++;
             this.pc++;
@@ -264,7 +270,7 @@ module TSOS {
 
             this.pc++;
 
-            this.xReg = Utils.padHex(Number(_MemoryAccessor.readPC(this.pc.toString())));
+            this.xReg = Utils.padHex(_MemoryAccessor.readPC(this.pc.toString()));
 
             this.pc++;
         }
@@ -277,11 +283,14 @@ module TSOS {
             this.pc++;
 
             let second = _MemoryAccessor.readPC(this.pc.toString());
-            let secondValue = _MemoryAccessor.read(second);
+            console.log("SECOND: " + second);
+            console.log("SECOND DECI: " + Utils.hexToDecimal(second));
+
+            let secondValue = _MemoryAccessor.readPC(Utils.hexToDecimal(second).toString());
 
             let first = _MemoryAccessor.readPC((this.pc + 1).toString());
 
-            this.xReg = Utils.padHex(Number(secondValue));
+            this.xReg = Utils.padHex(secondValue);
 
             this.pc++;
             this.pc++;
@@ -308,7 +317,11 @@ module TSOS {
             this.pc++;
 
             let second = _MemoryAccessor.readPC(this.pc.toString());
-            let secondValue = _MemoryAccessor.read(second);
+            console.log("SECOND: " + second);
+            console.log("SECOND DECI: " + Utils.hexToDecimal(second));
+
+            let secondValue = _MemoryAccessor.readPC(Utils.hexToDecimal(second).toString());
+
             let first = _MemoryAccessor.readPC((this.pc + 1).toString());
 
             this.yReg = secondValue;
@@ -345,7 +358,11 @@ module TSOS {
             this.pc++;
 
             let second = _MemoryAccessor.readPC(this.pc.toString());
-            let secondValue = _MemoryAccessor.read(second);
+            console.log("SECOND: " + second);
+            console.log("SECOND DECI: " + Utils.hexToDecimal(second));
+
+            let secondValue = _MemoryAccessor.readPC(Utils.hexToDecimal(second).toString());
+
             let first = _MemoryAccessor.readPC((this.pc + 1).toString());
 
             console.log("IN CPX");
@@ -397,7 +414,7 @@ module TSOS {
             this.pc++;
 
             let byteLookingFor = _MemoryAccessor.readPC(this.pc.toString());
-            let valueToInc = _MemoryAccessor.read(byteLookingFor);
+            let valueToInc = _MemoryAccessor.readPC(Utils.hexToDecimal(byteLookingFor).toString());
             let asDeci = Utils.hexToDecimal(valueToInc);
             asDeci++;
             let asHex = Utils.decimalToHex(asDeci);

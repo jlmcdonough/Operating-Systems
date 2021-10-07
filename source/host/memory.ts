@@ -26,11 +26,6 @@ module TSOS {
             }
         }
 
-        public getAtAddress(atAddress: string): string
-        {
-            return this.memoryBlock[Utils.hexToDecimal(atAddress)];
-        }
-
         public getAtPC(atPC: string): string
         {
             return this.memoryBlock[atPC];

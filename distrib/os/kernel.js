@@ -52,7 +52,7 @@ var TSOS;
             if (_CPU.isExecuting) {
                 _CPU.isExecuting = false;
                 TSOS.Control.cpuUpdateTable();
-                _PCB.state = "SHUTDOWN";
+                _PCB.state = "Shutdown";
                 TSOS.Control.pcbUpdateTable();
             }
             // ... Disable the Interrupts.
