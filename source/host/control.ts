@@ -92,10 +92,12 @@ module TSOS {
             (<HTMLButtonElement>document.getElementById("btnHaltOS")).disabled = false;
             (<HTMLButtonElement>document.getElementById("btnReset")).disabled = false;
 
-            // .. enable the Single Step buttons
-            (<HTMLButtonElement>document.getElementById("btnSingleStepOff")).disabled = true;
+            // .. enable the Single Step On buttons
             (<HTMLButtonElement>document.getElementById("btnSingleStepOn")).disabled = false;
             (<HTMLButtonElement>document.getElementById("btnSingleStepStep")).disabled = false;
+
+            // .. disable the Single Step Off button
+            (<HTMLButtonElement>document.getElementById("btnSingleStepOff")).disabled = true;
 
 
             // .. set focus on the OS console display ...

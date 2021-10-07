@@ -121,3 +121,7 @@ tr:nth-child(even) {
 ::-webkit-scrollbar-track {
   display: none;
 }
+
+input:disabled {
+  background: #ccc;
+}
