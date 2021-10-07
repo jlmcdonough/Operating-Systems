@@ -26,7 +26,7 @@ module TSOS {
             }
         }
 
-        public getAtPC(atPC: number): string
+        public getAt(atPC: number): string
         {
             return this.memoryBlock[atPC];
         }

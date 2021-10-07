@@ -66,7 +66,7 @@ module TSOS {
 
         public fetch(): void
         {
-            let command = _MemoryAccessor.readPC(this.pc);
+            let command = _MemoryAccessor.read(this.pc);
             this.ir = command;
             console.log("THIS IR: " + this.ir);
         }
@@ -192,7 +192,7 @@ module TSOS {
 
             this.pc++
 
-            this.acc = _MemoryAccessor.readPC(this.pc);
+            this.acc = _MemoryAccessor.read(this.pc);
 
             this.pc++;
         }
@@ -205,9 +205,8 @@ module TSOS {
 
             this.pc++;
 
-            let param = this.littleEndian(this.pc);
-
-            this.acc = _MemoryAccessor.readPC(Utils.hexToDecimal(param));
+            this.acc = _MemoryAccessor.read(
+                Utils.hexToDecimal(this.littleEndian(this.pc)));
 
             this.pc++;
             this.pc++;
@@ -221,11 +220,7 @@ module TSOS {
 
             this.pc++;
 
-            let param = this.littleEndian(this.pc);
-
-            _MemoryAccessor.write(param, this.acc);
-
-            console.log("STORING: " + this.acc + " AT " + param);
+            _MemoryAccessor.write(this.littleEndian(this.pc), Utils.padHex(this.acc));
 
             this.pc++;
             this.pc++;
@@ -241,18 +236,14 @@ module TSOS {
 
             let param = this.littleEndian(this.pc);
 
-            let p2 = (Utils.hexToDecimal(this.acc));
+            let accumulator = (Utils.hexToDecimal(this.acc));
 
-            let p15 = Utils.hexToDecimal(_MemoryAccessor.readPC(Utils.hexToDecimal(param)));
+            let storage = Utils.hexToDecimal(_MemoryAccessor.read(Utils.hexToDecimal(param)));
 
-            console.log("ACCUM: " + p2);
-            console.log("P15: " + p15);
-
-            this.acc = Utils.padHex(Utils.decimalToHex(p15 + p2));
+            this.acc = Utils.padHex(Utils.decimalToHex(storage + accumulator));
 
             this.pc++;
             this.pc++;
-
         }
 
         //A2
@@ -262,7 +253,7 @@ module TSOS {
 
             this.pc++;
 
-            this.xReg = Utils.padHex(_MemoryAccessor.readPC(this.pc));
+            this.xReg = Utils.padHex(_MemoryAccessor.read(this.pc));
 
             this.pc++;
         }
@@ -274,9 +265,8 @@ module TSOS {
 
             this.pc++;
 
-            let param = this.littleEndian(this.pc);
-
-            let secondValue = _MemoryAccessor.readPC(Utils.hexToDecimal(param));
+            let secondValue = _MemoryAccessor.read(
+                Utils.hexToDecimal(this.littleEndian(this.pc)));
 
             this.xReg = Utils.padHex(secondValue);
 
@@ -292,7 +282,7 @@ module TSOS {
 
             this.pc++
 
-            this.yReg = _MemoryAccessor.readPC(this.pc);
+            this.yReg = _MemoryAccessor.read(this.pc);
 
             this.pc++;
         }
@@ -304,9 +294,8 @@ module TSOS {
 
             this.pc++;
 
-            let param = this.littleEndian(this.pc);
-
-            let secondValue = _MemoryAccessor.readPC(Utils.hexToDecimal(param));
+            let secondValue = _MemoryAccessor.read(
+                Utils.hexToDecimal(this.littleEndian(this.pc)));
 
             this.yReg = secondValue;
 
@@ -341,14 +330,8 @@ module TSOS {
         {
             this.pc++;
 
-            let param = this.littleEndian(this.pc);
-
-            let secondValue = _MemoryAccessor.readPC(Utils.hexToDecimal(param));
-
-
-            console.log("IN CPX");
-            console.log("SV: " + secondValue);
-            console.log("X: " + this.xReg);
+            let secondValue = _MemoryAccessor.read(
+                Utils.hexToDecimal(this.littleEndian(this.pc)));
 
             if (secondValue == this.xReg)
             {
@@ -367,19 +350,15 @@ module TSOS {
         public bne(): void
         {
             this.pc++;
-            console.log("BRANCHING");
-            console.log("z flag: " + this.zFlag);
+
             if (this.zFlag == 0)
             {
-                console.log("PC READING: " + _MemoryAccessor.readPC(this.pc));
-                let fastForward = Utils.hexToDecimal(_MemoryAccessor.readPC(this.pc));
-                console.log("to jump: " + fastForward);
+                let fastForward = Utils.hexToDecimal(_MemoryAccessor.read(this.pc));
                 this.pc += fastForward;
-                console.log("THE PC: " + this.pc);
+
                 if(this.pc > 256)
                 {
                     this.pc = this.pc % 256;
-                    console.log("NEW PC: " + this.pc);
                 }
 
                 this.pc += 1;
@@ -395,12 +374,12 @@ module TSOS {
         {
             this.pc++;
 
-            let byteLookingFor = _MemoryAccessor.readPC(this.pc);
-            let valueToInc = _MemoryAccessor.readPC(Utils.hexToDecimal(byteLookingFor));
+            let byteLookingFor = _MemoryAccessor.read(this.pc);
+            let valueToInc = _MemoryAccessor.read(Utils.hexToDecimal(byteLookingFor));
             let asDeci = Utils.hexToDecimal(valueToInc);
             asDeci++;
             let asHex = Utils.decimalToHex(asDeci);
-            _MemoryAccessor.write(byteLookingFor, asHex.toString());
+            _MemoryAccessor.write(byteLookingFor, Utils.padHex(asHex.toString()));
 
             this.pc++;
             this.pc++;
@@ -453,9 +432,8 @@ module TSOS {
 
         public littleEndian(programCounter: number) : string
         {
-            let second = _MemoryAccessor.readPC(programCounter);
-            let first = _MemoryAccessor.readPC((programCounter + 1));
-
+            let second = _MemoryAccessor.read(programCounter);
+            let first = _MemoryAccessor.read((programCounter + 1));
             let result = first + second;
 
             return result;
