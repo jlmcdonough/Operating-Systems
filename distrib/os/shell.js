@@ -347,15 +347,6 @@ var TSOS;
         shellLoad(args) {
             //do not want the input to either be blank or just spaces
             if (_taProgramInput.value.length > 0 && _taProgramInput.value.trim()) {
-                let priority;
-                //ensures that the load priority is a number
-                if (isNaN(Number(args[0]))) {
-                    _StdOut.putText("It is recommended to include a priority after the load command. Priority was given 99 to this instance.");
-                    priority = 99;
-                }
-                else {
-                    priority = Number(args[0]);
-                }
                 let validHex = true;
                 let trimmedInput = _taProgramInput.value.replace(/(\r\n|\n|\r)/gm, "").replace(/\s/g, ""); //removes whitespace
                 trimmedInput = trimmedInput.replace(/.{1,2}(?=(.{2})+$)/g, '$& '); //add space after every second character
@@ -400,14 +391,25 @@ var TSOS;
                     }
                 });
                 if (validHex) {
-                    if (_ReadyQueue.length > 0) {
+                    if (_ReadyQueue.length > 0 && ((_ReadyQueue[0].state === "Ready") || (_ReadyQueue[0].state === "Resident"))) {
                         _StdOut.putText("There is already a program stored in memory. Cannot load another");
                     }
                     else {
+                        let priority;
+                        //ensures that the load priority is a number
+                        if (isNaN(Number(args[0]))) {
+                            _StdOut.putText("It is recommended to include a priority after the load command. Priority was given 99 to this instance.");
+                            priority = 99;
+                        }
+                        else {
+                            priority = Number(args[0]);
+                        }
                         _PCB = new TSOS.Pcb();
                         _PCB.init(priority);
-                        _ReadyQueue[_PCB.pid] = _PCB;
-                        _Memory.loadMemory(trimmedInput);
+                        _ReadyQueue[0] = _PCB;
+                        console.log(_ReadyQueue[0].pc);
+                        _MemoryAccessor.nukeMemory();
+                        _MemoryAccessor.loadMemory(trimmedInput);
                         TSOS.Control.memoryUpdateTable();
                         _StdOut.putText("Successfully loaded user program with priority " + priority);
                         _StdOut.advanceLine();
@@ -427,6 +429,7 @@ var TSOS;
             if (!isNaN(Number(args[0]))) {
                 if ((_ReadyQueue.length - 1) >= Number(args[0])) {
                     _CPU.isExecuting = true;
+                    _CPU.updateCpuMatchPcb();
                     _PCB.state = "Running";
                     _StdOut.putText("Running the program stored at: " + args[0]);
                 }

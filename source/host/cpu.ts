@@ -43,6 +43,8 @@ module TSOS {
 
             if(_CPU.isExecuting)
             {
+                console.log("IS EXECUTING");
+                console.log("PC: " + _CPU.pc);
                 this.fetch();
                 this.decode();
             }
@@ -61,6 +63,16 @@ module TSOS {
             _PCB.xReg = this.xReg;
             _PCB.yReg = this.yReg;
             _PCB.zFlag = this.zFlag;
+        }
+
+        public updateCpuMatchPcb(): void
+        {
+            this.pc = _PCB.pc;
+            this.ir = _PCB.ir;
+            this.acc = _PCB.acc;
+            this.xReg = _PCB.xReg;
+            this.yReg = _PCB.yReg;
+            this.zFlag = _PCB.zFlag;
         }
 
         public fetch(): void

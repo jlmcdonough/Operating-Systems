@@ -11,12 +11,6 @@ var TSOS;
             }
             TSOS.Control.memoryUpdateTable();
         }
-        loadMemory(userEntry) {
-            let userArr = userEntry.split(" ");
-            for (let i = 0; i < userArr.length; i++) {
-                this.memoryBlock[i] = userArr[i];
-            }
-        }
         getAt(atPC) {
             return this.memoryBlock[atPC];
         }

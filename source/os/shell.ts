@@ -423,91 +423,93 @@ module TSOS {
             //do not want the input to either be blank or just spaces
             if (_taProgramInput.value.length > 0 && _taProgramInput.value.trim())
             {
-                let priority;
-                //ensures that the load priority is a number
-                if (isNaN(Number(args[0])))
+                let validHex = true;
+                let trimmedInput = _taProgramInput.value.replace(/(\r\n|\n|\r)/gm,"").replace(/\s/g,"");  //removes whitespace
+
+                trimmedInput = trimmedInput.replace(/.{1,2}(?=(.{2})+$)/g, '$& ');  //add space after every second character
+
+                let charArray = Array.from(trimmedInput.toLocaleUpperCase());
+
+                charArray.forEach(function (char)
                 {
-                    _StdOut.putText("It is recommended to include a priority after the load command. Priority was given 99 to this instance.");
-                    priority = 99;
-                }
-                else
+                    switch (char){      //checks to make sure only hex digits were entered
+                        case " ":
+                            break;
+                        case "0":
+                            break;
+                        case "1":
+                            break;
+                        case "2":
+                            break;
+                        case "3":
+                            break;
+                        case "4":
+                            break;
+                        case "5":
+                            break;
+                        case "6":
+                            break;
+                        case "7":
+                            break;
+                        case "8":
+                            break;
+                        case "9":
+                            break;
+                        case "A":
+                            break;
+                        case "B":
+                            break;
+                        case "C":
+                            break;
+                        case "D":
+                            break;
+                        case "E":
+                            break;
+                        case "F":
+                            break;
+
+                        default: validHex = false;
+                    }
+                });
+
+                if(validHex)
                 {
-                    priority = Number(args[0]);
-                }
-                    let validHex = true;
-                    let trimmedInput = _taProgramInput.value.replace(/(\r\n|\n|\r)/gm,"").replace(/\s/g,"");  //removes whitespace
-
-                    trimmedInput = trimmedInput.replace(/.{1,2}(?=(.{2})+$)/g, '$& ');  //add space after every second character
-
-                    let charArray = Array.from(trimmedInput.toLocaleUpperCase());
-
-                    charArray.forEach(function (char)
+                    if(_ReadyQueue.length > 0 && ( (_ReadyQueue[0].state === "Ready") || (_ReadyQueue[0].state === "Resident") ) )
                     {
-                        switch (char){      //checks to make sure only hex digits were entered
-                            case " ":
-                                break;
-                            case "0":
-                                break;
-                            case "1":
-                                break;
-                            case "2":
-                                break;
-                            case "3":
-                                break;
-                            case "4":
-                                break;
-                            case "5":
-                                break;
-                            case "6":
-                                break;
-                            case "7":
-                                break;
-                            case "8":
-                                break;
-                            case "9":
-                                break;
-                            case "A":
-                                break;
-                            case "B":
-                                break;
-                            case "C":
-                                break;
-                            case "D":
-                                break;
-                            case "E":
-                                break;
-                            case "F":
-                                break;
-
-                            default: validHex = false;
-                        }
-                    });
-
-                    if(validHex)
-                    {
-                        if(_ReadyQueue.length > 0)
-                        {
-                            _StdOut.putText("There is already a program stored in memory. Cannot load another");
-                        }
-                        else
-                        {
-                            _PCB = new Pcb();
-                            _PCB.init(priority);
-                            _ReadyQueue[_PCB.pid] = _PCB;
-
-                            _Memory.loadMemory(trimmedInput);
-                            Control.memoryUpdateTable();
-
-                            _StdOut.putText("Successfully loaded user program with priority " + priority);
-                            _StdOut.advanceLine();
-                            _StdOut.putText("Your program is stored at process ID " + (_ProcessID - 1) );
-                        }
+                        _StdOut.putText("There is already a program stored in memory. Cannot load another");
                     }
                     else
                     {
-                        _StdOut.putText("Please enter valid hex in the program input area.");
+                        let priority;
+                        //ensures that the load priority is a number
+                        if (isNaN(Number(args[0])))
+                        {
+                            _StdOut.putText("It is recommended to include a priority after the load command. Priority was given 99 to this instance.");
+                            priority = 99;
+                        }
+                        else
+                        {
+                            priority = Number(args[0]);
+                        }
+
+                        _PCB = new Pcb();
+                        _PCB.init(priority);
+                        _ReadyQueue[0] = _PCB;
+                        console.log(_ReadyQueue[0].pc);
+                        _MemoryAccessor.nukeMemory();
+                        _MemoryAccessor.loadMemory(trimmedInput);
+                        Control.memoryUpdateTable();
+
+                        _StdOut.putText("Successfully loaded user program with priority " + priority);
+                        _StdOut.advanceLine();
+                        _StdOut.putText("Your program is stored at process ID " + (_ProcessID - 1) );
                     }
                 }
+                else
+                {
+                    _StdOut.putText("Please enter valid hex in the program input area.");
+                }
+            }
             else
             {
                 _StdOut.putText("Populate the user program input area with code before running the load command");
@@ -522,6 +524,7 @@ module TSOS {
                 if( (_ReadyQueue.length - 1) >= Number(args[0]) )
                 {
                     _CPU.isExecuting = true;
+                    _CPU.updateCpuMatchPcb();
                     _PCB.state = "Running";
                     _StdOut.putText("Running the program stored at: " + args[0]);
                 }

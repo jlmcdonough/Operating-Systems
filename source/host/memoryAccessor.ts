@@ -14,5 +14,21 @@ module TSOS {
         {
             return _Memory.getAt(atAddress);
         }
+
+        public loadMemory(userEntry: string): void
+        {
+            let userArr = userEntry.split(" ");
+
+            for(let i = 0; i < userArr.length; i++)
+            {
+                _Memory.memoryBlock[i] = userArr[i];
+            }
+        }
+
+        public nukeMemory(): void
+        {
+            _Memory.init();
+        }
+
     }
 }
