@@ -25,7 +25,7 @@ module TSOS {
 
             this.pid = _ProcessID;
             _ProcessID++;
-            this.pc = 0 + startingPoint;
+            this.pc = 0;
             this.ir = "00",
             this.acc = "00";
             this.xReg = "00";

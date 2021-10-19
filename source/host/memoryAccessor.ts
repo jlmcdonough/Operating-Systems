@@ -5,14 +5,14 @@ module TSOS {
         constructor() {
         }
 
-        public write(atAddress: string, newData: string) : void
+        public write(segment: number, atAddress: string, newData: string) : void
         {
-            _Memory.override(atAddress, newData);
+            _Memory.override(_MemoryManager.segmentOffset(segment, Utils.hexToDecimal(atAddress)), newData);
         }
 
-        public read(atAddress: number) : string
+        public read(segment: number, atAddress: number) : string
         {
-            return _Memory.getAt(atAddress);
+            return _Memory.getAt(_MemoryManager.segmentOffset(segment, atAddress) );
         }
 
         public loadMemory(userEntry: string, segmentNumber: number): void

@@ -77,7 +77,8 @@ module TSOS {
 
         public fetch(): void
         {
-            this.ir = _MemoryAccessor.read(this.pc);
+            this.ir = _MemoryAccessor.read(_PCB.segment,
+                this.pc);
         }
 
         public decode(): void
@@ -200,7 +201,8 @@ module TSOS {
         {
             this.pc++
 
-            this.acc = _MemoryAccessor.read(this.pc);
+            this.acc = _MemoryAccessor.read(_PCB.segment,
+                this.pc);
 
             this.pc++;
         }
@@ -211,7 +213,7 @@ module TSOS {
         {
             this.pc++;
 
-            this.acc = _MemoryAccessor.read(
+            this.acc = _MemoryAccessor.read(_PCB.segment,
                 Utils.hexToDecimal(this.littleEndian(this.pc)));
 
             this.pc++;
@@ -224,7 +226,8 @@ module TSOS {
         {
             this.pc++;
 
-            _MemoryAccessor.write(this.littleEndian(this.pc), Utils.padHex(this.acc));
+            _MemoryAccessor.write(_PCB.segment,
+                this.littleEndian(this.pc), Utils.padHex(this.acc));
 
             this.pc++;
             this.pc++;
@@ -240,7 +243,8 @@ module TSOS {
 
             let accumulator = (Utils.hexToDecimal(this.acc));
 
-            let storage = Utils.hexToDecimal(_MemoryAccessor.read(Utils.hexToDecimal(param)));
+            let storage = Utils.hexToDecimal(_MemoryAccessor.read(_PCB.segment,
+                Utils.hexToDecimal(param)));
 
             this.acc = Utils.padHex(Utils.decimalToHex(storage + accumulator));
 
@@ -253,7 +257,8 @@ module TSOS {
         {
             this.pc++;
 
-            this.xReg = Utils.padHex(_MemoryAccessor.read(this.pc));
+            this.xReg = Utils.padHex(_MemoryAccessor.read(_PCB.segment,
+                this.pc));
 
             this.pc++;
         }
@@ -263,7 +268,7 @@ module TSOS {
         {
             this.pc++;
 
-            let secondValue = _MemoryAccessor.read(
+            let secondValue = _MemoryAccessor.read(_PCB.segment,
                 Utils.hexToDecimal(this.littleEndian(this.pc)));
 
             this.xReg = Utils.padHex(secondValue);
@@ -278,7 +283,8 @@ module TSOS {
         {
             this.pc++
 
-            this.yReg = _MemoryAccessor.read(this.pc);
+            this.yReg = _MemoryAccessor.read(_PCB.segment,
+                this.pc);
 
             this.pc++;
         }
@@ -288,7 +294,7 @@ module TSOS {
         {
             this.pc++;
 
-            let secondValue = _MemoryAccessor.read(
+            let secondValue = _MemoryAccessor.read(_PCB.segment,
                 Utils.hexToDecimal(this.littleEndian(this.pc)));
 
             this.yReg = secondValue;
@@ -321,7 +327,7 @@ module TSOS {
         {
             this.pc++;
 
-            let secondValue = _MemoryAccessor.read(
+            let secondValue = _MemoryAccessor.read(_PCB.segment,
                 Utils.hexToDecimal(this.littleEndian(this.pc)));
 
             if (secondValue == this.xReg)
@@ -344,7 +350,8 @@ module TSOS {
 
             if (this.zFlag == 0)
             {
-                let fastForward = Utils.hexToDecimal(_MemoryAccessor.read(this.pc));
+                let fastForward = Utils.hexToDecimal(_MemoryAccessor.read(_PCB.segment,
+                    this.pc));
                 this.pc += fastForward;
 
                 if(this.pc > 256)
@@ -365,12 +372,15 @@ module TSOS {
         {
             this.pc++;
 
-            let byteLookingFor = _MemoryAccessor.read(this.pc);
-            let valueToInc = _MemoryAccessor.read(Utils.hexToDecimal(byteLookingFor));
+            let byteLookingFor = _MemoryAccessor.read(_PCB.segment,
+                this.pc);
+            let valueToInc = _MemoryAccessor.read(_PCB.segment,
+                Utils.hexToDecimal(byteLookingFor));
             let asDeci = Utils.hexToDecimal(valueToInc);
             asDeci++;
             let asHex = Utils.decimalToHex(asDeci);
-            _MemoryAccessor.write(byteLookingFor, Utils.padHex(asHex.toString()));
+            _MemoryAccessor.write(_PCB.segment,
+                byteLookingFor, Utils.padHex(asHex.toString()));
 
             this.pc++;
             this.pc++;
@@ -419,8 +429,10 @@ module TSOS {
 
         public littleEndian(programCounter: number) : string
         {
-            let second = _MemoryAccessor.read(programCounter);
-            let first = _MemoryAccessor.read((programCounter + 1));
+            let second = _MemoryAccessor.read(_PCB.segment,
+                programCounter);
+            let first = _MemoryAccessor.read(_PCB.segment,
+                (programCounter + 1));
             let result = first + second;
 
             return result;

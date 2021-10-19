@@ -3,11 +3,11 @@ var TSOS;
     class MemoryAccessor {
         constructor() {
         }
-        write(atAddress, newData) {
-            _Memory.override(atAddress, newData);
+        write(segment, atAddress, newData) {
+            _Memory.override(_MemoryManager.segmentOffset(segment, TSOS.Utils.hexToDecimal(atAddress)), newData);
         }
-        read(atAddress) {
-            return _Memory.getAt(atAddress);
+        read(segment, atAddress) {
+            return _Memory.getAt(_MemoryManager.segmentOffset(segment, atAddress));
         }
         loadMemory(userEntry, segmentNumber) {
             let userArr = userEntry.split(" ");

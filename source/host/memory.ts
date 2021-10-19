@@ -27,12 +27,14 @@ module TSOS {
 
         public getAt(atPC: number): string
         {
+            console.log("IN getAT: ");
+            console.log("ATPC: " + atPC);
             return this.memoryBlock[atPC];
         }
 
-        public override(atAddress: string, newData: string): void
+        public override(atAddress: number, newData: string): void
         {
-            this.memoryBlock[Utils.hexToDecimal(atAddress)] = newData;
+            this.memoryBlock[atAddress] = newData;
         }
 
     }

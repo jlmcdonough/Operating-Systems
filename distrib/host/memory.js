@@ -18,10 +18,12 @@ var TSOS;
             TSOS.Control.memoryUpdateTable();
         }
         getAt(atPC) {
+            console.log("IN getAT: ");
+            console.log("ATPC: " + atPC);
             return this.memoryBlock[atPC];
         }
         override(atAddress, newData) {
-            this.memoryBlock[TSOS.Utils.hexToDecimal(atAddress)] = newData;
+            this.memoryBlock[atAddress] = newData;
         }
     }
     TSOS.Memory = Memory;

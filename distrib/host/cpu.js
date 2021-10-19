@@ -64,7 +64,7 @@ var TSOS;
             this.zFlag = _PCB.zFlag;
         }
         fetch() {
-            this.ir = _MemoryAccessor.read(this.pc);
+            this.ir = _MemoryAccessor.read(_PCB.segment, this.pc);
         }
         decode() {
             switch (this.ir) {
@@ -179,21 +179,21 @@ var TSOS;
         // Load the accumulator with the constant that appears next
         ldaConstant() {
             this.pc++;
-            this.acc = _MemoryAccessor.read(this.pc);
+            this.acc = _MemoryAccessor.read(_PCB.segment, this.pc);
             this.pc++;
         }
         //AD
         //
         ldaMemory() {
             this.pc++;
-            this.acc = _MemoryAccessor.read(TSOS.Utils.hexToDecimal(this.littleEndian(this.pc)));
+            this.acc = _MemoryAccessor.read(_PCB.segment, TSOS.Utils.hexToDecimal(this.littleEndian(this.pc)));
             this.pc++;
             this.pc++;
         }
         //8D
         staMemory() {
             this.pc++;
-            _MemoryAccessor.write(this.littleEndian(this.pc), TSOS.Utils.padHex(this.acc));
+            _MemoryAccessor.write(_PCB.segment, this.littleEndian(this.pc), TSOS.Utils.padHex(this.acc));
             this.pc++;
             this.pc++;
         }
@@ -202,7 +202,7 @@ var TSOS;
             this.pc++;
             let param = this.littleEndian(this.pc);
             let accumulator = (TSOS.Utils.hexToDecimal(this.acc));
-            let storage = TSOS.Utils.hexToDecimal(_MemoryAccessor.read(TSOS.Utils.hexToDecimal(param)));
+            let storage = TSOS.Utils.hexToDecimal(_MemoryAccessor.read(_PCB.segment, TSOS.Utils.hexToDecimal(param)));
             this.acc = TSOS.Utils.padHex(TSOS.Utils.decimalToHex(storage + accumulator));
             this.pc++;
             this.pc++;
@@ -210,13 +210,13 @@ var TSOS;
         //A2
         ldaXConstant() {
             this.pc++;
-            this.xReg = TSOS.Utils.padHex(_MemoryAccessor.read(this.pc));
+            this.xReg = TSOS.Utils.padHex(_MemoryAccessor.read(_PCB.segment, this.pc));
             this.pc++;
         }
         //AE
         ldaXMemory() {
             this.pc++;
-            let secondValue = _MemoryAccessor.read(TSOS.Utils.hexToDecimal(this.littleEndian(this.pc)));
+            let secondValue = _MemoryAccessor.read(_PCB.segment, TSOS.Utils.hexToDecimal(this.littleEndian(this.pc)));
             this.xReg = TSOS.Utils.padHex(secondValue);
             this.pc++;
             this.pc++;
@@ -224,13 +224,13 @@ var TSOS;
         //A0
         ldaYConstant() {
             this.pc++;
-            this.yReg = _MemoryAccessor.read(this.pc);
+            this.yReg = _MemoryAccessor.read(_PCB.segment, this.pc);
             this.pc++;
         }
         //AC
         ldaYMemory() {
             this.pc++;
-            let secondValue = _MemoryAccessor.read(TSOS.Utils.hexToDecimal(this.littleEndian(this.pc)));
+            let secondValue = _MemoryAccessor.read(_PCB.segment, TSOS.Utils.hexToDecimal(this.littleEndian(this.pc)));
             this.yReg = secondValue;
             this.pc++;
             this.pc++;
@@ -251,7 +251,7 @@ var TSOS;
         //EC
         cpx() {
             this.pc++;
-            let secondValue = _MemoryAccessor.read(TSOS.Utils.hexToDecimal(this.littleEndian(this.pc)));
+            let secondValue = _MemoryAccessor.read(_PCB.segment, TSOS.Utils.hexToDecimal(this.littleEndian(this.pc)));
             if (secondValue == this.xReg) {
                 this.zFlag = 1;
             }
@@ -265,7 +265,7 @@ var TSOS;
         bne() {
             this.pc++;
             if (this.zFlag == 0) {
-                let fastForward = TSOS.Utils.hexToDecimal(_MemoryAccessor.read(this.pc));
+                let fastForward = TSOS.Utils.hexToDecimal(_MemoryAccessor.read(_PCB.segment, this.pc));
                 this.pc += fastForward;
                 if (this.pc > 256) {
                     this.pc = this.pc % 256;
@@ -279,12 +279,12 @@ var TSOS;
         //EE
         inc() {
             this.pc++;
-            let byteLookingFor = _MemoryAccessor.read(this.pc);
-            let valueToInc = _MemoryAccessor.read(TSOS.Utils.hexToDecimal(byteLookingFor));
+            let byteLookingFor = _MemoryAccessor.read(_PCB.segment, this.pc);
+            let valueToInc = _MemoryAccessor.read(_PCB.segment, TSOS.Utils.hexToDecimal(byteLookingFor));
             let asDeci = TSOS.Utils.hexToDecimal(valueToInc);
             asDeci++;
             let asHex = TSOS.Utils.decimalToHex(asDeci);
-            _MemoryAccessor.write(byteLookingFor, TSOS.Utils.padHex(asHex.toString()));
+            _MemoryAccessor.write(_PCB.segment, byteLookingFor, TSOS.Utils.padHex(asHex.toString()));
             this.pc++;
             this.pc++;
         }
@@ -318,8 +318,8 @@ var TSOS;
             console.log("OpCode " + this.ir + " not yet added.");
         }
         littleEndian(programCounter) {
-            let second = _MemoryAccessor.read(programCounter);
-            let first = _MemoryAccessor.read((programCounter + 1));
+            let second = _MemoryAccessor.read(_PCB.segment, programCounter);
+            let first = _MemoryAccessor.read(_PCB.segment, (programCounter + 1));
             let result = first + second;
             return result;
         }
