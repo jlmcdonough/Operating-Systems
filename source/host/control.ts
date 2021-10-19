@@ -92,12 +92,27 @@ module TSOS {
             (<HTMLButtonElement>document.getElementById("btnHaltOS")).disabled = false;
             (<HTMLButtonElement>document.getElementById("btnReset")).disabled = false;
 
+            // .. enable the Single Step On buttons
+            (<HTMLButtonElement>document.getElementById("btnSingleStepOn")).disabled = false;
+            (<HTMLButtonElement>document.getElementById("btnSingleStepStep")).disabled = false;
+
+            // .. disable the Single Step Off button
+            (<HTMLButtonElement>document.getElementById("btnSingleStepOff")).disabled = true;
+
+
             // .. set focus on the OS console display ...
             document.getElementById("display").focus();
 
             // ... Create and initialize the CPU (because it's part of the hardware)  ...
             _CPU = new Cpu();  // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.
             _CPU.init();       //       There's more to do, like dealing with scheduling and such, but this would be a start. Pretty cool.
+
+            _Memory = new Memory();
+            _Memory.init();
+
+            _MemoryAccessor = new MemoryAccessor();
+
+            _PCB = new Pcb();
 
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
@@ -122,6 +137,91 @@ module TSOS {
             // That boolean parameter is the 'forceget' flag. When it is true it causes the page to always
             // be reloaded from the server. If it is false or not specified the browser may reload the
             // page from its cache, which is not what we want.
+        }
+
+        public static hostBtnSSOff_click(btn): void
+        {
+            _SingleStep = false;
+
+            (<HTMLButtonElement>document.getElementById("btnSingleStepOff")).disabled = true;
+            (<HTMLButtonElement>document.getElementById("btnSingleStepOn")).disabled = false;
+            (<HTMLButtonElement>document.getElementById("btnSingleStepStep")).disabled = true;
+
+        }
+
+        public static hostBtnSSOn_click(btn): void
+        {
+            _SingleStep = true;
+
+            (<HTMLButtonElement>document.getElementById("btnSingleStepOff")).disabled = false;
+            (<HTMLButtonElement>document.getElementById("btnSingleStepOn")).disabled = true;
+            (<HTMLButtonElement>document.getElementById("btnSingleStepStep")).disabled = false;
+
+        }
+
+        public static hostBtnSSStep_click(btn): void
+        {
+            _SingleStepStep = true;
+        }
+
+        public static cpuUpdateTable(): void
+        {
+            if (_CPU.isExecuting)
+            {
+                document.getElementById("cpuPC").innerHTML = _CPU.pc.toString();
+                document.getElementById("cpuIR").innerHTML = _CPU.ir;
+                document.getElementById("cpuAcc").innerHTML = _CPU.acc;
+                document.getElementById("cpuX").innerHTML = _CPU.xReg;
+                document.getElementById("cpuY").innerHTML = _CPU.yReg;
+                document.getElementById("cpuZ").innerHTML = _CPU.zFlag.toString();
+            }
+            else
+            {
+                document.getElementById("cpuPC").innerHTML = "-";
+                document.getElementById("cpuIR").innerHTML = "-";
+                document.getElementById("cpuAcc").innerHTML = "-";
+                document.getElementById("cpuX").innerHTML = "-";
+                document.getElementById("cpuY").innerHTML = "-";
+                document.getElementById("cpuZ").innerHTML = "-";
+            }
+        }
+
+        public static memoryUpdateTable(): void
+        {
+            let table = document.getElementById("memoryTable");
+            let tableBody = "<tbody>";
+
+            for (let i = 0; i < _Memory.memorySize; i += 0x8)
+            {
+                let stringHex = i.toString(16);
+                let longHex = "000" + stringHex;        //0 would be 000, so assume worst case, best case is FFF and then the 000 would be removed anyways
+                let normalizedHex = longHex.substring(longHex.length - 3); //take last 3 elements
+                let row = "0x" + normalizedHex;
+
+                tableBody += `<tr><td>${row}</td>`;
+
+                for (let j = i; j < i + 8; j += 0x1)
+                {
+                    tableBody +=`<td>${_Memory.memoryBlock[j]}</td>`;
+                }
+
+                tableBody += "</tr>";
+            }
+
+            tableBody += "</tbody>";
+            table.innerHTML = tableBody;
+        }
+
+        public static pcbUpdateTable(): void
+        {
+            document.getElementById("pcbPC").innerHTML = _PCB.pc.toString();
+            document.getElementById("pcbAcc").innerHTML = _PCB.acc;
+            document.getElementById("pcbX").innerHTML = _PCB.xReg;
+            document.getElementById("pcbY").innerHTML = _PCB.yReg;
+            document.getElementById("pcbZ").innerHTML = _PCB.zFlag.toString();
+            document.getElementById("pcbPriority").innerHTML = _PCB.priority.toString();
+            document.getElementById("pcbState").innerHTML = _PCB.state;
+            document.getElementById("pcbLocation").innerHTML = _PCB.location;
         }
     }
 }

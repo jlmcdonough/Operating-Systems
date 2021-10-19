@@ -32,6 +32,8 @@ var TSOS;
             //
             // ... more?
             //
+            // Memory
+            _MemoryManager = new TSOS.MemoryManager();
             // Enable the OS Interrupts.  (Not the CPU clock interrupt, as that is done in the hardware sim.)
             this.krnTrace("Enabling the interrupts.");
             this.krnEnableInterrupts();
@@ -47,6 +49,12 @@ var TSOS;
         krnShutdown() {
             this.krnTrace("begin shutdown OS");
             // TODO: Check for running processes.  If there are some, alert and stop. Else...
+            if (_CPU.isExecuting) {
+                _CPU.isExecuting = false;
+                TSOS.Control.cpuUpdateTable();
+                _PCB.state = "Shutdown";
+                TSOS.Control.pcbUpdateTable();
+            }
             // ... Disable the Interrupts.
             this.krnTrace("Disabling the interrupts.");
             this.krnDisableInterrupts();
@@ -68,6 +76,12 @@ var TSOS;
                 // TODO (maybe): Implement a priority queue based on the IRQ number/id to enforce interrupt priority.
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
+            }
+            else if (_SingleStep) {
+                if (_CPU.isExecuting && _SingleStepStep) {
+                    _CPU.cycle();
+                    _SingleStepStep = false;
+                }
             }
             else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed.
                 _CPU.cycle();

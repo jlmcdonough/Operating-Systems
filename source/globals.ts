@@ -25,7 +25,18 @@ const KEYBOARD_IRQ: number = 1;
 // Global Variables
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.
 //
+
+// Hardware
 var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class.
+var _Memory: TSOS.Memory;
+var _MemoryAccessor: TSOS.MemoryAccessor;
+
+//Software
+var _MemoryManager: TSOS.MemoryManager;
+var _PCB: TSOS.Pcb;
+var _ProcessID: number = 0;
+var _ReadyQueue: TSOS.Pcb[] = [];
+
 
 var _OSclock: number = 0;  // Page 23.
 
@@ -62,7 +73,15 @@ var _krnKeyboardDriver: TSOS.DeviceDriverKeyboard  = null;
 
 var _hardwareClockID: number = null;
 
+// Sections to show on HTML
 var _taProgramInput: HTMLTextAreaElement;
+var _cpuDisplay: HTMLTextAreaElement;
+var _memoryDisplay: HTMLTextAreaElement;
+var _PCBdisplay: HTMLTextAreaElement;
+
+// For Single Step
+var _SingleStep: boolean = false;
+var _SingleStepStep: boolean = false;
 
 // For testing (and enrichment)...
 var Glados: any = null;  // This is the function Glados() in glados-ip*.js http://alanclasses.github.io/TSOS/test/ .

@@ -63,6 +63,9 @@ var TSOS;
             // load
             sc = new TSOS.ShellCommand(this.shellLoad, "load", "<priority> - Loads the specified user program.");
             this.commandList[this.commandList.length] = sc;
+            // run
+            sc = new TSOS.ShellCommand(this.shellRun, "run", "<pid> - Runs the specified user program.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             // Display the initial prompt.
@@ -158,7 +161,10 @@ var TSOS;
                     var arg = TSOS.Utils.trim(tempList[i]);
                     if (arg != "") {
                         retVal.args[retVal.args.length] = tempList[i];
+<<<<<<< HEAD
                         console.log("argsLength: " + retVal.args.length);
+=======
+>>>>>>> iProject2
                     }
                 }
             }
@@ -260,7 +266,10 @@ var TSOS;
                         _StdOut.putText("BSOD triggers a blue screen of death, the same way it would trap an OS error.");
                         break;
                     case "load":
-                        _StdOut.putText("LOAD will load specified user program and will be verified such that only hex code and spaces are valid.");
+                        _StdOut.putText("LOAD will load the specified user program and will be verified such that only hex code and spaces are valid.");
+                        break;
+                    case "run":
+                        _StdOut.putText("RUN will run the specified user program, denoted by the process ID that was assigned when loaded.");
                         break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -389,7 +398,19 @@ var TSOS;
                         }
                     });
                     if (validHex) {
-                        _StdOut.putText("Successfully loaded user program with priority " + priority);
+                        if (_ReadyQueue.length > 0) {
+                            _StdOut.putText("There is already a program stored in memory. Cannot load another");
+                        }
+                        else {
+                            _PCB = new TSOS.Pcb();
+                            _PCB.init(priority);
+                            _ReadyQueue[_PCB.pid] = _PCB;
+                            _Memory.loadMemory(trimmedInput);
+                            TSOS.Control.memoryUpdateTable();
+                            _StdOut.putText("Successfully loaded user program with priority " + priority);
+                            _StdOut.advanceLine();
+                            _StdOut.putText("Your program is stored at process ID " + (_ProcessID - 1));
+                        }
                     }
                     else {
                         _StdOut.putText("Please enter valid hex in the program input area.");
@@ -401,6 +422,22 @@ var TSOS;
             }
             else {
                 _StdOut.putText("Populate the user program input area with code before running the load command");
+            }
+        }
+        shellRun(args) {
+            //ensures that the run is a number
+            if (!isNaN(Number(args[0]))) {
+                if ((_ReadyQueue.length - 1) >= Number(args[0])) {
+                    _CPU.isExecuting = true;
+                    _PCB.state = "Running";
+                    _StdOut.putText("Running the program stored at: " + args[0]);
+                }
+                else {
+                    _StdOut.putText("There is no program with that PID number");
+                }
+            }
+            else {
+                _StdOut.putText("Run function must be followed by a number");
             }
         }
     }

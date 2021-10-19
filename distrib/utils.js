@@ -42,6 +42,16 @@ var TSOS;
             }
             return retVal;
         }
+        static hexToDecimal(hexStr) {
+            return parseInt(hexStr, 16);
+        }
+        static decimalToHex(dec) {
+            return dec.toString(16);
+        }
+        static padHex(hexNum) {
+            let withPadding = "00" + hexNum;
+            return withPadding.substr(withPadding.length - 2).toUpperCase();
+        }
     }
     TSOS.Utils = Utils;
 })(TSOS || (TSOS = {}));

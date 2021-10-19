@@ -43,5 +43,21 @@ module TSOS {
             }
             return retVal;
         }
+
+        public static hexToDecimal(hexStr: string): number
+        {
+            return parseInt(hexStr, 16);
+        }
+
+        public static decimalToHex(dec: number): string
+        {
+            return dec.toString(16);
+        }
+
+        public static padHex(hexNum: string)
+        {
+            let withPadding = "00" + hexNum;
+            return withPadding.substr(withPadding.length - 2).toUpperCase();
+        }
     }
 }

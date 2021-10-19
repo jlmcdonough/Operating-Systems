@@ -13,26 +13,305 @@
 var TSOS;
 (function (TSOS) {
     class Cpu {
-        constructor(PC = 0, Acc = 0, Xreg = 0, Yreg = 0, Zflag = 0, isExecuting = false) {
-            this.PC = PC;
-            this.Acc = Acc;
-            this.Xreg = Xreg;
-            this.Yreg = Yreg;
-            this.Zflag = Zflag;
+        constructor(pc = 0, ir = "", acc = "", xReg = "", yReg = "", zFlag = 0, isExecuting = false) {
+            this.pc = pc;
+            this.ir = ir;
+            this.acc = acc;
+            this.xReg = xReg;
+            this.yReg = yReg;
+            this.zFlag = zFlag;
             this.isExecuting = isExecuting;
         }
         init() {
-            this.PC = 0;
-            this.Acc = 0;
-            this.Xreg = 0;
-            this.Yreg = 0;
-            this.Zflag = 0;
+            this.pc = 0;
+            this.ir = "00";
+            this.acc = "00";
+            this.xReg = "00";
+            this.yReg = "00";
+            this.zFlag = 0;
             this.isExecuting = false;
+            TSOS.Control.cpuUpdateTable();
         }
         cycle() {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
+            if (_CPU.isExecuting) {
+                this.fetch();
+                this.decode();
+            }
+            TSOS.Control.cpuUpdateTable();
+            this.updatePcbMatchCpu();
+            TSOS.Control.pcbUpdateTable();
+            TSOS.Control.memoryUpdateTable();
+        }
+        updatePcbMatchCpu() {
+            _PCB.pc = this.pc;
+            _PCB.ir = this.ir;
+            _PCB.acc = this.acc;
+            _PCB.xReg = this.xReg;
+            _PCB.yReg = this.yReg;
+            _PCB.zFlag = this.zFlag;
+        }
+        fetch() {
+            this.ir = _MemoryAccessor.read(this.pc);
+        }
+        decode() {
+            switch (this.ir) {
+                case "00":
+                    this.brk();
+                    break;
+                case "01":
+                    this.opcode();
+                    break;
+                case "02":
+                    this.opcode();
+                    break;
+                case "03":
+                    this.opcode();
+                    break;
+                case "05":
+                    this.opcode();
+                    break;
+                case "20":
+                    this.opcode();
+                    break;
+                case "33":
+                    this.opcode();
+                    break;
+                case "49":
+                    this.opcode();
+                    break;
+                case "65":
+                    this.opcode();
+                    break;
+                case "69":
+                    this.opcode();
+                    break;
+                case "6D":
+                    this.adc();
+                    break;
+                case "6E":
+                    this.opcode();
+                    break;
+                case "6F":
+                    this.opcode();
+                    break;
+                case "72":
+                    this.opcode();
+                    break;
+                case "74":
+                    this.opcode();
+                    break;
+                case "75":
+                    this.opcode();
+                    break;
+                case "8D":
+                    this.staMemory();
+                    break;
+                case "A0":
+                    this.ldaYConstant();
+                    break;
+                case "A2":
+                    this.ldaXConstant();
+                    break;
+                case "A4":
+                    this.opcode();
+                    break;
+                case "A9":
+                    this.ldaConstant();
+                    break;
+                case "AC":
+                    this.ldaYMemory();
+                    break;
+                case "AD":
+                    this.ldaMemory();
+                    break;
+                case "AE":
+                    this.ldaXMemory();
+                    break;
+                case "BA":
+                    this.opcode();
+                    break;
+                case "D0":
+                    this.bne();
+                    break;
+                case "EA":
+                    this.noOperation();
+                    break;
+                case "EC":
+                    this.cpx();
+                    break;
+                case "ED":
+                    this.opcode();
+                    break;
+                case "EE":
+                    this.inc();
+                    break;
+                case "EF":
+                    this.opcode();
+                    break;
+                case "F1":
+                    this.opcode();
+                    break;
+                case "F8":
+                    this.opcode();
+                    break;
+                case "FF":
+                    this.sys();
+                    break;
+                default:
+                    this.opcode();
+            }
+        }
+        // EXECUTE
+        //A9
+        // Load the accumulator with the constant that appears next
+        ldaConstant() {
+            this.pc++;
+            this.acc = _MemoryAccessor.read(this.pc);
+            this.pc++;
+        }
+        //AD
+        //
+        ldaMemory() {
+            this.pc++;
+            this.acc = _MemoryAccessor.read(TSOS.Utils.hexToDecimal(this.littleEndian(this.pc)));
+            this.pc++;
+            this.pc++;
+        }
+        //8D
+        staMemory() {
+            this.pc++;
+            _MemoryAccessor.write(this.littleEndian(this.pc), TSOS.Utils.padHex(this.acc));
+            this.pc++;
+            this.pc++;
+        }
+        //6D
+        adc() {
+            this.pc++;
+            let param = this.littleEndian(this.pc);
+            let accumulator = (TSOS.Utils.hexToDecimal(this.acc));
+            let storage = TSOS.Utils.hexToDecimal(_MemoryAccessor.read(TSOS.Utils.hexToDecimal(param)));
+            this.acc = TSOS.Utils.padHex(TSOS.Utils.decimalToHex(storage + accumulator));
+            this.pc++;
+            this.pc++;
+        }
+        //A2
+        ldaXConstant() {
+            this.pc++;
+            this.xReg = TSOS.Utils.padHex(_MemoryAccessor.read(this.pc));
+            this.pc++;
+        }
+        //AE
+        ldaXMemory() {
+            this.pc++;
+            let secondValue = _MemoryAccessor.read(TSOS.Utils.hexToDecimal(this.littleEndian(this.pc)));
+            this.xReg = TSOS.Utils.padHex(secondValue);
+            this.pc++;
+            this.pc++;
+        }
+        //A0
+        ldaYConstant() {
+            this.pc++;
+            this.yReg = _MemoryAccessor.read(this.pc);
+            this.pc++;
+        }
+        //AC
+        ldaYMemory() {
+            this.pc++;
+            let secondValue = _MemoryAccessor.read(TSOS.Utils.hexToDecimal(this.littleEndian(this.pc)));
+            this.yReg = secondValue;
+            this.pc++;
+            this.pc++;
+        }
+        //EA
+        noOperation() {
+            this.pc++;
+        }
+        //00
+        brk() {
+            _StdOut.advanceLine();
+            _StdOut.putText("Process " + _PCB.pid + " has finished");
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
+            _CPU.isExecuting = false;
+            _PCB.state = "Finished";
+        }
+        //EC
+        cpx() {
+            this.pc++;
+            let secondValue = _MemoryAccessor.read(TSOS.Utils.hexToDecimal(this.littleEndian(this.pc)));
+            if (secondValue == this.xReg) {
+                this.zFlag = 1;
+            }
+            else {
+                this.zFlag = 0;
+            }
+            this.pc++;
+            this.pc++;
+        }
+        //D0
+        bne() {
+            this.pc++;
+            if (this.zFlag == 0) {
+                let fastForward = TSOS.Utils.hexToDecimal(_MemoryAccessor.read(this.pc));
+                this.pc += fastForward;
+                if (this.pc > 256) {
+                    this.pc = this.pc % 256;
+                }
+                this.pc += 1;
+            }
+            else {
+                this.pc++;
+            }
+        }
+        //EE
+        inc() {
+            this.pc++;
+            let byteLookingFor = _MemoryAccessor.read(this.pc);
+            let valueToInc = _MemoryAccessor.read(TSOS.Utils.hexToDecimal(byteLookingFor));
+            let asDeci = TSOS.Utils.hexToDecimal(valueToInc);
+            asDeci++;
+            let asHex = TSOS.Utils.decimalToHex(asDeci);
+            _MemoryAccessor.write(byteLookingFor, TSOS.Utils.padHex(asHex.toString()));
+            this.pc++;
+            this.pc++;
+        }
+        //FF
+        sys() {
+            this.pc++;
+            if (Number(this.xReg) == 1) {
+                _StdOut.putText(this.yReg);
+            }
+            else if (Number(this.xReg) == 2) {
+                let location = TSOS.Utils.hexToDecimal(this.yReg);
+                let output = "";
+                let byteString;
+                for (let i = 0; i + location < _Memory.memorySize; i++) {
+                    byteString = _Memory.memoryBlock[location + i];
+                    if (byteString == "00") {
+                        break;
+                    }
+                    else {
+                        output += String.fromCharCode(TSOS.Utils.hexToDecimal(byteString));
+                    }
+                }
+                _StdOut.putText(output);
+            }
+        }
+        //Remainder
+        //these are the op codes that appeared on https://www.labouseur.com/courses/os/ under the example
+        //the above op codes are defined in the resource provided https://www.labouseur.com/commondocs/6502alan-instruction-set.pdf
+        //so far only working with the explicitly defined ones
+        opcode() {
+            console.log("OpCode " + this.ir + " not yet added.");
+        }
+        littleEndian(programCounter) {
+            let second = _MemoryAccessor.read(programCounter);
+            let first = _MemoryAccessor.read((programCounter + 1));
+            let result = first + second;
+            return result;
         }
     }
     TSOS.Cpu = Cpu;
