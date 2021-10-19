@@ -161,10 +161,7 @@ var TSOS;
                     var arg = TSOS.Utils.trim(tempList[i]);
                     if (arg != "") {
                         retVal.args[retVal.args.length] = tempList[i];
-<<<<<<< HEAD
                         console.log("argsLength: " + retVal.args.length);
-=======
->>>>>>> iProject2
                     }
                 }
             }

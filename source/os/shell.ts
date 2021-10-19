@@ -220,12 +220,9 @@ module TSOS {
             {
                 for (var i in tempList) {
                     var arg = Utils.trim(tempList[i]);
-                    if (arg != "") {
+                    if (arg != "")
+                    {
                         retVal.args[retVal.args.length] = tempList[i];
-<<<<<<< HEAD
-                        console.log("argsLength: " + retVal.args.length);
-=======
->>>>>>> iProject2
                     }
                 }
             }

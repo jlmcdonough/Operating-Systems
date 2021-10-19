@@ -126,7 +126,7 @@ var TSOS;
         }
         static cpuUpdateTable() {
             if (_CPU.isExecuting) {
-                document.getElementById("cpuPC").innerHTML = _CPU.pc.toString();
+                document.getElementById("cpuPC").innerHTML = TSOS.Utils.padHex(TSOS.Utils.decimalToHex(_CPU.pc));
                 document.getElementById("cpuIR").innerHTML = _CPU.ir;
                 document.getElementById("cpuAcc").innerHTML = _CPU.acc;
                 document.getElementById("cpuX").innerHTML = _CPU.xReg;
@@ -160,7 +160,8 @@ var TSOS;
             table.innerHTML = tableBody;
         }
         static pcbUpdateTable() {
-            document.getElementById("pcbPC").innerHTML = _PCB.pc.toString();
+            document.getElementById("pcbPC").innerHTML = TSOS.Utils.padHex(TSOS.Utils.decimalToHex(_PCB.pc));
+            ;
             document.getElementById("pcbAcc").innerHTML = _PCB.acc;
             document.getElementById("pcbX").innerHTML = _PCB.xReg;
             document.getElementById("pcbY").innerHTML = _PCB.yReg;
