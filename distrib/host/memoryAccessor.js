@@ -9,14 +9,27 @@ var TSOS;
         read(atAddress) {
             return _Memory.getAt(atAddress);
         }
-        loadMemory(userEntry) {
+        loadMemory(userEntry, segmentNumber) {
             let userArr = userEntry.split(" ");
+            let points = TSOS.Utils.segmentStuff(segmentNumber);
+            let startingPoint = points[0];
+            let maxPoint = points[1];
             for (let i = 0; i < userArr.length; i++) {
-                _Memory.memoryBlock[i] = userArr[i];
+                if (i <= maxPoint - startingPoint) {
+                    _Memory.memoryBlock[i + startingPoint] = userArr[i];
+                }
+                else {
+                    console.log("EXCEEDING MEMORY: TO IMPLEMENT ERROR");
+                }
             }
         }
-        nukeMemory() {
-            _Memory.init();
+        nukeMemory(segmentNumber) {
+            let points = TSOS.Utils.segmentStuff(segmentNumber);
+            let startingPoint = points[0];
+            let maxPoint = points[1];
+            for (let i = startingPoint; i < maxPoint; i++) {
+                _Memory.memoryBlock[i] = "00";
+            }
         }
     }
     TSOS.MemoryAccessor = MemoryAccessor;

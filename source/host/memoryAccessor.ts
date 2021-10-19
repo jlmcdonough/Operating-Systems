@@ -15,20 +15,37 @@ module TSOS {
             return _Memory.getAt(atAddress);
         }
 
-        public loadMemory(userEntry: string): void
+        public loadMemory(userEntry: string, segmentNumber: number): void
         {
             let userArr = userEntry.split(" ");
 
+            let points = Utils.segmentStuff(segmentNumber);
+            let startingPoint = points[0];
+            let maxPoint = points[1];
+
             for(let i = 0; i < userArr.length; i++)
             {
-                _Memory.memoryBlock[i] = userArr[i];
+                if (i <= maxPoint - startingPoint)
+                {
+                    _Memory.memoryBlock[i + startingPoint] = userArr[i];
+                }
+                else
+                {
+                    console.log("EXCEEDING MEMORY: TO IMPLEMENT ERROR");
+                }
             }
         }
 
-        public nukeMemory(): void
+        public nukeMemory(segmentNumber: number): void
         {
-            _Memory.init();
-        }
+            let points = Utils.segmentStuff(segmentNumber);
+            let startingPoint = points[0];
+            let maxPoint = points[1];
 
+            for(let i = startingPoint; i < maxPoint; i++)
+            {
+                _Memory.memoryBlock[i] = "00";
+            }
+        }
     }
 }

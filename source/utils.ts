@@ -59,5 +59,26 @@ module TSOS {
             let withPadding = "00" + hexNum;
             return withPadding.substr(withPadding.length - 2).toUpperCase();
         }
+
+        public static segmentStuff(segmentNumber: number): number[]
+        {
+            let startingPoint, maxPoint;
+            switch (segmentNumber)
+            {
+                case 1:
+                    startingPoint = _Memory.segmentOneBase;
+                    maxPoint = _Memory.segmentOneLimit;
+                    break;
+                case 2:
+                    startingPoint = _Memory.segmentTwoBase;
+                    maxPoint = _Memory.segmentTwoLimit;
+                    break;
+                case 3:
+                    startingPoint = _Memory.segmentThreeBase;
+                    maxPoint = _Memory.segmentThreeLimit;
+                    break;
+            }
+            return [startingPoint, maxPoint];
+        }
     }
 }

@@ -474,9 +474,25 @@ module TSOS {
 
                 if(validHex)
                 {
-                    if(_ReadyQueue.length > 0 && ( (_ReadyQueue[0].state === "Ready") || (_ReadyQueue[0].state === "Resident") ) )
+                    Control.memoryUpdateTable();
+                    let segmentOneAvailable = _MemoryManager.segmentAvailable(1);
+                    console.log("S1: " + segmentOneAvailable);
+                    let segmentTwoAvailable = _MemoryManager.segmentAvailable(2);
+                    console.log("S2: " + segmentTwoAvailable);
+                    let segmentThreeAvailable = _MemoryManager.segmentAvailable(3);
+                    console.log("S3: " + segmentThreeAvailable);
+
+                    console.log("ALL 3: ");
+
+                    console.log("S1: " + segmentOneAvailable);
+                    console.log("S2: " + segmentTwoAvailable);
+                    console.log("S3: " + segmentThreeAvailable);
+
+                    if(_ReadyQueue.length > 0 && (
+                        ( !segmentOneAvailable ) && ( !segmentTwoAvailable) && ( !segmentThreeAvailable) )
+                    )
                     {
-                        _StdOut.putText("There is already a program stored in memory. Cannot load another");
+                        _StdOut.putText("There is already 3 programs stored in memory. Cannot load another");
                     }
                     else
                     {
@@ -492,12 +508,44 @@ module TSOS {
                             priority = Number(args[0]);
                         }
 
+                        let thisSegment;
+                        if(segmentOneAvailable)
+                        {
+                            thisSegment = 1;
+                        }
+                        else if(segmentTwoAvailable)
+                        {
+                            thisSegment = 2;
+                        }
+                        else if(segmentThreeAvailable)
+                        {
+                            thisSegment = 3;
+                        }
+
                         _PCB = new Pcb();
-                        _PCB.init(priority);
-                        _ReadyQueue[0] = _PCB;
-                        console.log(_ReadyQueue[0].pc);
-                        _MemoryAccessor.nukeMemory();
-                        _MemoryAccessor.loadMemory(trimmedInput);
+                        _PCB.init(priority, thisSegment);
+
+                        if (segmentOneAvailable)
+                        {
+                            console.log("LOADING INTO 0")
+                            _ReadyQueue[0] = _PCB;
+                        }
+                        else if (segmentTwoAvailable)
+                        {
+                            console.log("LOADING INTO 1")
+                            _ReadyQueue[1] = _PCB;
+                        }
+                        else if (segmentThreeAvailable)
+                        {
+                            console.log("LOADING INTO 2")
+                            _ReadyQueue[2] = _PCB;
+                        }
+                        else
+                        {
+                            _StdOut.putText("ERROR LOADING PROGRAM INTO MEMORY");
+                        }
+                        _MemoryAccessor.nukeMemory(thisSegment);
+                        _MemoryAccessor.loadMemory(trimmedInput, thisSegment);
                         Control.memoryUpdateTable();
 
                         _StdOut.putText("Successfully loaded user program with priority " + priority);
@@ -523,10 +571,29 @@ module TSOS {
             {
                 if( (_ReadyQueue.length - 1) >= Number(args[0]) )
                 {
-                    _CPU.isExecuting = true;
-                    _CPU.updateCpuMatchPcb();
-                    _PCB.state = "Running";
-                    _StdOut.putText("Running the program stored at: " + args[0]);
+                    console.log("RUN ARGS: " + Number(args[0]));
+                    for(let i = 0; i < _ReadyQueue.length; i++)
+                    {
+                        if (_ReadyQueue[i].pid === Number(args[0]) )
+                        {
+                            if (_ReadyQueue[i].state === "Resident")
+                            {
+                                _PCB = _ReadyQueue[i];
+                                console.log("FOUND AT READYQUEUE INDEX " + i);
+                                _CPU.updateCpuMatchPcb();
+                                _PCB.state = "Running";
+                                _CPU.isExecuting = true;
+                                _StdOut.putText("Running the program stored at: " + args[0]);
+
+                            }
+                            else
+                            {
+                                _StdOut.putText("The program stored at " + args[0] + " is not resident");
+                            }
+                            break;
+                        }
+                    }
+
                 }
                 else
                 {
