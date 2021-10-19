@@ -423,10 +423,17 @@ module TSOS {
             //do not want the input to either be blank or just spaces
             if (_taProgramInput.value.length > 0 && _taProgramInput.value.trim())
             {
+                let priority;
                 //ensures that the load priority is a number
-                if (!isNaN(Number(args[0])))
+                if (isNaN(Number(args[0])))
                 {
-                    let priority = Number(args[0]);
+                    _StdOut.putText("It is recommended to include a priority after the load command. Priority was given 99 to this instance.");
+                    priority = 99;
+                }
+                else
+                {
+                    priority = Number(args[0]);
+                }
                     let validHex = true;
                     let trimmedInput = _taProgramInput.value.replace(/(\r\n|\n|\r)/gm,"").replace(/\s/g,"");  //removes whitespace
 
@@ -501,11 +508,6 @@ module TSOS {
                         _StdOut.putText("Please enter valid hex in the program input area.");
                     }
                 }
-                else
-                {
-                    _StdOut.putText("The load function must be entered with a priority number after it");
-                }
-            }
             else
             {
                 _StdOut.putText("Populate the user program input area with code before running the load command");
