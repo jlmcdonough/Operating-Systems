@@ -27,8 +27,6 @@ module TSOS {
 
         public getAt(atPC: number): string
         {
-            console.log("IN getAT: ");
-            console.log("ATPC: " + atPC);
             return this.memoryBlock[atPC];
         }
 

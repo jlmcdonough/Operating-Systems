@@ -37,15 +37,13 @@ var TSOS;
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
             if (_CPU.isExecuting) {
-                console.log("IS EXECUTING");
-                console.log("PC: " + _CPU.pc);
+                let oldPC = this.pc;
+                operandCount = 1;
                 this.fetch();
                 this.decode();
+                this.updatePcbMatchCpu();
+                TSOS.Control.updateVisuals(oldPC);
             }
-            TSOS.Control.cpuUpdateTable();
-            this.updatePcbMatchCpu();
-            TSOS.Control.pcbUpdateTable();
-            TSOS.Control.memoryUpdateTable();
         }
         updatePcbMatchCpu() {
             _PCB.pc = this.pc;
@@ -321,6 +319,7 @@ var TSOS;
             let second = _MemoryAccessor.read(_PCB.segment, programCounter);
             let first = _MemoryAccessor.read(_PCB.segment, (programCounter + 1));
             let result = first + second;
+            operandCount = 2;
             return result;
         }
     }

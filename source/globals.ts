@@ -36,7 +36,7 @@ var _MemoryManager: TSOS.MemoryManager;
 var _PCB: TSOS.Pcb;
 var _ProcessID: number = 0;
 var _ReadyQueue: TSOS.Pcb[] = [];
-
+var operandCount: number;
 
 var _OSclock: number = 0;  // Page 23.
 
@@ -48,6 +48,7 @@ var _DefaultFontFamily: string = "sans"; // Ignored, I think. The was just a pla
 var _DefaultFontSize: number = 13;
 var _DefaultFontColor: string = "#ffffff";
 var _FontHeightMargin: number = 4;       // Additional space added to font size when advancing a line.
+var _APPEARANCE: string;
 
 var _Trace: boolean = true;              // Default the OS trace to be on.
 
@@ -89,4 +90,7 @@ var _GLaDOS: any = null; // If the above is linked in, this is the instantiated 
 
 var onDocumentLoad = function() {
 	TSOS.Control.hostInit();
+	const darkModeToggle = document.querySelector('dark-mode-toggle');
+	darkModeToggle.mode = 'dark';
+	_APPEARANCE = darkModeToggle.mode;
 };

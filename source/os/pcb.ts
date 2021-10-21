@@ -37,7 +37,6 @@ module TSOS {
             this.segment = segment;
             this.base = startingPoint;
             this.limit = maxPoint;
-            Control.pcbUpdateTable();
         }
     }
 }

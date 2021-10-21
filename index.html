@@ -4,6 +4,10 @@
    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
    <meta name="author"             content="Alan G. Labouseur" />
    <link rel="stylesheet" href="tsos.css" type="text/css" media="screen" />
+
+   <link rel="stylesheet" href="light.css" media="(prefers-color-scheme: light)">
+   <link rel="stylesheet" href="dark.css" media="(prefers-color-scheme: dark)">
+
    <link rel="shortcut icon" href="/rhino.png">
    <title>
       rhinOS - a browser-based virtual Operating System in TypeScript
@@ -42,18 +46,29 @@
    <!--
    <script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip3.js"></script>
    -->
+
+   <script type="module" src="https://unpkg.com/dark-mode-toggle"></script>
+
 </head>
 
 <body onload="onDocumentLoad()">
+<aside style="float: right">
+   <dark-mode-toggle
+           id="dark-mode-toggle-1"
+           appearance="switch"
+           dark="Dark"
+           light="Light"
+   ></dark-mode-toggle>
+</aside>
 
 <div id="divMain" style="width:100%;">
   <!-- <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> -->
 
    <div>
-      <img src="rhino.png" style="vertical-align: middle; width:100px; float:left;"/>
+      <img id = "logo" src="rhino.png" style="vertical-align: middle; width:100px; float:left;"/>
       <br>
-      <p id = "dateTime" style="color: #ffffff">  Date -  Time - </p>
-      <p id = "status" style="color: #ffffff"> Status - Running RhinOS Version 0.2</p>
+      <p id = "dateTime" >  Date -  Time - </p>
+      <p id = "status"> Status - Running RhinOS Version 0.2</p>
    </div>
    <br>
 
@@ -196,6 +211,10 @@
    <label>
       PCB
       <div id="divPCBTable">
+         <table class="hostDisplayTable" id="pcbTable">
+         </table>
+      </div>
+      <!--<div id="divPCBTable">
          <table class="hostDisplayTable">
             <tr>
                <th>PC</th>
@@ -218,7 +237,7 @@
                <td id="pcbLocation">-</td>
             </tr>
          </table>
-      </div>
+      </div>-->
    </label>
 </div>
 

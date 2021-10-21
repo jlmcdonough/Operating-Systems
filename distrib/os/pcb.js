@@ -34,7 +34,6 @@ var TSOS;
             this.segment = segment;
             this.base = startingPoint;
             this.limit = maxPoint;
-            TSOS.Control.pcbUpdateTable();
         }
     }
     TSOS.Pcb = Pcb;

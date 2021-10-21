@@ -54,6 +54,18 @@ var TSOS;
             // Update the log console.
             var taLog = document.getElementById("taHostLog");
             taLog.value = str + taLog.value;
+            // Aware this does not "compile" but it works as if it does.
+            // Assuming it has something to do with html importing a script instead
+            // of npm installing the dark-mode-toggle
+            document.addEventListener('colorschemechange', (e) => {
+                _APPEARANCE = document.querySelector('dark-mode-toggle').mode;
+                if (_APPEARANCE === "light") {
+                    _DefaultFontColor = "#121212";
+                }
+                else {
+                    _DefaultFontColor = "#ffffff";
+                }
+            });
             // TODO in the future: Optionally update a log database or some streaming service.
         }
         //Date and Time for header
@@ -152,23 +164,68 @@ var TSOS;
                 let row = "0x" + normalizedHex;
                 tableBody += `<tr><td>${row}</td>`;
                 for (let j = i; j < i + 8; j += 0x1) {
-                    tableBody += `<td>${_Memory.memoryBlock[j]}</td>`;
+                    tableBody += "<td " + `id=mem${j}>` + _Memory.memoryBlock[j] + "</td>";
                 }
                 tableBody += "</tr>";
             }
             tableBody += "</tbody>";
             table.innerHTML = tableBody;
         }
+        static memoryTableColor(pc, operandCount, segment) {
+            let offset = (segment - 1) * 256;
+            let mainHighlight, secondaryHighlight;
+            if (_APPEARANCE === "dark") {
+                mainHighlight = "#3700B3";
+                secondaryHighlight = "#BB86FC";
+            }
+            else if (_APPEARANCE === "light") {
+                mainHighlight = "#1E88E5";
+                secondaryHighlight = "#BBDEFB";
+            }
+            console.log("PC: " + pc);
+            document.getElementById("mem" + (pc + offset)).style.backgroundColor = mainHighlight;
+            for (let i = 1; i <= operandCount; i++) {
+                document.getElementById("mem" + ((pc + offset) + i)).style.backgroundColor = secondaryHighlight;
+            }
+        }
         static pcbUpdateTable() {
-            document.getElementById("pcbPC").innerHTML = TSOS.Utils.padHex(TSOS.Utils.decimalToHex(_PCB.pc));
-            ;
-            document.getElementById("pcbAcc").innerHTML = _PCB.acc;
-            document.getElementById("pcbX").innerHTML = _PCB.xReg;
-            document.getElementById("pcbY").innerHTML = _PCB.yReg;
-            document.getElementById("pcbZ").innerHTML = _PCB.zFlag.toString();
-            document.getElementById("pcbPriority").innerHTML = _PCB.priority.toString();
-            document.getElementById("pcbState").innerHTML = _PCB.state;
-            document.getElementById("pcbLocation").innerHTML = _PCB.location;
+            let table = document.getElementById("pcbTable");
+            let tableBody = "<tbody>" + "<tr>" +
+                "<th>PID</th><th>PC</th><th>Acc</th><th>X</th><th>Y</th><th>Z</th><th>Priority</th><th>State</th><th>Location</th><th>Mem. Base</th><th>Mem. Limit</th><th>Segment</th>" +
+                "</tr>";
+            for (let i = 0; i < _ReadyQueue.length; i++) {
+                tableBody += "<tr>" +
+                    `<td> ${_ReadyQueue[i].pid} </td>` +
+                    `<td> ${TSOS.Utils.padHex(TSOS.Utils.decimalToHex(_ReadyQueue[i].pc))} </td>` +
+                    `<td> ${_ReadyQueue[i].acc} </td>` +
+                    `<td> ${_ReadyQueue[i].xReg} </td>` +
+                    `<td> ${_ReadyQueue[i].yReg} </td>` +
+                    `<td> ${_ReadyQueue[i].zFlag.toString()} </td>` +
+                    `<td> ${_ReadyQueue[i].priority.toString()} </td>` +
+                    `<td> ${_ReadyQueue[i].state} </td>` +
+                    `<td> ${_ReadyQueue[i].location} </td>` +
+                    `<td> ${_ReadyQueue[i].base} </td>` +
+                    `<td> ${_ReadyQueue[i].limit} </td>` +
+                    `<td> ${_ReadyQueue[i].segment} </td>` +
+                    "</tr>";
+            }
+            /*  document.getElementById("pcbPC").innerHTML = Utils.padHex(Utils.decimalToHex(_PCB.pc));
+              document.getElementById("pcbAcc").innerHTML = _PCB.acc;
+              document.getElementById("pcbX").innerHTML = _PCB.xReg;
+              document.getElementById("pcbY").innerHTML = _PCB.yReg;
+              document.getElementById("pcbZ").innerHTML = _PCB.zFlag.toString();
+              document.getElementById("pcbPriority").innerHTML = _PCB.priority.toString();
+              document.getElementById("pcbState").innerHTML = _PCB.state;
+              document.getElementById("pcbLocation").innerHTML = _PCB.location;
+  */
+            tableBody += "</tbody>";
+            table.innerHTML = tableBody;
+        }
+        static updateVisuals(oldPC) {
+            Control.cpuUpdateTable();
+            Control.pcbUpdateTable();
+            Control.memoryUpdateTable();
+            Control.memoryTableColor(oldPC, operandCount, _PCB.segment);
         }
     }
     TSOS.Control = Control;

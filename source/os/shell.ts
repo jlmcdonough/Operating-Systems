@@ -476,17 +476,8 @@ module TSOS {
                 {
                     Control.memoryUpdateTable();
                     let segmentOneAvailable = _MemoryManager.segmentAvailable(1);
-                    console.log("S1: " + segmentOneAvailable);
                     let segmentTwoAvailable = _MemoryManager.segmentAvailable(2);
-                    console.log("S2: " + segmentTwoAvailable);
                     let segmentThreeAvailable = _MemoryManager.segmentAvailable(3);
-                    console.log("S3: " + segmentThreeAvailable);
-
-                    console.log("ALL 3: ");
-
-                    console.log("S1: " + segmentOneAvailable);
-                    console.log("S2: " + segmentTwoAvailable);
-                    console.log("S3: " + segmentThreeAvailable);
 
                     if(_ReadyQueue.length > 0 && (
                         ( !segmentOneAvailable ) && ( !segmentTwoAvailable) && ( !segmentThreeAvailable) )
@@ -525,6 +516,7 @@ module TSOS {
                         _PCB = new Pcb();
                         _PCB.init(priority, thisSegment);
 
+                        let lowerLimit;
                         if (segmentOneAvailable)
                         {
                             console.log("LOADING INTO 0")
@@ -546,7 +538,7 @@ module TSOS {
                         }
                         _MemoryAccessor.nukeMemory(thisSegment);
                         _MemoryAccessor.loadMemory(trimmedInput, thisSegment);
-                        Control.memoryUpdateTable();
+                        Control.updateVisuals(0);
 
                         _StdOut.putText("Successfully loaded user program with priority " + priority);
                         _StdOut.advanceLine();
@@ -571,7 +563,6 @@ module TSOS {
             {
                 if( (_ReadyQueue.length - 1) >= Number(args[0]) )
                 {
-                    console.log("RUN ARGS: " + Number(args[0]));
                     for(let i = 0; i < _ReadyQueue.length; i++)
                     {
                         if (_ReadyQueue[i].pid === Number(args[0]) )
@@ -579,12 +570,11 @@ module TSOS {
                             if (_ReadyQueue[i].state === "Resident")
                             {
                                 _PCB = _ReadyQueue[i];
-                                console.log("FOUND AT READYQUEUE INDEX " + i);
                                 _CPU.updateCpuMatchPcb();
                                 _PCB.state = "Running";
                                 _CPU.isExecuting = true;
                                 _StdOut.putText("Running the program stored at: " + args[0]);
-
+                                Control.updateVisuals(_PCB.pc);
                             }
                             else
                             {

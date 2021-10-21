@@ -29,6 +29,7 @@ var _MemoryManager;
 var _PCB;
 var _ProcessID = 0;
 var _ReadyQueue = [];
+var operandCount;
 var _OSclock = 0; // Page 23.
 var _Mode = 0; // (currently unused)  0 = Kernel Mode, 1 = User Mode.  See page 21.
 var _Canvas; // Initialized in Control.hostInit().
@@ -37,6 +38,7 @@ var _DefaultFontFamily = "sans"; // Ignored, I think. The was just a place-holde
 var _DefaultFontSize = 13;
 var _DefaultFontColor = "#ffffff";
 var _FontHeightMargin = 4; // Additional space added to font size when advancing a line.
+var _APPEARANCE;
 var _Trace = true; // Default the OS trace to be on.
 // The OS Kernel and its queues.
 var _Kernel;
@@ -67,5 +69,8 @@ var Glados = null; // This is the function Glados() in glados-ip*.js http://alan
 var _GLaDOS = null; // If the above is linked in, this is the instantiated instance of Glados.
 var onDocumentLoad = function () {
     TSOS.Control.hostInit();
+    const darkModeToggle = document.querySelector('dark-mode-toggle');
+    darkModeToggle.mode = 'dark';
+    _APPEARANCE = darkModeToggle.mode;
 };
 //# sourceMappingURL=globals.js.map
