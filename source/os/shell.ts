@@ -117,7 +117,40 @@ module TSOS {
             this.commandList[this.commandList.length] = sc;
 
             // ps  - list the running processes and their IDs
-            // kill <id> - kills the specified process id.
+            sc = new ShellCommand(this.shellPs,
+                "ps",
+                "displays the PID and state of all current processes.");
+            this.commandList[this.commandList.length] = sc;
+
+            // clearmem
+            sc = new ShellCommand(this.shellClearMem,
+                "clearmem",
+                "resets all memory");
+            this.commandList[this.commandList.length] = sc;
+
+            // runall
+            sc = new ShellCommand(this.shellRunAll,
+                "runall",
+                "runs every program");
+            this.commandList[this.commandList.length] = sc;
+
+            // kill
+            sc = new ShellCommand(this.shellKill,
+                "kill",
+                "<id> - kills the specified process id.");
+            this.commandList[this.commandList.length] = sc;
+
+            // killall
+            sc = new ShellCommand(this.shellKillAll,
+                "killall",
+                "kills all processes.");
+            this.commandList[this.commandList.length] = sc;
+
+            // kill
+            sc = new ShellCommand(this.shellQuantum,
+                "quantum",
+                "<number> - sets the quantum to number.");
+            this.commandList[this.commandList.length] = sc;
 
             // Display the initial prompt.
             this.putPrompt();
@@ -336,6 +369,24 @@ module TSOS {
                         break;
                     case "run":
                         _StdOut.putText("RUN will run the specified user program, denoted by the process ID that was assigned when loaded.");
+                        break;
+                    case "ps":
+                        _StdOut.putText("PS will print a list of all the PCBs that are currently stored as well as their Process IDs.");
+                        break;
+                    case "clearmem":
+                        _StdOut.putText("CLEARMEM will empty out all the memory partitions and essentially reset all memory.");
+                        break;
+                    case "runall":
+                        _StdOut.putText("RUNALL will begin to execute all programs at once.");
+                        break;
+                    case "kill":
+                        _StdOut.putText("KILL will the program specified by the entered process ID.");
+                        break;
+                    case "killall":
+                        _StdOut.putText("KILLALL will kill every process that is running.");
+                        break;
+                    case "quantum":
+                        _StdOut.putText("QUANTUM will set the quantum for round robin scheduling by the user entered number.");
                         break;
 
                     default:
@@ -595,5 +646,123 @@ module TSOS {
                 _StdOut.putText("Run function must be followed by a number")
             }
         }
+
+        public shellPs(args: string[])
+        {
+            if (_ReadyQueue.length > 0)
+            {
+                for (let i = 0; i < _ReadyQueue.length; i++)
+                {
+                    _StdOut.putText("Process ID: " + _ReadyQueue[i].pid + " State: " + _ReadyQueue[i].state + " Segment: " + _ReadyQueue[i].segment + " Program Counter: " + _ReadyQueue[i].pc + " Priority: " + _ReadyQueue[i].priority);
+                    _StdOut.advanceLine();
+                }
+            }
+            else
+            {
+                _StdOut.putText("No loaded processes to display");
+            }
+        }
+
+        public shellClearMem(args: string[])
+        {
+            _MemoryAccessor.nukeMemory(1);
+            _MemoryAccessor.nukeMemory(2);
+            _MemoryAccessor.nukeMemory(3);
+            Control.memoryUpdateTable();
+            _StdOut.putText("Memory has been reset.");
+        }
+
+        public shellRunAll(args: string[])
+        {
+
+        }
+
+        public shellKill(args: string[])
+        {
+            if (!isNaN(Number(args[0])))
+            {
+                let thisPID = Number(args[0]);
+                let notFound = true;
+                for (let i = 0; i < _ReadyQueue.length; i++)
+                {
+                    if (_ReadyQueue[i].pid == thisPID )
+                    {
+                        notFound = false;
+                        if (_ReadyQueue[i].state === "Running")
+                        {
+                            _CPU.isExecuting = false;
+                            _PCB.state = "Stopped";
+                            _StdOut.putText("Process " + thisPID + " terminated.");
+                        }
+                        if (_ReadyQueue[i].state === "Resident")
+                        {
+                            _PCB.state = "Stopped";
+                            _StdOut.putText("Process " + thisPID + " terminated.");
+                        }
+                        if (_ReadyQueue[i].state === "Finished" || _ReadyQueue[i].state === "Stopped")
+                        {
+                            _StdOut.putText("Process " + thisPID + " is not resident or running.");
+                        }
+
+
+                        Control.updateVisuals(0);
+                    }
+                }
+
+                if (notFound)
+                {
+                    _StdOut.putText("Process " + thisPID + " does not exist in the current queue.");
+                }
+            }
+            else
+            {
+                _StdOut.putText("Enter a valid process id after kill")
+            }
+        }
+
+        public shellKillAll(args: string[])
+        {
+            _CPU.isExecuting = false;
+
+            for (let i = 0; i < _ReadyQueue.length; i++)
+            {
+                _ReadyQueue[i].state = "Stopped";
+            }
+            _StdOut.putText("All stored processes killed");
+            Control.updateVisuals(0);
+        }
+
+        public shellQuantum(args: string[])
+        {
+            console.log("ARGS: " + args);
+            console.log("ARGS length: " + args.length);
+            console.log(Number(args[0]));
+            console.log("ARGS[0]: " + args[0]);
+            if (args.length == 0)
+            {
+                _StdOut.putText("Current quantum is " + _Quantum);
+                _StdOut.advanceLine();
+                _StdOut.putText("To change this, add a number to the quantum command.");
+            }
+            else if (args.length == 1 && !isNaN(Number(args[0])))
+            {
+                let userQuantum = Number(args[0]);
+                if (userQuantum > 0)
+                {
+                    _Quantum = userQuantum;
+                    _StdOut.putText("Quantum updated to " + _Quantum);
+                }
+                else
+                {
+                    _StdOut.putText("Quantum must be greater than 0.")
+                }
+            }
+            else
+            {
+                _StdOut.putText("Quantum command must have nothing follow it, or just a valid positive integer.")
+            }
+
+        }
+
     }
 }
