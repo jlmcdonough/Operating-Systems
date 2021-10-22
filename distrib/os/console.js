@@ -20,6 +20,9 @@ var TSOS;
         init() {
             this.clearScreen();
             this.resetXY();
+            _FontHeight = _DefaultFontSize +
+                _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
+                _FontHeightMargin;
         }
         clearScreen() {
             _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
@@ -159,16 +162,16 @@ var TSOS;
              * Font height margin is extra spacing between the lines.
              */
             //this will allow for a buffer for new line at the bottom
-            let fontHeight = _DefaultFontSize +
+            _FontHeight = _DefaultFontSize +
                 _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                 _FontHeightMargin;
-            this.currentYPosition += fontHeight;
+            this.currentYPosition += _FontHeight;
             // TODO: Handle scrolling. (iProject 1)
             if (this.currentYPosition > _Canvas.height) {
-                var prevText = _DrawingContext.getImageData(0, fontHeight, _Canvas.width, _Canvas.height);
+                var prevText = _DrawingContext.getImageData(0, _FontHeight, _Canvas.width, _Canvas.height);
                 this.clearScreen();
                 _DrawingContext.putImageData(prevText, 0, 0);
-                this.currentYPosition -= fontHeight;
+                this.currentYPosition -= _FontHeight;
             }
         }
         deleteChr(chr) {

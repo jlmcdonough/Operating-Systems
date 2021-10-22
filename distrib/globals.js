@@ -39,6 +39,7 @@ var _DefaultFontSize = 13;
 var _DefaultFontColor = "#ffffff";
 var _FontHeightMargin = 4; // Additional space added to font size when advancing a line.
 var _APPEARANCE;
+var _FontHeight;
 var _Trace = true; // Default the OS trace to be on.
 // The OS Kernel and its queues.
 var _Kernel;

@@ -52,12 +52,14 @@
 </head>
 
 <body onload="onDocumentLoad()">
+
 <aside style="float: right">
    <dark-mode-toggle
            id="dark-mode-toggle-1"
            appearance="switch"
            dark="Dark"
            light="Light"
+           onclick="TSOS.Control.toggleAppearance(this);"
    ></dark-mode-toggle>
 </aside>
 

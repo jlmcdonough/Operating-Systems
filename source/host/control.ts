@@ -67,22 +67,36 @@ module TSOS {
             var taLog = <HTMLInputElement> document.getElementById("taHostLog");
             taLog.value = str + taLog.value;
 
+
+            // TODO in the future: Optionally update a log database or some streaming service.
+        }
+
+        public static toggleAppearance(): void {
             // Aware this does not "compile" but it works as if it does.
             // Assuming it has something to do with html importing a script instead
             // of npm installing the dark-mode-toggle
             document.addEventListener('colorschemechange', (e) => {
                 _APPEARANCE = document.querySelector('dark-mode-toggle').mode;
+                console.log("Apperance switched to " + _APPEARANCE);
                 if (_APPEARANCE === "light")
                 {
                     _DefaultFontColor = "#121212";
+                    //_DrawingContext.globalCompositeOperation='source-atop';
+
+
+                    //var prevText = _DrawingContext.getImageData(0, _FontHeight, _Canvas.width, _Canvas.height);
+                    //console.log("prev: "+ prevText);
+                    //console.log("prev data: "+ prevText.data);
+                    //console.log("prev data toSTring: "+ prevText.data.toString());
+
+                    // _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
+                    //_DrawingContext.putImageData(prevText, 0, 0);
                 }
                 else
                 {
                     _DefaultFontColor = "#ffffff";
-                }
+                ]                }
             });
-
-            // TODO in the future: Optionally update a log database or some streaming service.
         }
 
         //Date and Time for header
