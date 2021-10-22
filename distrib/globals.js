@@ -38,8 +38,8 @@ var _DefaultFontFamily = "sans"; // Ignored, I think. The was just a place-holde
 var _DefaultFontSize = 13;
 var _DefaultFontColor = "#ffffff";
 var _FontHeightMargin = 4; // Additional space added to font size when advancing a line.
+var _FontHeight = _FontHeightMargin + 3.64 + _DefaultFontSize;
 var _APPEARANCE;
-var _FontHeight;
 var _Trace = true; // Default the OS trace to be on.
 // The OS Kernel and its queues.
 var _Kernel;

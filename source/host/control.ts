@@ -81,21 +81,40 @@ module TSOS {
                 if (_APPEARANCE === "light")
                 {
                     _DefaultFontColor = "#121212";
-                    //_DrawingContext.globalCompositeOperation='source-atop';
 
+                    var image = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
+                    var data = image.data;
+                    for (let i = 0; i < data.length; i += 4)
+                    {
+                        data[i] = 0 - data[i]
 
-                    //var prevText = _DrawingContext.getImageData(0, _FontHeight, _Canvas.width, _Canvas.height);
-                    //console.log("prev: "+ prevText);
-                    //console.log("prev data: "+ prevText.data);
-                    //console.log("prev data toSTring: "+ prevText.data.toString());
+                        data[i + 1] = 0 - data[i + 1];
 
+                        data[i + 2] = 0 - data[i + 2];
+                    }
+                    // overwrite original image
+                    _DrawingContext.putImageData(image, 0, 0);
+            }
                     // _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
                     //_DrawingContext.putImageData(prevText, 0, 0);
-                }
+
                 else
                 {
                     _DefaultFontColor = "#ffffff";
-                ]                }
+
+                    var image = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
+                    var data = image.data;
+                    for (let i = 0; i < data.length; i += 4)
+                    {
+                        data[i] = 255 - data[i]
+
+                        data[i + 1] = 255 - data[i + 1];
+
+                        data[i + 2] = 255 - data[i + 2];
+                    }
+                    // overwrite original image
+                    _DrawingContext.putImageData(image, 0, 0);
+                }
             });
         }
 

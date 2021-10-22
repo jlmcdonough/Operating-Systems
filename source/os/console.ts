@@ -22,9 +22,6 @@ module TSOS {
         public init(): void {
             this.clearScreen();
             this.resetXY();
-            _FontHeight = _DefaultFontSize +
-                _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
-                _FontHeightMargin;
         }
 
         public clearScreen(): void {

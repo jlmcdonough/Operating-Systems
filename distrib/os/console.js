@@ -20,9 +20,6 @@ var TSOS;
         init() {
             this.clearScreen();
             this.resetXY();
-            _FontHeight = _DefaultFontSize +
-                _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
-                _FontHeightMargin;
         }
         clearScreen() {
             _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);

@@ -48,6 +48,7 @@ var _DefaultFontFamily: string = "sans"; // Ignored, I think. The was just a pla
 var _DefaultFontSize: number = 13;
 var _DefaultFontColor: string = "#ffffff";
 var _FontHeightMargin: number = 4;       // Additional space added to font size when advancing a line.
+var _FontHeight: number = _FontHeightMargin + 3.64 + _DefaultFontSize;
 var _APPEARANCE: string;
 
 var _Trace: boolean = true;              // Default the OS trace to be on.
