@@ -426,9 +426,14 @@ var TSOS;
                 });
                 if (validHex) {
                     TSOS.Control.memoryUpdateTable();
-                    let segmentOneAvailable = _MemoryManager.segmentAvailable(1);
-                    let segmentTwoAvailable = _MemoryManager.segmentAvailable(2);
-                    let segmentThreeAvailable = _MemoryManager.segmentAvailable(3);
+                    let segmentOneAvailable = _MemoryManager.segmentEmpty(1);
+                    let segmentTwoAvailable = _MemoryManager.segmentEmpty(2);
+                    let segmentThreeAvailable = _MemoryManager.segmentEmpty(3);
+                    if (!segmentOneAvailable && !segmentTwoAvailable && !segmentThreeAvailable) {
+                        segmentOneAvailable = _MemoryManager.segmentReallocate(1);
+                        segmentTwoAvailable = _MemoryManager.segmentReallocate(2);
+                        segmentThreeAvailable = _MemoryManager.segmentReallocate(3);
+                    }
                     if (_ReadyQueue.length > 0 && ((!segmentOneAvailable) && (!segmentTwoAvailable) && (!segmentThreeAvailable))) {
                         _StdOut.putText("There is already 3 programs stored in memory. Cannot load another");
                     }
@@ -487,32 +492,34 @@ var TSOS;
             }
         }
         shellRun(args) {
+            console.log("RUN ARGS: " + args);
             //ensures that the run is a number
             if (!isNaN(Number(args[0]))) {
-                if ((_ReadyQueue.length - 1) >= Number(args[0])) {
-                    for (let i = 0; i < _ReadyQueue.length; i++) {
-                        if (_ReadyQueue[i].pid === Number(args[0])) {
-                            if (_ReadyQueue[i].state === "Resident") {
-                                _PCB = _ReadyQueue[i];
-                                _CPU.updateCpuMatchPcb();
-                                _PCB.state = "Running";
-                                _CPU.isExecuting = true;
-                                _StdOut.putText("Running the program stored at: " + args[0]);
-                                TSOS.Control.updateVisuals(_PCB.pc);
-                            }
-                            else {
-                                _StdOut.putText("The program stored at " + args[0] + " is not resident");
-                            }
-                            break;
+                let neverFound = true;
+                for (let i = 0; i < _ReadyQueue.length; i++) {
+                    console.log("THIS QUEUED PCB pid " + _ReadyQueue[i].pid);
+                    if (_ReadyQueue[i].pid === Number(args[0])) {
+                        if (_ReadyQueue[i].state === "Resident") {
+                            _PCB = _ReadyQueue[i];
+                            _CPU.updateCpuMatchPcb();
+                            _PCB.state = "Running";
+                            _CPU.isExecuting = true;
+                            _StdOut.putText("Running the program stored at: " + args[0]);
+                            TSOS.Control.updateVisuals(_PCB.pc);
                         }
+                        else {
+                            _StdOut.putText("The program stored at " + args[0] + " is not resident");
+                        }
+                        neverFound = false;
+                        break;
                     }
                 }
-                else {
+                if (neverFound) {
                     _StdOut.putText("There is no program with that PID number");
                 }
             }
             else {
-                _StdOut.putText("Run function must be followed by a number");
+                _StdOut.putText("A positive integer must follow the run command.");
             }
         }
         shellPs(args) {
@@ -527,11 +534,16 @@ var TSOS;
             }
         }
         shellClearMem(args) {
-            _MemoryAccessor.nukeMemory(1);
-            _MemoryAccessor.nukeMemory(2);
-            _MemoryAccessor.nukeMemory(3);
-            TSOS.Control.memoryUpdateTable();
-            _StdOut.putText("Memory has been reset.");
+            if (_CPU.isExecuting) {
+                _StdOut.putText("Cannot clear the memory while there are running processes.");
+            }
+            else {
+                _MemoryAccessor.nukeMemory(1);
+                _MemoryAccessor.nukeMemory(2);
+                _MemoryAccessor.nukeMemory(3);
+                TSOS.Control.memoryUpdateTable();
+                _StdOut.putText("Memory has been reset.");
+            }
         }
         shellRunAll(args) {
         }

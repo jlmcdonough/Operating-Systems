@@ -3,33 +3,53 @@ var TSOS;
     class MemoryManager {
         constructor() {
         }
-        segmentAvailable(segment) {
+        segmentEmpty(segment) {
             //segments are 1, 2, 3 yet array indices are 0, 1, 2
             if (0 < segment && segment <= 3) {
-                switch (segment) {
+                /*switch (segment)
+                {
                     case 1:
                         if (_MemoryAccessor.read(1, 0) == "00")
                             return true;
-                        else if (!((_ReadyQueue[segment - 1].state === "Ready") || (_ReadyQueue[segment - 1].state === "Resident")))
+                        else if( ! ( (_ReadyQueue[segment - 1].state === "Ready") || (_ReadyQueue[segment - 1].state === "Resident") ) )
                             return true;
                         else
                             return false;
                     case 2:
                         if (_MemoryAccessor.read(2, 0) == "00")
                             return true;
-                        else if (!((_ReadyQueue[segment - 1].state === "Ready") || (_ReadyQueue[segment - 1].state === "Resident")))
+                        else if( ! ( (_ReadyQueue[segment - 1].state === "Ready") || (_ReadyQueue[segment - 1].state === "Resident") ) )
                             return true;
                         else
                             return false;
                     case 3:
                         if (_MemoryAccessor.read(3, 0) == "00")
                             return true;
-                        else if (!((_ReadyQueue[segment - 1].state === "Ready") || (_ReadyQueue[segment - 1].state === "Resident")))
+                        else if( ! ( (_ReadyQueue[segment - 1].state === "Ready") || (_ReadyQueue[segment - 1].state === "Resident") ) )
                             return true;
                         else
                             return false;
                     default:
                         return false;
+                }*/
+                if (_MemoryAccessor.read(segment, 0) === "00") {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+        }
+        segmentReallocate(segment) {
+            if (0 < segment && segment <= 3) {
+                if (!((_ReadyQueue[segment - 1].state === "Ready") || (_ReadyQueue[segment - 1].state === "Resident"))) {
+                    return true;
+                }
+                else {
+                    return false;
                 }
             }
             else {

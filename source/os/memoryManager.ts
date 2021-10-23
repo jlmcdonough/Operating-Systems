@@ -3,12 +3,12 @@ module TSOS {
         constructor() {
         }
 
-    public segmentAvailable(segment: number) : boolean
+    public segmentEmpty(segment: number) : boolean
     {
         //segments are 1, 2, 3 yet array indices are 0, 1, 2
         if (0 < segment && segment <= 3)
         {
-            switch (segment)
+            /*switch (segment)
             {
                 case 1:
                     if (_MemoryAccessor.read(1, 0) == "00")
@@ -33,6 +33,35 @@ module TSOS {
                         return false;
                 default:
                     return false;
+            }*/
+
+            if (_MemoryAccessor.read(segment, 0) === "00")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public segmentReallocate(segment: number) : boolean
+    {
+        if (0 < segment && segment <= 3)
+        {
+            if ( ! ( (_ReadyQueue[segment - 1].state === "Ready") || (_ReadyQueue[segment - 1].state === "Resident") ) )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
         else
