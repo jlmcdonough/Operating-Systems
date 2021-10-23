@@ -36,6 +36,8 @@ var TSOS;
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
+            console.log("CYCLE COUNT PRE: " + _CycleCount);
+            console.log("PCB RUNNING COUNT: " + _PCB.runningCycle);
             if (_CPU.isExecuting) {
                 let oldPC = this.pc;
                 operandCount = 1;
@@ -43,6 +45,8 @@ var TSOS;
                 this.decode();
                 this.updatePcbMatchCpu();
                 TSOS.Control.updateVisuals(oldPC);
+                _PCB.runningCycle++;
+                _CycleCount++;
             }
         }
         updatePcbMatchCpu() {
@@ -242,9 +246,14 @@ var TSOS;
             _StdOut.advanceLine();
             _StdOut.putText("Process " + _PCB.pid + " has finished");
             _StdOut.advanceLine();
-            _OsShell.putPrompt();
             _CPU.isExecuting = false;
             _PCB.state = "Finished";
+            _PCB.endingCycle = _CycleCount;
+            _StdOut.putText("Turnaround Time: " + TSOS.Utils.calculateTurnaroundTime());
+            _StdOut.advanceLine();
+            _StdOut.putText("Wait Time: " + TSOS.Utils.calculateWaitTime());
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
         }
         //EC
         cpx() {

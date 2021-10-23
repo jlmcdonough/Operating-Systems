@@ -492,12 +492,10 @@ var TSOS;
             }
         }
         shellRun(args) {
-            console.log("RUN ARGS: " + args);
             //ensures that the run is a number
             if (!isNaN(Number(args[0]))) {
                 let neverFound = true;
                 for (let i = 0; i < _ReadyQueue.length; i++) {
-                    console.log("THIS QUEUED PCB pid " + _ReadyQueue[i].pid);
                     if (_ReadyQueue[i].pid === Number(args[0])) {
                         if (_ReadyQueue[i].state === "Resident") {
                             _PCB = _ReadyQueue[i];
@@ -546,6 +544,16 @@ var TSOS;
             }
         }
         shellRunAll(args) {
+            for (let i = 0; i < _ReadyQueue.length; i++) {
+                if (_ReadyQueue[i].state === "Resident") {
+                    _PCB = _ReadyQueue[i];
+                    _CPU.updateCpuMatchPcb();
+                    _PCB.state = "Running";
+                    _CPU.isExecuting = true;
+                    _StdOut.putText("Running the program stored at: " + args[0]);
+                    TSOS.Control.updateVisuals(_PCB.pc);
+                }
+            }
         }
         shellKill(args) {
             if (!isNaN(Number(args[0]))) {

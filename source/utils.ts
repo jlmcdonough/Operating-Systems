@@ -80,5 +80,16 @@ module TSOS {
             }
             return [startingPoint, maxPoint];
         }
+
+        public static calculateTurnaroundTime() : number
+        {
+            return _PCB.endingCycle - _PCB.startingCycle;
+        }
+
+        public static calculateWaitTime(): number
+        {
+            return this.calculateTurnaroundTime() - _PCB.runningCycle;
+        }
+
     }
 }

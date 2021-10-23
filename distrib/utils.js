@@ -70,6 +70,12 @@ var TSOS;
             }
             return [startingPoint, maxPoint];
         }
+        static calculateTurnaroundTime() {
+            return _PCB.endingCycle - _PCB.startingCycle;
+        }
+        static calculateWaitTime() {
+            return this.calculateTurnaroundTime() - _PCB.runningCycle;
+        }
     }
     TSOS.Utils = Utils;
 })(TSOS || (TSOS = {}));

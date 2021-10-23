@@ -14,7 +14,10 @@ module TSOS {
                     public location: string = "",
                     public segment: number = 0,
                     public base: number = 0,
-                    public limit: number = 0) {
+                    public limit: number = 0,
+                    public startingCycle: number = 0,
+                    public endingCycle: number = 0,
+                    public runningCycle: number = 0) {
         }
 
         public init(priorityNum: number, segment: number): void
@@ -37,6 +40,7 @@ module TSOS {
             this.segment = segment;
             this.base = startingPoint;
             this.limit = maxPoint;
+            this.startingCycle = _CycleCount;
         }
     }
 }

@@ -617,14 +617,12 @@ module TSOS {
 
         public shellRun(args: string[])
         {
-            console.log("RUN ARGS: " + args);
             //ensures that the run is a number
             if (!isNaN(Number(args[0])))
             {
                 let neverFound = true;
                 for(let i = 0; i < _ReadyQueue.length; i++)
                 {
-                    console.log("THIS QUEUED PCB pid " + _ReadyQueue[i].pid);
                     if (_ReadyQueue[i].pid === Number(args[0]) )
                     {
                         if (_ReadyQueue[i].state === "Resident")
@@ -693,7 +691,18 @@ module TSOS {
 
         public shellRunAll(args: string[])
         {
-
+            for(let i = 0; i < _ReadyQueue.length; i++)
+            {
+                if (_ReadyQueue[i].state === "Resident")
+                {
+                    _PCB = _ReadyQueue[i];
+                    _CPU.updateCpuMatchPcb();
+                    _PCB.state = "Running";
+                    _CPU.isExecuting = true;
+                    _StdOut.putText("Running the program stored at: " + args[0]);
+                    Control.updateVisuals(_PCB.pc);
+                }
+            }
         }
 
         public shellKill(args: string[])
