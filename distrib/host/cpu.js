@@ -321,6 +321,7 @@ var TSOS;
         //so far only working with the explicitly defined ones
         opcode() {
             console.log("OpCode " + this.ir + " not yet added.");
+            TSOS.Utils.invalidOPCodeError();
         }
         littleEndian(programCounter) {
             let second = _MemoryAccessor.read(_PCB.segment, programCounter);

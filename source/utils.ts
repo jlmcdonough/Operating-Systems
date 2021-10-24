@@ -91,5 +91,23 @@ module TSOS {
             return this.calculateTurnaroundTime() - _PCB.runningCycle;
         }
 
+        public static memoryOutOfBoundsError(): void
+        {
+            _CPU.isExecuting = false;
+            _PCB.state = "Stopped";
+            _StdOut.putText("Memory out of bounds error on process " + _PCB.pid + ". CPU stopped.");
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
+        }
+
+        public static invalidOPCodeError(): void
+        {
+            _CPU.isExecuting = false;
+            _PCB.state = "Stopped";
+            _StdOut.putText("Invalid OP Code reached on process " + _PCB.pid + ". CPU stopped.");
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
+        }
+
     }
 }

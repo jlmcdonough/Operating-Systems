@@ -76,6 +76,20 @@ var TSOS;
         static calculateWaitTime() {
             return this.calculateTurnaroundTime() - _PCB.runningCycle;
         }
+        static memoryOutOfBoundsError() {
+            _CPU.isExecuting = false;
+            _PCB.state = "Stopped";
+            _StdOut.putText("Memory out of bounds error on process " + _PCB.pid + ". CPU stopped.");
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
+        }
+        static invalidOPCodeError() {
+            _CPU.isExecuting = false;
+            _PCB.state = "Stopped";
+            _StdOut.putText("Invalid OP Code reached on process " + _PCB.pid + ". CPU stopped.");
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
+        }
     }
     TSOS.Utils = Utils;
 })(TSOS || (TSOS = {}));

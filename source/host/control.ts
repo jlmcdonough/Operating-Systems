@@ -275,7 +275,6 @@ module TSOS {
                 mainHighlight = "#1E88E5";
                 secondaryHighlight = "#BBDEFB";
             }
-
             document.getElementById("mem" + (pc + offset)).style.backgroundColor = mainHighlight;
             for(let i = 1; i <= operandCount; i++)
             {
@@ -322,12 +321,20 @@ module TSOS {
             table.innerHTML = tableBody;
         }
 
-        public static updateVisuals(oldPC: number): void
+        public static updateVisuals(oldPC: number, segment?: number): void
         {
             Control.cpuUpdateTable();
             Control.pcbUpdateTable();
             Control.memoryUpdateTable();
-            Control.memoryTableColor(oldPC, operandCount, _PCB.segment );
+
+            if (typeof segment !== 'undefined')
+            {
+                Control.memoryTableColor(oldPC, operandCount, segment );
+            }
+            else
+            {
+                Control.memoryTableColor(oldPC, operandCount, _PCB.segment );
+            }
         }
     }
 }

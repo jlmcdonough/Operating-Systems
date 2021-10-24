@@ -535,7 +535,6 @@ module TSOS {
                         segmentOneAvailable = _MemoryManager.segmentReallocate(1);
                         segmentTwoAvailable = _MemoryManager.segmentReallocate(2);
                         segmentThreeAvailable = _MemoryManager.segmentReallocate(3);
-
                     }
 
                     if(_PCBList.length > 0 && (
@@ -572,24 +571,28 @@ module TSOS {
                             thisSegment = 3;
                         }
 
-                        _PCB = new Pcb();
-                        _PCB.init(priority, thisSegment);
+                        let newPCB = new Pcb();
+                        newPCB.init(priority, thisSegment);
+                        //_PCB = new Pcb();
+                        //_PCB.init(priority, thisSegment);
+
 
                         let lowerLimit;
                         if (segmentOneAvailable)
                         {
                             console.log("LOADING INTO 0")
-                            _PCBList[0] = _PCB;
+                            _PCBList[0] = newPCB;
+                            //_PCBList[0] = _PCB;
                         }
                         else if (segmentTwoAvailable)
                         {
                             console.log("LOADING INTO 1")
-                            _PCBList[1] = _PCB;
+                            _PCBList[1] = newPCB;
                         }
                         else if (segmentThreeAvailable)
                         {
                             console.log("LOADING INTO 2")
-                            _PCBList[2] = _PCB;
+                            _PCBList[2] = newPCB;
                         }
                         else
                         {
@@ -597,7 +600,7 @@ module TSOS {
                         }
                         _MemoryAccessor.nukeMemory(thisSegment);
                         _MemoryAccessor.loadMemory(trimmedInput, thisSegment);
-                        Control.updateVisuals(0);
+                        Control.updateVisuals(0, thisSegment);
 
                         _StdOut.putText("Successfully loaded user program with priority " + priority);
                         _StdOut.advanceLine();

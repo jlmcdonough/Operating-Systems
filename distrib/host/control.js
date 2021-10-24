@@ -243,11 +243,16 @@ var TSOS;
             tableBody += "</tbody>";
             table.innerHTML = tableBody;
         }
-        static updateVisuals(oldPC) {
+        static updateVisuals(oldPC, segment) {
             Control.cpuUpdateTable();
             Control.pcbUpdateTable();
             Control.memoryUpdateTable();
-            Control.memoryTableColor(oldPC, operandCount, _PCB.segment);
+            if (typeof segment !== 'undefined') {
+                Control.memoryTableColor(oldPC, operandCount, segment);
+            }
+            else {
+                Control.memoryTableColor(oldPC, operandCount, _PCB.segment);
+            }
         }
     }
     TSOS.Control = Control;

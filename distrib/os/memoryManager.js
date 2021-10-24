@@ -6,12 +6,12 @@ var TSOS;
         segmentEmpty(segment) {
             //segments are 1, 2, 3 yet array indices are 0, 1, 2
             if (0 < segment && segment <= 3) {
-                if (_MemoryAccessor.read(segment, 0) === "00") {
-                    return true;
+                for (let i = 0; i < _PCBList.length; i++) {
+                    if (_PCBList[i].segment == segment) {
+                        return false;
+                    }
                 }
-                else {
-                    return false;
-                }
+                return true;
             }
             else {
                 return false;
@@ -19,7 +19,7 @@ var TSOS;
         }
         segmentReallocate(segment) {
             if (0 < segment && segment <= 3) {
-                if (!((_PCBList[segment - 1].state === "Ready") || (_PCBList[segment - 1].state === "Resident"))) {
+                if (!((_PCBList[segment - 1].state === "Running") || (_PCBList[segment - 1].state === "Resident"))) {
                     return true;
                 }
                 else {

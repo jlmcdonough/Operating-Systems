@@ -7,14 +7,29 @@ module TSOS {
 
         public write(segment: number, atAddress: string, newData: string) : void
         {
-            console.log("WRITING: " + _MemoryManager.segmentOffset(segment, Utils.hexToDecimal(atAddress)));
-            _Memory.override(_MemoryManager.segmentOffset(segment, Utils.hexToDecimal(atAddress)), newData);
+            let valueToRead = _MemoryManager.segmentOffset(segment, Utils.hexToDecimal(atAddress));
+            if ( (_PCB.base <= valueToRead) && (valueToRead <= _PCB.limit) )
+            {
+                _Memory.override(_MemoryManager.segmentOffset(segment, Utils.hexToDecimal(atAddress)), newData);
+            }
+            else
+            {
+                Utils.memoryOutOfBoundsError();
+            }
         }
 
         public read(segment: number, atAddress: number) : string
         {
-            console.log("READING: " + _MemoryManager.segmentOffset(segment, atAddress));
-            return _Memory.getAt(_MemoryManager.segmentOffset(segment, atAddress) );
+            let valueToRead = _MemoryManager.segmentOffset(segment, atAddress);
+            if ( (_PCB.base <= valueToRead) && (valueToRead <= _PCB.limit) )
+            {
+                return _Memory.getAt(valueToRead);
+            }
+            else
+            {
+                Utils.memoryOutOfBoundsError();
+            }
+
         }
 
         public loadMemory(userEntry: string, segmentNumber: number): void
@@ -34,6 +49,7 @@ module TSOS {
                 else
                 {
                     console.log("EXCEEDING MEMORY: TO IMPLEMENT ERROR");
+                    Utils.memoryOutOfBoundsError();
                 }
             }
         }

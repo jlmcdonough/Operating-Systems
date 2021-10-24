@@ -429,6 +429,7 @@ module TSOS {
         public opcode(): void
         {
             console.log("OpCode " + this.ir + " not yet added.");
+            Utils.invalidOPCodeError();
         }
 
         public littleEndian(programCounter: number) : string

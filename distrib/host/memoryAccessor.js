@@ -4,12 +4,22 @@ var TSOS;
         constructor() {
         }
         write(segment, atAddress, newData) {
-            console.log("WRITING: " + _MemoryManager.segmentOffset(segment, TSOS.Utils.hexToDecimal(atAddress)));
-            _Memory.override(_MemoryManager.segmentOffset(segment, TSOS.Utils.hexToDecimal(atAddress)), newData);
+            let valueToRead = _MemoryManager.segmentOffset(segment, TSOS.Utils.hexToDecimal(atAddress));
+            if ((_PCB.base <= valueToRead) && (valueToRead <= _PCB.limit)) {
+                _Memory.override(_MemoryManager.segmentOffset(segment, TSOS.Utils.hexToDecimal(atAddress)), newData);
+            }
+            else {
+                TSOS.Utils.memoryOutOfBoundsError();
+            }
         }
         read(segment, atAddress) {
-            console.log("READING: " + _MemoryManager.segmentOffset(segment, atAddress));
-            return _Memory.getAt(_MemoryManager.segmentOffset(segment, atAddress));
+            let valueToRead = _MemoryManager.segmentOffset(segment, atAddress);
+            if ((_PCB.base <= valueToRead) && (valueToRead <= _PCB.limit)) {
+                return _Memory.getAt(valueToRead);
+            }
+            else {
+                TSOS.Utils.memoryOutOfBoundsError();
+            }
         }
         loadMemory(userEntry, segmentNumber) {
             let userArr = userEntry.split(" ");
@@ -22,6 +32,7 @@ var TSOS;
                 }
                 else {
                     console.log("EXCEEDING MEMORY: TO IMPLEMENT ERROR");
+                    TSOS.Utils.memoryOutOfBoundsError();
                 }
             }
         }
