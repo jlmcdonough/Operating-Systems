@@ -57,7 +57,14 @@ module TSOS {
         public static padHex(hexNum: string)
         {
             let withPadding = "00" + hexNum;
-            return withPadding.substr(withPadding.length - 2).toUpperCase();
+            if (withPadding.length > 4)
+            {
+                return withPadding.substr(2).toUpperCase();
+            }
+            else
+            {
+                return withPadding.substr(withPadding.length - 2).toUpperCase();
+            }
         }
 
         public static segmentStuff(segmentNumber: number): number[]

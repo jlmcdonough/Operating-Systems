@@ -50,7 +50,14 @@ var TSOS;
         }
         static padHex(hexNum) {
             let withPadding = "00" + hexNum;
-            return withPadding.substr(withPadding.length - 2).toUpperCase();
+            console.log("withPad: " + withPadding);
+            if (withPadding.length > 4) {
+                console.log("IN IF");
+                return withPadding.substr(2).toUpperCase();
+            }
+            else {
+                return withPadding.substr(withPadding.length - 2).toUpperCase();
+            }
         }
         static segmentStuff(segmentNumber) {
             let startingPoint, maxPoint;

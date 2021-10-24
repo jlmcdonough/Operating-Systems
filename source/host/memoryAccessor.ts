@@ -48,7 +48,6 @@ module TSOS {
                 }
                 else
                 {
-                    console.log("EXCEEDING MEMORY: TO IMPLEMENT ERROR");
                     Utils.memoryOutOfBoundsError();
                 }
             }

@@ -31,7 +31,6 @@ var TSOS;
                     _Memory.memoryBlock[i + startingPoint] = userArr[i];
                 }
                 else {
-                    console.log("EXCEEDING MEMORY: TO IMPLEMENT ERROR");
                     TSOS.Utils.memoryOutOfBoundsError();
                 }
             }

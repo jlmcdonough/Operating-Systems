@@ -295,7 +295,6 @@ module TSOS {
 
             let secondValue = _MemoryAccessor.read(_PCB.segment,
                 Utils.hexToDecimal(this.littleEndian(this.pc)));
-
             this.yReg = secondValue;
 
             this.pc++;
@@ -428,7 +427,6 @@ module TSOS {
         //so far only working with the explicitly defined ones
         public opcode(): void
         {
-            console.log("OpCode " + this.ir + " not yet added.");
             Utils.invalidOPCodeError();
         }
 
