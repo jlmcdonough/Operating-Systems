@@ -4,9 +4,11 @@ var TSOS;
         constructor() {
         }
         write(segment, atAddress, newData) {
+            console.log("WRITING: " + _MemoryManager.segmentOffset(segment, TSOS.Utils.hexToDecimal(atAddress)));
             _Memory.override(_MemoryManager.segmentOffset(segment, TSOS.Utils.hexToDecimal(atAddress)), newData);
         }
         read(segment, atAddress) {
+            console.log("READING: " + _MemoryManager.segmentOffset(segment, atAddress));
             return _Memory.getAt(_MemoryManager.segmentOffset(segment, atAddress));
         }
         loadMemory(userEntry, segmentNumber) {

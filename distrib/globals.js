@@ -28,7 +28,7 @@ var _MemoryAccessor;
 var _MemoryManager;
 var _PCB;
 var _ProcessID = 0;
-var _ReadyQueue = [];
+var _PCBList = [];
 var operandCount;
 var _Quantum = 6;
 var _CycleCount = 0;

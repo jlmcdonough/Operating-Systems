@@ -538,7 +538,7 @@ module TSOS {
 
                     }
 
-                    if(_ReadyQueue.length > 0 && (
+                    if(_PCBList.length > 0 && (
                         ( !segmentOneAvailable ) && ( !segmentTwoAvailable) && ( !segmentThreeAvailable) )
                     )
                     {
@@ -579,17 +579,17 @@ module TSOS {
                         if (segmentOneAvailable)
                         {
                             console.log("LOADING INTO 0")
-                            _ReadyQueue[0] = _PCB;
+                            _PCBList[0] = _PCB;
                         }
                         else if (segmentTwoAvailable)
                         {
                             console.log("LOADING INTO 1")
-                            _ReadyQueue[1] = _PCB;
+                            _PCBList[1] = _PCB;
                         }
                         else if (segmentThreeAvailable)
                         {
                             console.log("LOADING INTO 2")
-                            _ReadyQueue[2] = _PCB;
+                            _PCBList[2] = _PCB;
                         }
                         else
                         {
@@ -621,13 +621,13 @@ module TSOS {
             if (!isNaN(Number(args[0])))
             {
                 let neverFound = true;
-                for(let i = 0; i < _ReadyQueue.length; i++)
+                for(let i = 0; i < _PCBList.length; i++)
                 {
-                    if (_ReadyQueue[i].pid === Number(args[0]) )
+                    if (_PCBList[i].pid === Number(args[0]) )
                     {
-                        if (_ReadyQueue[i].state === "Resident")
+                        if (_PCBList[i].state === "Resident")
                         {
-                            _PCB = _ReadyQueue[i];
+                            _PCB = _PCBList[i];
                             _CPU.updateCpuMatchPcb();
                             _PCB.state = "Running";
                             _CPU.isExecuting = true;
@@ -658,11 +658,11 @@ module TSOS {
 
         public shellPs(args: string[])
         {
-            if (_ReadyQueue.length > 0)
+            if (_PCBList.length > 0)
             {
-                for (let i = 0; i < _ReadyQueue.length; i++)
+                for (let i = 0; i < _PCBList.length; i++)
                 {
-                    _StdOut.putText("Process ID: " + _ReadyQueue[i].pid + " State: " + _ReadyQueue[i].state + " Segment: " + _ReadyQueue[i].segment + " Program Counter: " + _ReadyQueue[i].pc + " Priority: " + _ReadyQueue[i].priority);
+                    _StdOut.putText("Process ID: " + _PCBList[i].pid + " State: " + _PCBList[i].state + " Segment: " + _PCBList[i].segment + " Program Counter: " + _PCBList[i].pc + " Priority: " + _PCBList[i].priority);
                     _StdOut.advanceLine();
                 }
             }
@@ -680,22 +680,42 @@ module TSOS {
             }
             else
             {
-                _MemoryAccessor.nukeMemory(1);
-                _MemoryAccessor.nukeMemory(2);
-                _MemoryAccessor.nukeMemory(3);
-                Control.memoryUpdateTable();
-
-                _StdOut.putText("Memory has been reset.");
+                if (args.length == 0)
+                {
+                    _MemoryAccessor.nukeMemory(1);
+                    _MemoryAccessor.nukeMemory(2);
+                    _MemoryAccessor.nukeMemory(3);
+                    Control.memoryUpdateTable();
+                    _StdOut.putText("Memory has been reset.");
+                }
+                else if (args.length == 1 && !isNaN(Number(args[0])))
+                {
+                    let segment = Number(args[0]);
+                    if (0 < segment && segment < 4)
+                    {
+                        _MemoryAccessor.nukeMemory(segment);
+                        Control.memoryUpdateTable();
+                        _StdOut.putText("Memory in segment " + segment + " has been reset.");
+                    }
+                    else
+                    {
+                        _StdOut.putText("Segment must be between 1 and 3 (inclusive).")
+                    }
+                }
+                else
+                {
+                    _StdOut.putText("Quantum command must have nothing follow it, or just a valid positive integer.")
+                }
             }
         }
 
         public shellRunAll(args: string[])
         {
-            for(let i = 0; i < _ReadyQueue.length; i++)
+            for(let i = 0; i < _PCBList.length; i++)
             {
-                if (_ReadyQueue[i].state === "Resident")
+                if (_PCBList[i].state === "Resident")
                 {
-                    _PCB = _ReadyQueue[i];
+                    _PCB = _PCBList[i];
                     _CPU.updateCpuMatchPcb();
                     _PCB.state = "Running";
                     _CPU.isExecuting = true;
@@ -711,23 +731,23 @@ module TSOS {
             {
                 let thisPID = Number(args[0]);
                 let notFound = true;
-                for (let i = 0; i < _ReadyQueue.length; i++)
+                for (let i = 0; i < _PCBList.length; i++)
                 {
-                    if (_ReadyQueue[i].pid == thisPID )
+                    if (_PCBList[i].pid == thisPID )
                     {
                         notFound = false;
-                        if (_ReadyQueue[i].state === "Running")
+                        if (_PCBList[i].state === "Running")
                         {
                             _CPU.isExecuting = false;
                             _PCB.state = "Stopped";
                             _StdOut.putText("Process " + thisPID + " terminated.");
                         }
-                        if (_ReadyQueue[i].state === "Resident")
+                        if (_PCBList[i].state === "Resident")
                         {
                             _PCB.state = "Stopped";
                             _StdOut.putText("Process " + thisPID + " terminated.");
                         }
-                        if (_ReadyQueue[i].state === "Finished" || _ReadyQueue[i].state === "Stopped")
+                        if (_PCBList[i].state === "Finished" || _PCBList[i].state === "Stopped")
                         {
                             _StdOut.putText("Process " + thisPID + " is not resident or running.");
                         }
@@ -752,9 +772,9 @@ module TSOS {
         {
             _CPU.isExecuting = false;
 
-            for (let i = 0; i < _ReadyQueue.length; i++)
+            for (let i = 0; i < _PCBList.length; i++)
             {
-                _ReadyQueue[i].state = "Stopped";
+                _PCBList[i].state = "Stopped";
             }
             _StdOut.putText("All stored processes killed");
             Control.updateVisuals(0);
@@ -762,10 +782,6 @@ module TSOS {
 
         public shellQuantum(args: string[])
         {
-            console.log("ARGS: " + args);
-            console.log("ARGS length: " + args.length);
-            console.log(Number(args[0]));
-            console.log("ARGS[0]: " + args[0]);
             if (args.length == 0)
             {
                 _StdOut.putText("Current quantum is " + _Quantum);

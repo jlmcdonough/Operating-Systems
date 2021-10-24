@@ -7,11 +7,13 @@ module TSOS {
 
         public write(segment: number, atAddress: string, newData: string) : void
         {
+            console.log("WRITING: " + _MemoryManager.segmentOffset(segment, Utils.hexToDecimal(atAddress)));
             _Memory.override(_MemoryManager.segmentOffset(segment, Utils.hexToDecimal(atAddress)), newData);
         }
 
         public read(segment: number, atAddress: number) : string
         {
+            console.log("READING: " + _MemoryManager.segmentOffset(segment, atAddress));
             return _Memory.getAt(_MemoryManager.segmentOffset(segment, atAddress) );
         }
 

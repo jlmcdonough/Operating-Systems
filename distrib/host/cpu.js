@@ -36,8 +36,6 @@ var TSOS;
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
-            console.log("CYCLE COUNT PRE: " + _CycleCount);
-            console.log("PCB RUNNING COUNT: " + _PCB.runningCycle);
             if (_CPU.isExecuting) {
                 let oldPC = this.pc;
                 operandCount = 1;

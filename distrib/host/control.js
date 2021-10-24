@@ -215,20 +215,20 @@ var TSOS;
             let tableBody = "<tbody>" + "<tr>" +
                 "<th>PID</th><th>PC</th><th>Acc</th><th>X</th><th>Y</th><th>Z</th><th>Priority</th><th>State</th><th>Location</th><th>Mem. Base</th><th>Mem. Limit</th><th>Segment</th>" +
                 "</tr>";
-            for (let i = 0; i < _ReadyQueue.length; i++) {
+            for (let i = 0; i < _PCBList.length; i++) {
                 tableBody += "<tr>" +
-                    `<td> ${_ReadyQueue[i].pid} </td>` +
-                    `<td> ${TSOS.Utils.padHex(TSOS.Utils.decimalToHex(_ReadyQueue[i].pc))} </td>` +
-                    `<td> ${_ReadyQueue[i].acc} </td>` +
-                    `<td> ${_ReadyQueue[i].xReg} </td>` +
-                    `<td> ${_ReadyQueue[i].yReg} </td>` +
-                    `<td> ${_ReadyQueue[i].zFlag.toString()} </td>` +
-                    `<td> ${_ReadyQueue[i].priority.toString()} </td>` +
-                    `<td> ${_ReadyQueue[i].state} </td>` +
-                    `<td> ${_ReadyQueue[i].location} </td>` +
-                    `<td> ${_ReadyQueue[i].base} </td>` +
-                    `<td> ${_ReadyQueue[i].limit} </td>` +
-                    `<td> ${_ReadyQueue[i].segment} </td>` +
+                    `<td> ${_PCBList[i].pid} </td>` +
+                    `<td> ${TSOS.Utils.padHex(TSOS.Utils.decimalToHex(_PCBList[i].pc))} </td>` +
+                    `<td> ${_PCBList[i].acc} </td>` +
+                    `<td> ${_PCBList[i].xReg} </td>` +
+                    `<td> ${_PCBList[i].yReg} </td>` +
+                    `<td> ${_PCBList[i].zFlag.toString()} </td>` +
+                    `<td> ${_PCBList[i].priority.toString()} </td>` +
+                    `<td> ${_PCBList[i].state} </td>` +
+                    `<td> ${_PCBList[i].location} </td>` +
+                    `<td> ${_PCBList[i].base} </td>` +
+                    `<td> ${_PCBList[i].limit} </td>` +
+                    `<td> ${_PCBList[i].segment} </td>` +
                     "</tr>";
             }
             /*  document.getElementById("pcbPC").innerHTML = Utils.padHex(Utils.decimalToHex(_PCB.pc));
