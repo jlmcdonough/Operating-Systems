@@ -82,8 +82,8 @@ module TSOS {
                 {
                     _DefaultFontColor = "#121212";
 
-                    var image = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
-                    var data = image.data;
+                    let image = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
+                    let data = image.data;
                     for (let i = 0; i < data.length; i += 4)
                     {
                         data[i] = 0 - data[i]
@@ -102,8 +102,8 @@ module TSOS {
                 {
                     _DefaultFontColor = "#ffffff";
 
-                    var image = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
-                    var data = image.data;
+                    let image = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
+                    let data = image.data;
                     for (let i = 0; i < data.length; i += 4)
                     {
                         data[i] = 255 - data[i]
@@ -161,6 +161,8 @@ module TSOS {
             _MemoryAccessor = new MemoryAccessor();
 
             _PCB = new Pcb();
+            _Scheduler = new Scheduler();
+            _Scheduler.init();
 
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(Devices.hostClockPulse, CPU_CLOCK_INTERVAL);

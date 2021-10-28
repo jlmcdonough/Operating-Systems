@@ -320,7 +320,6 @@ var TSOS;
         //the above op codes are defined in the resource provided https://www.labouseur.com/commondocs/6502alan-instruction-set.pdf
         //so far only working with the explicitly defined ones
         opcode() {
-            console.log("OpCode " + this.ir + " not yet added.");
             TSOS.Utils.invalidOPCodeError();
         }
         littleEndian(programCounter) {

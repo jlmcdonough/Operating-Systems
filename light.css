@@ -39,14 +39,14 @@ h2 {
 
 #display {
     background-color:#ECEFF1;
-    border: 1px solid #018786;;
+    border: 1px solid #484b6a;;
     cursor: default;
 }
 
 .normal_button {
     width: 100px;
-    color: #121212;
-    background-color: #018786;
+    color: #ffffff;
+    background-color: #484b6a;
 }
 
 .footerText {
@@ -85,7 +85,7 @@ h2 {
 .hostLogText {
     color: #222222;
     background: #ECEFF1;
-    border-color: #018786;
+    border-color: #484b6a;
 }
 
 .userProgramInput {
@@ -95,7 +95,7 @@ h2 {
 .userProgramInputText {
     color: #222222;
     background: #ECEFF1;
-    border-color: #018786;
+    border-color: #484b6a;
 }
 
 .hostDisplay {
@@ -109,7 +109,7 @@ tr:nth-child(even) {
 .hostDisplayTable {
     color: #222222;
     background: #ECEFF1;
-    border: 1px solid #018786;
+    border: 1px solid #484b6a;
     width: 470px;
     text-align: center;
 }
@@ -119,7 +119,7 @@ tr:nth-child(even) {
     max-height: 211px;
     overflow-x: hidden;
     overflow-y: hidden;
-    border-bottom: 1px solid #018786;
+    border-bottom: 1px solid #484b6a;
 }
 
 #divMemoryTable:hover {
@@ -133,7 +133,7 @@ tr:nth-child(even) {
     max-height: 211px;
     overflow-x: hidden;
     overflow-y: hidden;
-    border-bottom: 1px solid #018786;
+    border-bottom: 1px solid #484b6a;
 }
 
 #divPCBTable:hover {
@@ -151,5 +151,5 @@ tr:nth-child(even) {
 }
 
 input:disabled {
-    background: #ccc;
+    background: #3b3b3b;
 }

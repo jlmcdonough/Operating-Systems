@@ -65,8 +65,8 @@ var TSOS;
                 console.log("Apperance switched to " + _APPEARANCE);
                 if (_APPEARANCE === "light") {
                     _DefaultFontColor = "#121212";
-                    var image = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
-                    var data = image.data;
+                    let image = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
+                    let data = image.data;
                     for (let i = 0; i < data.length; i += 4) {
                         data[i] = 0 - data[i];
                         data[i + 1] = 0 - data[i + 1];
@@ -79,8 +79,8 @@ var TSOS;
                 //_DrawingContext.putImageData(prevText, 0, 0);
                 else {
                     _DefaultFontColor = "#ffffff";
-                    var image = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
-                    var data = image.data;
+                    let image = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
+                    let data = image.data;
                     for (let i = 0; i < data.length; i += 4) {
                         data[i] = 255 - data[i];
                         data[i + 1] = 255 - data[i + 1];
@@ -122,6 +122,8 @@ var TSOS;
             _Memory.init();
             _MemoryAccessor = new TSOS.MemoryAccessor();
             _PCB = new TSOS.Pcb();
+            _Scheduler = new TSOS.Scheduler();
+            _Scheduler.init();
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(TSOS.Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.
