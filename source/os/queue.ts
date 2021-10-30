@@ -33,6 +33,15 @@ module TSOS {
             return retVal;
         }
 
+        public peek()
+        {
+            if (this.q.length > 0)
+            {
+                return this.q[0];
+            }
+            return null;
+        }
+
         public toString() {
             var retVal = "";
             for (var i in this.q) {

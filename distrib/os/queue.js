@@ -29,6 +29,12 @@ var TSOS;
             }
             return retVal;
         }
+        peek() {
+            if (this.q.length > 0) {
+                return this.q[0];
+            }
+            return null;
+        }
         toString() {
             var retVal = "";
             for (var i in this.q) {

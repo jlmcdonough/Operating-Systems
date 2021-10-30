@@ -630,12 +630,15 @@ module TSOS {
                     {
                         if (_PCBList[i].state === "Resident")
                         {
-                            _PCB = _PCBList[i];
+                            _PCBList[i].state = "Ready";
+                            _Scheduler.readyQueue.enqueue(_PCBList[i]);
+                            _Scheduler.doScheduling();
+                           /* _PCB = _PCBList[i];
                             _CPU.updateCpuMatchPcb();
                             _PCB.state = "Running";
                             _CPU.isExecuting = true;
                             _StdOut.putText("Running the program stored at: " + args[0]);
-                            Control.updateVisuals(_PCB.pc);
+                            Control.updateVisuals(_PCB.pc);*/
                         }
                         else
                         {

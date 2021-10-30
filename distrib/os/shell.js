@@ -501,12 +501,15 @@ var TSOS;
                 for (let i = 0; i < _PCBList.length; i++) {
                     if (_PCBList[i].pid === Number(args[0])) {
                         if (_PCBList[i].state === "Resident") {
-                            _PCB = _PCBList[i];
-                            _CPU.updateCpuMatchPcb();
-                            _PCB.state = "Running";
-                            _CPU.isExecuting = true;
-                            _StdOut.putText("Running the program stored at: " + args[0]);
-                            TSOS.Control.updateVisuals(_PCB.pc);
+                            _PCBList[i].state = "Ready";
+                            _Scheduler.readyQueue.enqueue(_PCBList[i]);
+                            _Scheduler.doScheduling();
+                            /* _PCB = _PCBList[i];
+                             _CPU.updateCpuMatchPcb();
+                             _PCB.state = "Running";
+                             _CPU.isExecuting = true;
+                             _StdOut.putText("Running the program stored at: " + args[0]);
+                             Control.updateVisuals(_PCB.pc);*/
                         }
                         else {
                             _StdOut.putText("The program stored at " + args[0] + " is not resident");

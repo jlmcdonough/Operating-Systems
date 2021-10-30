@@ -6,7 +6,7 @@ module TSOS {
             public quanta: number = 0,
             public schedulingSystem: string = "",
             public readyQueue: Queue = new Queue(),
-            public runningPCB: Pcb = _PCB
+            public runningPCB: Pcb = undefined
         ) {
         }
 
@@ -15,20 +15,40 @@ module TSOS {
             this.quanta = _Quantum;
             this.schedulingSystem = "FCFS";
             this.readyQueue = new Queue();
-            this.runningPCB = _PCB;
+
             console.log(this.readyQueue);
         }
 
-/*        public doScheduling() : void
+        public doScheduling() : void
         {
-
+            console.log("SCHEDULING WITH: " + _Scheduler.readyQueue.toString());
+            console.log("GLOBAL PCB: " + _PCB.priority);
+            console.log("PEEK QUEUE: " + _Scheduler.readyQueue.peek());
+            if (_Scheduler.readyQueue.getSize() > 0)
+            {
+                console.log("READY QUEUE > 0");
+                if ( (_Scheduler.readyQueue.getSize() == 1) && (_Scheduler.runningPCB == null) )
+                {
+                    console.log("READY QUEUE = 1")
+                    _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, [_Scheduler.readyQueue.peek()]))
+                }
+                else
+                {
+                    console.log("SOMETHING WRONG");
+                }
+                _CPU.isExecuting = true;
+            }
+            else
+            {
+                console.log("READY QUUEUE <= 0")
+            }
         }
-*/
+
         public contextSwitch(): Pcb
         {
             console.log("CONTEXT SWITCHING");
             let currPCB = _Scheduler.runningPCB;
-            console.log("CURR RUNNING PCB: " + currPCB.pid);
+            //console.log("CURR RUNNING PCB: " + currPCB.pid);
             let nextPCB = _Scheduler.readyQueue.dequeue();
             console.log("NEXT IN QUEUE: " + nextPCB.pid)
 
@@ -36,13 +56,15 @@ module TSOS {
             {
                 console.log("CURRENTLY NO PCB RUNNING");
                 nextPCB.state = "Running";
-                this.updateCPU(nextPCB);
+                _PCB = nextPCB;
+                this.updateCPU(_PCB);
             }
             else
             {
                 console.log("SWITCHING FROM AN OLD RUNNING PCB")
                 _Scheduler.readyQueue.enqueue(this.storePCB(currPCB));
                 nextPCB.state = "Running";
+                _PCB = nextPCB;
                 this.updateCPU(nextPCB);
             }
 
