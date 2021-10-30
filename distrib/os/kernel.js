@@ -51,9 +51,9 @@ var TSOS;
             // TODO: Check for running processes.  If there are some, alert and stop. Else...
             if (_CPU.isExecuting) {
                 _CPU.isExecuting = false;
-                TSOS.Control.cpuUpdateTable();
+                TSOS.Control.cpuUpdateTable(_CPU.pc);
                 _PCB.state = "Shutdown";
-                TSOS.Control.pcbUpdateTable();
+                TSOS.Control.pcbUpdateTable(_PCB.pc);
             }
             // ... Disable the Interrupts.
             this.krnTrace("Disabling the interrupts.");

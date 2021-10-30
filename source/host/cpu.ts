@@ -33,7 +33,7 @@ module TSOS {
             this.zFlag = 0;
             this.isExecuting = false;
 
-            Control.cpuUpdateTable();
+            Control.cpuUpdateTable(_CPU.pc);
         }
 
         public cycle(): void {
@@ -43,6 +43,7 @@ module TSOS {
 
             if(_CPU.isExecuting)
             {
+                _Scheduler.quantaCheck();
                 let oldPC = this.pc;
                 operandCount = 1;
                 this.fetch();

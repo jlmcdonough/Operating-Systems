@@ -294,10 +294,19 @@ module TSOS {
 
             for (let i = 0; i < _PCBList.length; i++)
             {
+                let pcbPC;
+                if (_PCBList[i].state === "Running")
+                {
+                    pcbPC = Utils.padHex(Utils.decimalToHex(oldPC));
+                }
+                else
+                {
+                    pcbPC = Utils.padHex(Utils.decimalToHex(_PCBList[i].pc));
+                }
+
                 tableBody +="<tr>" +
                                 `<td> ${_PCBList[i].pid} </td>` +
-                                `<td> ${Utils.padHex(oldPC.toString())} </td>` +
-                                //`<td> ${Utils.padHex(Utils.decimalToHex(_PCBList[i].pc))} </td>` +
+                                `<td> ${pcbPC} </td>` +
                                 `<td> ${_PCBList[i].acc} </td>` +
                                 `<td> ${_PCBList[i].xReg} </td>` +
                                 `<td> ${_PCBList[i].yReg} </td>` +

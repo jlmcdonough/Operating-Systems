@@ -50,14 +50,19 @@ var TSOS;
                 else if (chr === "ctrl+c") {
                     if (_CPU.isExecuting) //if no programs are running, don't care
                      {
-                        _CPU.isExecuting = false;
-                        TSOS.Control.cpuUpdateTable();
+                        TSOS.Control.cpuUpdateTable(_CPU.pc);
                         _PCB.state = "Stopped";
-                        TSOS.Control.pcbUpdateTable();
-                        _CPU.pc = 0;
+                        _PCB.endingCycle = _CycleCount;
+                        TSOS.Control.pcbUpdateTable(_PCB.pc);
                         this.advanceLine();
                         this.putText("Running process " + _PCB.pid + " stopped by user.");
                         this.advanceLine();
+                        _StdOut.putText("Turnaround Time: " + TSOS.Utils.calculateTurnaroundTime());
+                        _StdOut.advanceLine();
+                        _StdOut.putText("Wait Time: " + TSOS.Utils.calculateWaitTime());
+                        _StdOut.advanceLine();
+                        _Scheduler.runningPCB = null;
+                        _Scheduler.doScheduling();
                         _OsShell.putPrompt();
                     }
                 }

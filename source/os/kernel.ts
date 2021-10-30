@@ -62,10 +62,10 @@ module TSOS {
             if(_CPU.isExecuting)
             {
                 _CPU.isExecuting = false;
-                Control.cpuUpdateTable();
+                Control.cpuUpdateTable(_CPU.pc);
 
                 _PCB.state = "Shutdown";
-                Control.pcbUpdateTable();
+                Control.pcbUpdateTable(_PCB.pc);
             }
 
             // ... Disable the Interrupts.

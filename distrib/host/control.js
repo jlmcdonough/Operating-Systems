@@ -218,10 +218,16 @@ var TSOS;
                 "<th>PID</th><th>PC</th><th>Acc</th><th>X</th><th>Y</th><th>Z</th><th>Priority</th><th>State</th><th>Location</th><th>Mem. Base</th><th>Mem. Limit</th><th>Segment</th><th>Running Quanta</th>" +
                 "</tr>";
             for (let i = 0; i < _PCBList.length; i++) {
+                let pcbPC;
+                if (_PCBList[i].state === "Running") {
+                    pcbPC = TSOS.Utils.padHex(TSOS.Utils.decimalToHex(oldPC));
+                }
+                else {
+                    pcbPC = TSOS.Utils.padHex(TSOS.Utils.decimalToHex(_PCBList[i].pc));
+                }
                 tableBody += "<tr>" +
                     `<td> ${_PCBList[i].pid} </td>` +
-                    `<td> ${TSOS.Utils.padHex(oldPC.toString())} </td>` +
-                    //`<td> ${Utils.padHex(Utils.decimalToHex(_PCBList[i].pc))} </td>` +
+                    `<td> ${pcbPC} </td>` +
                     `<td> ${_PCBList[i].acc} </td>` +
                     `<td> ${_PCBList[i].xReg} </td>` +
                     `<td> ${_PCBList[i].yReg} </td>` +

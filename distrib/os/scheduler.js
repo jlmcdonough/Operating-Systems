@@ -11,14 +11,9 @@ var TSOS;
             this.quanta = _Quantum;
             this.schedulingSystem = "FCFS";
             this.readyQueue = new TSOS.Queue();
-            console.log(this.readyQueue);
         }
         doScheduling() {
-            /*  console.log("SCHEDULING WITH: " + _Scheduler.readyQueue.toString());
-              console.log("GLOBAL PCB: " + _PCB.priority);
-              console.log("PEEK QUEUE: " + _Scheduler.readyQueue.peek());
-              console.log("QUEUE PEEK VALUES: " + _Scheduler.readyQueue.peek().runningQuanta);
-  */ if (_Scheduler.readyQueue.getSize() > 0) {
+            if (_Scheduler.readyQueue.getSize() > 0) {
                 console.log("READY QUEUE > 0");
                 if ((_Scheduler.readyQueue.getSize() == 1) && (_Scheduler.runningPCB == null)) {
                     console.log("READY QUEUE = 1");
@@ -29,10 +24,12 @@ var TSOS;
                     if (_Scheduler.runningPCB == null) {
                         console.log("EMPTY");
                         _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, [_Scheduler.readyQueue.peek()]));
-                        //this.getNextProcess();
                     }
                     else {
                         console.log("HAS PREVIOUS");
+                        if (!(_Scheduler.runningPCB.runningQuanta < _Quantum)) {
+                            console.log("QUANTUM EXPIRED ON PID " + _Scheduler.runningPCB.pid);
+                        }
                     }
                 }
                 else {
@@ -42,6 +39,13 @@ var TSOS;
             }
             else {
                 console.log("READY QUUEUE <= 0");
+                _CPU.isExecuting = false;
+            }
+        }
+        quantaCheck() {
+            if (_Scheduler.runningPCB.runningQuanta >= _Quantum) {
+                _Scheduler.runningPCB.runningQuanta = 0;
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, [_Scheduler.readyQueue.peek()]));
             }
         }
         contextSwitch() {
@@ -60,6 +64,7 @@ var TSOS;
             }
             else {
                 console.log("SWITCHING FROM AN OLD RUNNING PCB");
+                currPCB.state = "Ready";
                 _Scheduler.readyQueue.enqueue(this.storePCB(currPCB));
                 nextPCB.state = "Running";
                 _PCB = nextPCB;
@@ -67,12 +72,6 @@ var TSOS;
                 this.updateCPU(nextPCB);
             }
             return nextPCB;
-        }
-        getNextProcess() {
-            let existReady = false;
-            for (let i = 0; i < _Scheduler.readyQueue.getSize(); i++) {
-                //if (_Scheduler.readyQueue.peek())
-            }
         }
         updateCPU(thisPCB) {
             _CPU.pc = thisPCB.pc;

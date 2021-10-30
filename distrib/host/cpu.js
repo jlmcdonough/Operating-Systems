@@ -30,13 +30,14 @@ var TSOS;
             this.yReg = "00";
             this.zFlag = 0;
             this.isExecuting = false;
-            TSOS.Control.cpuUpdateTable();
+            TSOS.Control.cpuUpdateTable(_CPU.pc);
         }
         cycle() {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
             if (_CPU.isExecuting) {
+                _Scheduler.quantaCheck();
                 let oldPC = this.pc;
                 operandCount = 1;
                 this.fetch();
