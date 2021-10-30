@@ -44,6 +44,7 @@ var TSOS;
                 this.updatePcbMatchCpu();
                 TSOS.Control.updateVisuals(oldPC);
                 _PCB.runningCycle++;
+                _PCB.runningQuanta++;
                 _CycleCount++;
             }
         }
@@ -251,6 +252,8 @@ var TSOS;
             _StdOut.advanceLine();
             _StdOut.putText("Wait Time: " + TSOS.Utils.calculateWaitTime());
             _StdOut.advanceLine();
+            _Scheduler.runningPCB = null;
+            _Scheduler.doScheduling();
             _OsShell.putPrompt();
         }
         //EC

@@ -214,11 +214,11 @@ module TSOS {
             _SingleStepStep = true;
         }
 
-        public static cpuUpdateTable(): void
+        public static cpuUpdateTable(oldPC: number): void
         {
             if (_CPU.isExecuting)
             {
-                document.getElementById("cpuPC").innerHTML = Utils.padHex(Utils.decimalToHex(_CPU.pc));
+                document.getElementById("cpuPC").innerHTML = Utils.padHex(oldPC.toString());
                 document.getElementById("cpuIR").innerHTML = _CPU.ir;
                 document.getElementById("cpuAcc").innerHTML = _CPU.acc;
                 document.getElementById("cpuX").innerHTML = _CPU.xReg;
@@ -285,18 +285,19 @@ module TSOS {
         }
 
 
-        public static pcbUpdateTable(): void
+        public static pcbUpdateTable(oldPC: number): void
         {
             let table = document.getElementById("pcbTable");
             let tableBody = "<tbody>" + "<tr>" +
-        "<th>PID</th><th>PC</th><th>Acc</th><th>X</th><th>Y</th><th>Z</th><th>Priority</th><th>State</th><th>Location</th><th>Mem. Base</th><th>Mem. Limit</th><th>Segment</th>" +
+        "<th>PID</th><th>PC</th><th>Acc</th><th>X</th><th>Y</th><th>Z</th><th>Priority</th><th>State</th><th>Location</th><th>Mem. Base</th><th>Mem. Limit</th><th>Segment</th><th>Running Quanta</th>" +
         "</tr>";
 
             for (let i = 0; i < _PCBList.length; i++)
             {
                 tableBody +="<tr>" +
                                 `<td> ${_PCBList[i].pid} </td>` +
-                                `<td> ${Utils.padHex(Utils.decimalToHex(_PCBList[i].pc))} </td>` +
+                                `<td> ${Utils.padHex(oldPC.toString())} </td>` +
+                                //`<td> ${Utils.padHex(Utils.decimalToHex(_PCBList[i].pc))} </td>` +
                                 `<td> ${_PCBList[i].acc} </td>` +
                                 `<td> ${_PCBList[i].xReg} </td>` +
                                 `<td> ${_PCBList[i].yReg} </td>` +
@@ -307,6 +308,7 @@ module TSOS {
                                 `<td> ${_PCBList[i].base} </td>` +
                                 `<td> ${_PCBList[i].limit} </td>` +
                                 `<td> ${_PCBList[i].segment} </td>` +
+                                `<td> ${_PCBList[i].runningQuanta} </td>` +
                             "</tr>";
             }
 
@@ -325,8 +327,8 @@ module TSOS {
 
         public static updateVisuals(oldPC: number, segment?: number): void
         {
-            Control.cpuUpdateTable();
-            Control.pcbUpdateTable();
+            Control.cpuUpdateTable(oldPC);
+            Control.pcbUpdateTable(oldPC);
             Control.memoryUpdateTable();
 
             if (typeof segment !== 'undefined')

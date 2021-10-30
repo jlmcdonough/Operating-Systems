@@ -12,6 +12,7 @@ module TSOS {
                     public priority: number = 0,
                     public state: string = "",
                     public location: string = "",
+                    public runningQuanta: number = 0,
                     public segment: number = 0,
                     public base: number = 0,
                     public limit: number = 0,
@@ -37,6 +38,7 @@ module TSOS {
             this.priority = priorityNum;
             this.state = "Resident";
             this.location = "Memory";
+            this.runningQuanta = 0,
             this.segment = segment;
             this.base = startingPoint;
             this.limit = maxPoint;

@@ -21,16 +21,33 @@ module TSOS {
 
         public doScheduling() : void
         {
-            console.log("SCHEDULING WITH: " + _Scheduler.readyQueue.toString());
+          /*  console.log("SCHEDULING WITH: " + _Scheduler.readyQueue.toString());
             console.log("GLOBAL PCB: " + _PCB.priority);
             console.log("PEEK QUEUE: " + _Scheduler.readyQueue.peek());
-            if (_Scheduler.readyQueue.getSize() > 0)
+            console.log("QUEUE PEEK VALUES: " + _Scheduler.readyQueue.peek().runningQuanta);
+*/            if (_Scheduler.readyQueue.getSize() > 0)
             {
                 console.log("READY QUEUE > 0");
                 if ( (_Scheduler.readyQueue.getSize() == 1) && (_Scheduler.runningPCB == null) )
                 {
                     console.log("READY QUEUE = 1")
                     _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, [_Scheduler.readyQueue.peek()]))
+                }
+                else if (_Scheduler.readyQueue.getSize() > 1)
+                {
+                    console.log("READY QUEUE > 1");
+
+                    if (_Scheduler.runningPCB == null)
+                    {
+                        console.log("EMPTY");
+                        _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, [_Scheduler.readyQueue.peek()]))
+                        //this.getNextProcess();
+                    }
+                    else
+                    {
+                        console.log("HAS PREVIOUS");
+                    }
+
                 }
                 else
                 {
@@ -51,12 +68,13 @@ module TSOS {
             //console.log("CURR RUNNING PCB: " + currPCB.pid);
             let nextPCB = _Scheduler.readyQueue.dequeue();
             console.log("NEXT IN QUEUE: " + nextPCB.pid)
-
+            console.log("AFTER DEQUEUE, READY QUEUE SIZE = " + _Scheduler.readyQueue.getSize());
             if (currPCB == undefined)
             {
                 console.log("CURRENTLY NO PCB RUNNING");
                 nextPCB.state = "Running";
                 _PCB = nextPCB;
+                _Scheduler.runningPCB = nextPCB;
                 this.updateCPU(_PCB);
             }
             else
@@ -65,10 +83,21 @@ module TSOS {
                 _Scheduler.readyQueue.enqueue(this.storePCB(currPCB));
                 nextPCB.state = "Running";
                 _PCB = nextPCB;
+                _Scheduler.runningPCB = _PCB;
                 this.updateCPU(nextPCB);
             }
 
             return nextPCB;
+        }
+
+        public getNextProcess() : void
+        {
+            let existReady = false;
+
+            for (let i = 0; i < _Scheduler.readyQueue.getSize(); i++)
+            {
+                //if (_Scheduler.readyQueue.peek())
+            }
         }
 
         public updateCPU(thisPCB: Pcb): void

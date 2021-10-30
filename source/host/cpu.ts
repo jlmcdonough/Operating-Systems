@@ -50,6 +50,7 @@ module TSOS {
                 this.updatePcbMatchCpu();
                 Control.updateVisuals(oldPC);
                 _PCB.runningCycle++;
+                _PCB.runningQuanta++;
                 _CycleCount++;
             }
         }
@@ -322,6 +323,10 @@ module TSOS {
             _StdOut.advanceLine();
             _StdOut.putText("Wait Time: " + Utils.calculateWaitTime());
             _StdOut.advanceLine();
+
+            _Scheduler.runningPCB = null;
+
+            _Scheduler.doScheduling();
             _OsShell.putPrompt();
         }
 

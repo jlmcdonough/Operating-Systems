@@ -568,14 +568,12 @@ var TSOS;
         shellRunAll(args) {
             for (let i = 0; i < _PCBList.length; i++) {
                 if (_PCBList[i].state === "Resident") {
-                    _PCB = _PCBList[i];
-                    _CPU.updateCpuMatchPcb();
-                    _PCB.state = "Running";
-                    _CPU.isExecuting = true;
-                    _StdOut.putText("Running the program stored at: " + args[0]);
-                    TSOS.Control.updateVisuals(_PCB.pc);
+                    _PCBList[i].state = "Ready";
+                    _Scheduler.readyQueue.enqueue(_PCBList[i]);
                 }
             }
+            _Scheduler.doScheduling();
+            console.log("RUN ALL QUEUE: " + _Scheduler.readyQueue.toString());
         }
         shellKill(args) {
             if (!isNaN(Number(args[0]))) {

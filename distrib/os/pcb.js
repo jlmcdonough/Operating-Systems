@@ -1,7 +1,7 @@
 var TSOS;
 (function (TSOS) {
     class Pcb {
-        constructor(pid = 0, pc = 0, ir = "", acc = "", xReg = "", yReg = "", zFlag = 0, priority = 0, state = "", location = "", segment = 0, base = 0, limit = 0, startingCycle = 0, endingCycle = 0, runningCycle = 0) {
+        constructor(pid = 0, pc = 0, ir = "", acc = "", xReg = "", yReg = "", zFlag = 0, priority = 0, state = "", location = "", runningQuanta = 0, segment = 0, base = 0, limit = 0, startingCycle = 0, endingCycle = 0, runningCycle = 0) {
             this.pid = pid;
             this.pc = pc;
             this.ir = ir;
@@ -12,6 +12,7 @@ var TSOS;
             this.priority = priority;
             this.state = state;
             this.location = location;
+            this.runningQuanta = runningQuanta;
             this.segment = segment;
             this.base = base;
             this.limit = limit;
@@ -34,7 +35,8 @@ var TSOS;
             this.priority = priorityNum;
             this.state = "Resident";
             this.location = "Memory";
-            this.segment = segment;
+            this.runningQuanta = 0,
+                this.segment = segment;
             this.base = startingPoint;
             this.limit = maxPoint;
             this.startingCycle = _CycleCount;
