@@ -547,13 +547,20 @@ var TSOS;
             }
         }
         shellRunAll(args) {
+            let canRun = false;
             for (let i = 0; i < _PCBList.length; i++) {
                 if (_PCBList[i].state === "Resident") {
                     _PCBList[i].state = "Ready";
                     _Scheduler.readyQueue.enqueue(_PCBList[i]);
+                    canRun = true;
                 }
             }
-            _Scheduler.doScheduling();
+            if (canRun) {
+                _Scheduler.doScheduling();
+            }
+            else {
+                _StdOut.putText("There are no programs to run.");
+            }
         }
         shellKill(args) {
             if (!isNaN(Number(args[0]))) {
