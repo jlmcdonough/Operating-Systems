@@ -69,11 +69,7 @@ module TSOS {
                         this.advanceLine();
                         this.putText("Running process " + _PCB.pid + " stopped by user.");
                         this.advanceLine();
-
-                        _StdOut.putText("Turnaround Time: " + Utils.calculateTurnaroundTime());
-                        _StdOut.advanceLine();
-                        _StdOut.putText("Wait Time: " + Utils.calculateWaitTime());
-                        _StdOut.advanceLine();
+                        Utils.displayPCBAllData();
 
                         _Scheduler.runningPCB = null;
 

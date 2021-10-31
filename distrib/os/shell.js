@@ -554,7 +554,6 @@ var TSOS;
                 }
             }
             _Scheduler.doScheduling();
-            console.log("RUN ALL QUEUE: " + _Scheduler.readyQueue.toString());
         }
         shellKill(args) {
             if (!isNaN(Number(args[0]))) {

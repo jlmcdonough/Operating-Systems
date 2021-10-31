@@ -14,31 +14,17 @@ var TSOS;
         }
         doScheduling() {
             if (_Scheduler.readyQueue.getSize() > 0) {
-                console.log("READY QUEUE > 0");
                 if ((_Scheduler.readyQueue.getSize() == 1) && (_Scheduler.runningPCB == null)) {
-                    console.log("READY QUEUE = 1");
                     _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, [_Scheduler.readyQueue.peek()]));
                 }
                 else if (_Scheduler.readyQueue.getSize() > 1) {
-                    console.log("READY QUEUE > 1");
                     if (_Scheduler.runningPCB == null) {
-                        console.log("EMPTY");
                         _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, [_Scheduler.readyQueue.peek()]));
                     }
-                    else {
-                        console.log("HAS PREVIOUS");
-                        if (!(_Scheduler.runningPCB.runningQuanta < _Quantum)) {
-                            console.log("QUANTUM EXPIRED ON PID " + _Scheduler.runningPCB.pid);
-                        }
-                    }
-                }
-                else {
-                    console.log("SOMETHING WRONG");
                 }
                 _CPU.isExecuting = true;
             }
             else {
-                console.log("READY QUUEUE <= 0");
                 _CPU.isExecuting = false;
             }
         }
@@ -50,21 +36,15 @@ var TSOS;
             }
         }
         contextSwitch() {
-            console.log("CONTEXT SWITCHING");
             let currPCB = _Scheduler.runningPCB;
-            console.log("CURRPCB: " + currPCB);
             let nextPCB = _Scheduler.readyQueue.dequeue();
-            console.log("AFTER DEQUEUE, READY QUEUE SIZE = " + _Scheduler.readyQueue.getSize());
             if (currPCB == undefined) {
-                console.log("CURRENTLY NO PCB RUNNING");
                 nextPCB.state = "Running";
                 _PCB = nextPCB;
                 _Scheduler.runningPCB = nextPCB;
                 this.updateCPU(_PCB);
             }
             else {
-                console.log("SWITCHING FROM AN OLD RUNNING PCB");
-                console.log("STATUS OF CURRPCB: " + currPCB.state);
                 currPCB.state = "Ready";
                 _Scheduler.readyQueue.enqueue(this.storePCB(currPCB));
                 nextPCB.state = "Running";

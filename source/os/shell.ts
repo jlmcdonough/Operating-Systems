@@ -706,7 +706,6 @@ module TSOS {
                 }
             }
             _Scheduler.doScheduling();
-            console.log("RUN ALL QUEUE: " + _Scheduler.readyQueue.toString());
         }
 
         public shellKill(args: string[])

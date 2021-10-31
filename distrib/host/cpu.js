@@ -37,16 +37,15 @@ var TSOS;
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
             if (_CPU.isExecuting) {
-                _Scheduler.quantaCheck();
                 let oldPC = this.pc;
                 operandCount = 1;
                 this.fetch();
                 this.decode();
                 this.updatePcbMatchCpu();
-                TSOS.Control.updateVisuals(oldPC);
                 _PCB.runningCycle++;
                 _PCB.runningQuanta++;
                 _CycleCount++;
+                TSOS.Control.updateVisuals(oldPC);
             }
         }
         updatePcbMatchCpu() {
@@ -183,16 +182,13 @@ var TSOS;
         }
         //00
         brk() {
-            _StdOut.advanceLine();
-            _StdOut.putText("Process " + _PCB.pid + " has finished");
-            _StdOut.advanceLine();
             _CPU.isExecuting = false;
             _PCB.state = "Finished";
             _PCB.endingCycle = _CycleCount;
-            _StdOut.putText("Turnaround Time: " + TSOS.Utils.calculateTurnaroundTime());
             _StdOut.advanceLine();
-            _StdOut.putText("Wait Time: " + TSOS.Utils.calculateWaitTime());
+            _StdOut.putText("Process " + _PCB.pid + " has finished");
             _StdOut.advanceLine();
+            TSOS.Utils.displayPCBAllData();
             _Scheduler.runningPCB = null;
             _Scheduler.doScheduling();
             _OsShell.putPrompt();
@@ -240,16 +236,13 @@ var TSOS;
         //FF
         sys() {
             this.pc++;
-            console.log("IN SYS CALL WITH xREG OF " + this.xReg);
             if (Number(this.xReg) == 1) {
-                console.log("X REG IS 1, THEREFORE PUT yREG - " + this.yReg);
                 _StdOut.putText(this.yReg);
+                _PCB.outputData += this.yReg;
             }
             else if (Number(this.xReg) == 2) {
                 let location = TSOS.Utils.hexToDecimal(this.yReg);
-                console.log("LOCATION IS YREG - " + this.yReg + " IN SEGMENT " + _PCB.segment);
                 location += _PCB.base;
-                console.log("THEREFORE ADJUSTED BY " + _PCB.base + " TO " + location);
                 let output = "";
                 let byteString;
                 for (let i = 0; i + location < _Memory.memorySize; i++) {
@@ -262,6 +255,7 @@ var TSOS;
                     }
                 }
                 _StdOut.putText(output);
+                _PCB.outputData += output;
             }
         }
         //Remainder

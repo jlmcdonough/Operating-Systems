@@ -18,7 +18,8 @@ module TSOS {
                     public limit: number = 0,
                     public startingCycle: number = 0,
                     public endingCycle: number = 0,
-                    public runningCycle: number = 0) {
+                    public runningCycle: number = 0,
+                    public outputData: string = "") {
         }
 
         public init(priorityNum: number, segment: number): void

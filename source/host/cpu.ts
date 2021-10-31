@@ -43,16 +43,15 @@ module TSOS {
 
             if(_CPU.isExecuting)
             {
-                _Scheduler.quantaCheck();
                 let oldPC = this.pc;
                 operandCount = 1;
                 this.fetch();
                 this.decode();
                 this.updatePcbMatchCpu();
-                Control.updateVisuals(oldPC);
                 _PCB.runningCycle++;
                 _PCB.runningQuanta++;
                 _CycleCount++;
+                Control.updateVisuals(oldPC);
             }
         }
 
@@ -252,18 +251,15 @@ module TSOS {
         //00
         public brk(): void
         {
-            _StdOut.advanceLine();
-            _StdOut.putText("Process " + _PCB.pid + " has finished");
-            _StdOut.advanceLine();
-
             _CPU.isExecuting = false;
             _PCB.state = "Finished";
             _PCB.endingCycle = _CycleCount;
 
-            _StdOut.putText("Turnaround Time: " + Utils.calculateTurnaroundTime());
             _StdOut.advanceLine();
-            _StdOut.putText("Wait Time: " + Utils.calculateWaitTime());
+            _StdOut.putText("Process " + _PCB.pid + " has finished");
             _StdOut.advanceLine();
+
+            Utils.displayPCBAllData();
 
             _Scheduler.runningPCB = null;
 
@@ -340,19 +336,15 @@ module TSOS {
         {
             this.pc++;
 
-            console.log("IN SYS CALL WITH xREG OF " + this.xReg);
-
             if(Number(this.xReg) == 1)
             {
-                console.log("X REG IS 1, THEREFORE PUT yREG - " + this.yReg);
                 _StdOut.putText(this.yReg);
+                _PCB.outputData += this.yReg;
             }
             else if(Number(this.xReg) == 2)
             {
                 let location = Utils.hexToDecimal(this.yReg);
-                console.log("LOCATION IS YREG - " + this.yReg + " IN SEGMENT " + _PCB.segment);
                 location += _PCB.base;
-                console.log("THEREFORE ADJUSTED BY " + _PCB.base + " TO " + location);
                 let output: string = "";
                 let byteString: string;
                 for (let i = 0; i + location < _Memory.memorySize; i++)
@@ -370,6 +362,7 @@ module TSOS {
                 }
 
                 _StdOut.putText(output);
+                _PCB.outputData += output;
             }
         }
         

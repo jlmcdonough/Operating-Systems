@@ -81,6 +81,14 @@ var TSOS;
         static calculateWaitTime() {
             return this.calculateTurnaroundTime() - _PCB.runningCycle;
         }
+        static displayPCBAllData() {
+            _StdOut.putText("Output: " + _PCB.outputData);
+            _StdOut.advanceLine();
+            _StdOut.putText("Turnaround Time: " + Utils.calculateTurnaroundTime());
+            _StdOut.advanceLine();
+            _StdOut.putText("Wait Time: " + Utils.calculateWaitTime());
+            _StdOut.advanceLine();
+        }
         static memoryOutOfBoundsError() {
             _CPU.isExecuting = false;
             _PCB.state = "Stopped";

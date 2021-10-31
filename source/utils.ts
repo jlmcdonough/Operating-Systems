@@ -98,6 +98,16 @@ module TSOS {
             return this.calculateTurnaroundTime() - _PCB.runningCycle;
         }
 
+        public static displayPCBAllData(): void
+        {
+            _StdOut.putText("Output: " + _PCB.outputData);
+            _StdOut.advanceLine();
+            _StdOut.putText("Turnaround Time: " + Utils.calculateTurnaroundTime());
+            _StdOut.advanceLine();
+            _StdOut.putText("Wait Time: " + Utils.calculateWaitTime());
+            _StdOut.advanceLine();
+        }
+
         public static memoryOutOfBoundsError(): void
         {
             _CPU.isExecuting = false;
