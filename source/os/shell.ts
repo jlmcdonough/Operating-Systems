@@ -526,9 +526,11 @@ module TSOS {
                 if(validHex)
                 {
                     Control.memoryUpdateTable();
+
                     let segmentOneAvailable = _MemoryManager.segmentEmpty(1);
                     let segmentTwoAvailable = _MemoryManager.segmentEmpty(2);
                     let segmentThreeAvailable = _MemoryManager.segmentEmpty(3);
+
 
                     if (!segmentOneAvailable && !segmentTwoAvailable && !segmentThreeAvailable)
                     {
@@ -549,8 +551,8 @@ module TSOS {
                         //ensures that the load priority is a number
                         if (isNaN(Number(args[0])))
                         {
-                            _StdOut.putText("It is recommended to include a priority after the load command. Priority was given 99 to this instance.");
-                            priority = 99;
+                            _StdOut.putText("It is recommended to include a priority after the load command. Priority was given 32 to this instance.");
+                            priority = 32;
                         }
                         else
                         {
@@ -570,41 +572,25 @@ module TSOS {
                         {
                             thisSegment = 3;
                         }
-
-                        let newPCB = new Pcb();
-                        newPCB.init(priority, thisSegment);
-                        //_PCB = new Pcb();
-                        //_PCB.init(priority, thisSegment);
-
-
-                        let lowerLimit;
-                        if (segmentOneAvailable)
-                        {
-                            console.log("LOADING INTO 0")
-                            _PCBList[0] = newPCB;
-                            //_PCBList[0] = _PCB;
-                        }
-                        else if (segmentTwoAvailable)
-                        {
-                            console.log("LOADING INTO 1")
-                            _PCBList[1] = newPCB;
-                        }
-                        else if (segmentThreeAvailable)
-                        {
-                            console.log("LOADING INTO 2")
-                            _PCBList[2] = newPCB;
-                        }
                         else
                         {
                             _StdOut.putText("ERROR LOADING PROGRAM INTO MEMORY");
                         }
-                        _MemoryAccessor.nukeMemory(thisSegment);
-                        _MemoryAccessor.loadMemory(trimmedInput, thisSegment);
-                        Control.updateVisuals(0, thisSegment);
 
-                        _StdOut.putText("Successfully loaded user program with priority " + priority);
-                        _StdOut.advanceLine();
-                        _StdOut.putText("Your program is stored at process ID " + (_ProcessID - 1) );
+                        if (segmentOneAvailable || segmentTwoAvailable || segmentThreeAvailable)
+                        {
+                            let newPCB = new Pcb();
+                            newPCB.init(priority, thisSegment);
+                            _PCBList[_PCBList.length] = newPCB;
+
+                            _MemoryAccessor.nukeMemory(thisSegment);
+                            _MemoryAccessor.loadMemory(trimmedInput, thisSegment);
+                            Control.updateVisuals(0, thisSegment);
+
+                            _StdOut.putText("Successfully loaded user program with priority " + priority);
+                            _StdOut.advanceLine();
+                            _StdOut.putText("Your program is stored at process ID " + (_ProcessID - 1) );
+                        }
                     }
                 }
                 else
@@ -633,12 +619,6 @@ module TSOS {
                             _PCBList[i].state = "Ready";
                             _Scheduler.readyQueue.enqueue(_PCBList[i]);
                             _Scheduler.doScheduling();
-                           /* _PCB = _PCBList[i];
-                            _CPU.updateCpuMatchPcb();
-                            _PCB.state = "Running";
-                            _CPU.isExecuting = true;
-                            _StdOut.putText("Running the program stored at: " + args[0]);
-                            Control.updateVisuals(_PCB.pc);*/
                         }
                         else
                         {

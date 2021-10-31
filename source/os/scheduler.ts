@@ -13,7 +13,7 @@ module TSOS {
         public init(): void
         {
             this.quanta = _Quantum;
-            this.schedulingSystem = "FCFS";
+            this.schedulingSystem = "RR";
             this.readyQueue = new Queue();
         }
 
@@ -60,7 +60,7 @@ module TSOS {
 
         public quantaCheck(): void
         {
-            if (_Scheduler.runningPCB.runningQuanta >= _Quantum)
+            if (_Scheduler.runningPCB.runningQuanta >= _Quantum && _Scheduler.readyQueue.getSize() > 0)  //don't care about quanta if there is no process to switch to
             {
                 _Scheduler.runningPCB.runningQuanta = 0;
                 _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, [_Scheduler.readyQueue.peek()]));
@@ -71,9 +71,8 @@ module TSOS {
         {
             console.log("CONTEXT SWITCHING");
             let currPCB = _Scheduler.runningPCB;
-            //console.log("CURR RUNNING PCB: " + currPCB.pid);
+            console.log("CURRPCB: " + currPCB);
             let nextPCB = _Scheduler.readyQueue.dequeue();
-            console.log("NEXT IN QUEUE: " + nextPCB.pid)
             console.log("AFTER DEQUEUE, READY QUEUE SIZE = " + _Scheduler.readyQueue.getSize());
             if (currPCB == undefined)
             {
@@ -86,6 +85,7 @@ module TSOS {
             else
             {
                 console.log("SWITCHING FROM AN OLD RUNNING PCB")
+                console.log("STATUS OF CURRPCB: " + currPCB.state);
                 currPCB.state = "Ready";
                 _Scheduler.readyQueue.enqueue(this.storePCB(currPCB));
                 nextPCB.state = "Running";

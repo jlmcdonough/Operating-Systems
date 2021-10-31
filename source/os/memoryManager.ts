@@ -27,14 +27,18 @@ module TSOS {
     {
         if (0 < segment && segment <= 3)
         {
-            if ( ! ( (_PCBList[segment - 1].state === "Running") || (_PCBList[segment - 1].state === "Resident") ) )
+            for (let i = 0; i < _PCBList.length; i++)
             {
-                return true;
+                if (_PCBList[i].segment == segment)
+                {
+                    if ( (_PCBList[i].state === "Running") || (_PCBList[i].state === "Resident") )
+                    {
+                        return false;
+                    }
+                }
             }
-            else
-            {
-                return false;
-            }
+
+            return true;
         }
         else
         {

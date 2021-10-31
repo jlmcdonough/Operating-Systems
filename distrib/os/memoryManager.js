@@ -19,12 +19,14 @@ var TSOS;
         }
         segmentReallocate(segment) {
             if (0 < segment && segment <= 3) {
-                if (!((_PCBList[segment - 1].state === "Running") || (_PCBList[segment - 1].state === "Resident"))) {
-                    return true;
+                for (let i = 0; i < _PCBList.length; i++) {
+                    if (_PCBList[i].segment == segment) {
+                        if ((_PCBList[i].state === "Running") || (_PCBList[i].state === "Resident")) {
+                            return false;
+                        }
+                    }
                 }
-                else {
-                    return false;
-                }
+                return true;
             }
             else {
                 return false;

@@ -73,50 +73,8 @@ var TSOS;
                 case "00":
                     this.brk();
                     break;
-                case "01":
-                    this.opcode();
-                    break;
-                case "02":
-                    this.opcode();
-                    break;
-                case "03":
-                    this.opcode();
-                    break;
-                case "05":
-                    this.opcode();
-                    break;
-                case "20":
-                    this.opcode();
-                    break;
-                case "33":
-                    this.opcode();
-                    break;
-                case "49":
-                    this.opcode();
-                    break;
-                case "65":
-                    this.opcode();
-                    break;
-                case "69":
-                    this.opcode();
-                    break;
                 case "6D":
                     this.adc();
-                    break;
-                case "6E":
-                    this.opcode();
-                    break;
-                case "6F":
-                    this.opcode();
-                    break;
-                case "72":
-                    this.opcode();
-                    break;
-                case "74":
-                    this.opcode();
-                    break;
-                case "75":
-                    this.opcode();
                     break;
                 case "8D":
                     this.staMemory();
@@ -126,9 +84,6 @@ var TSOS;
                     break;
                 case "A2":
                     this.ldaXConstant();
-                    break;
-                case "A4":
-                    this.opcode();
                     break;
                 case "A9":
                     this.ldaConstant();
@@ -142,9 +97,6 @@ var TSOS;
                 case "AE":
                     this.ldaXMemory();
                     break;
-                case "BA":
-                    this.opcode();
-                    break;
                 case "D0":
                     this.bne();
                     break;
@@ -154,20 +106,8 @@ var TSOS;
                 case "EC":
                     this.cpx();
                     break;
-                case "ED":
-                    this.opcode();
-                    break;
                 case "EE":
                     this.inc();
-                    break;
-                case "EF":
-                    this.opcode();
-                    break;
-                case "F1":
-                    this.opcode();
-                    break;
-                case "F8":
-                    this.opcode();
                     break;
                 case "FF":
                     this.sys();
@@ -300,11 +240,16 @@ var TSOS;
         //FF
         sys() {
             this.pc++;
+            console.log("IN SYS CALL WITH xREG OF " + this.xReg);
             if (Number(this.xReg) == 1) {
+                console.log("X REG IS 1, THEREFORE PUT yREG - " + this.yReg);
                 _StdOut.putText(this.yReg);
             }
             else if (Number(this.xReg) == 2) {
                 let location = TSOS.Utils.hexToDecimal(this.yReg);
+                console.log("LOCATION IS YREG - " + this.yReg + " IN SEGMENT " + _PCB.segment);
+                location += _PCB.base;
+                console.log("THEREFORE ADJUSTED BY " + _PCB.base + " TO " + location);
                 let output = "";
                 let byteString;
                 for (let i = 0; i + location < _Memory.memorySize; i++) {

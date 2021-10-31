@@ -163,7 +163,7 @@ var TSOS;
         }
         static cpuUpdateTable(oldPC) {
             if (_CPU.isExecuting) {
-                document.getElementById("cpuPC").innerHTML = TSOS.Utils.padHex(oldPC.toString());
+                document.getElementById("cpuPC").innerHTML = TSOS.Utils.padHex(TSOS.Utils.decimalToHex(oldPC));
                 document.getElementById("cpuIR").innerHTML = _CPU.ir;
                 document.getElementById("cpuAcc").innerHTML = _CPU.acc;
                 document.getElementById("cpuX").innerHTML = _CPU.xReg;
