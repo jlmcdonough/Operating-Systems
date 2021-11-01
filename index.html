@@ -129,6 +129,15 @@
              tabindex="2"
              onclick="TSOS.Control.hostBtnSSStep_click(this);">
 
+      <input type="button"
+             id = "btnMemoryTrack"
+             name="brnMT"
+             class="normal_button"
+             disabled="disabled"
+             value="Memory Track"
+             tabindex="2"
+             onclick="TSOS.Control.hostBtnMemoryTrack_click(this);">
+
    </div>
 
    <div id="divConsole" style="margin:4px; width:500px; height:500px; float:left;">
@@ -166,51 +175,53 @@
          ></textarea>
       </label>
    </div>
+
+   <br>
+
+   <div id="divMemoryDisplay" style="margin-left: 520px;" class="hostDisplay">
+      <label>
+         Memory
+         <div id="divMemoryTable">
+            <table class="hostDisplayTable" id="memoryTable">
+            </table>
+         </div>
+      </label>
+   </div>
+
+   <div id="divCPUDisplay" style="margin-left: 4px; margin-top: -100px" class="hostDisplay">
+      <label>
+         CPU
+         <div id="divCPUTable">
+            <table class="hostDisplayTable">
+               <tr>
+                  <th>PC</th>
+                  <th>IR</th>
+                  <th>ACC</th>
+                  <th>X</th>
+                  <th>Y</th>
+                  <th>Z</th>
+               </tr>
+               <tr>
+                  <td id="cpuPC">-</td>
+                  <td id="cpuIR">-</td>
+                  <td id="cpuAcc">-</td>
+                  <td id="cpuX">-</td>
+                  <td id="cpuY">-</td>
+                  <td id="cpuZ">-</td>
+               </tr>
+            </table>
+         </div>
+      </label>
+   </div>
+
 </div>
 
 <br>
 
-<div id="divCPUDisplay" style="margin-left: 520px;" class="hostDisplay">
-   <label>
-      CPU
-      <div id="divCPUTable">
-         <table class="hostDisplayTable">
-            <tr>
-               <th>PC</th>
-               <th>IR</th>
-               <th>ACC</th>
-               <th>X</th>
-               <th>Y</th>
-               <th>Z</th>
-            </tr>
-            <tr>
-               <td id="cpuPC">-</td>
-               <td id="cpuIR">-</td>
-               <td id="cpuAcc">-</td>
-               <td id="cpuX">-</td>
-               <td id="cpuY">-</td>
-               <td id="cpuZ">-</td>
-            </tr>
-         </table>
-      </div>
-   </label>
-</div>
+
 
 <br>
-
-<div id="divMemoryDisplay" style="margin-left: 520px;" class="hostDisplay">
-   <label>
-      Memory
-      <div id="divMemoryTable">
-         <table class="hostDisplayTable" id="memoryTable">
-         </table>
-      </div>
-   </label>
-</div>
-
-<br>
-
-<div id="divPCBDisplay" style="margin-left: 520px;" class="hostDisplay">
+<div id="divPCBDisplay" style="margin-left: 4px;" class="hostDisplay">
    <label>
       PCB
       <div id="divPCBTable">
@@ -219,6 +230,14 @@
       </div>
    </label>
 </div>
+
+<br>
+
+
+
+<br>
+
+
 
 <p class="footerText" style="clear:both;">
    <br>

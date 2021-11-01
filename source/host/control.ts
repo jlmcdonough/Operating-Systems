@@ -146,6 +146,8 @@ module TSOS {
             // .. disable the Single Step Off button
             (<HTMLButtonElement>document.getElementById("btnSingleStepOff")).disabled = true;
 
+            // .. disable the Memory tracker
+            (<HTMLButtonElement>document.getElementById("btnMemoryTrack")).disabled = false;
 
             // .. set focus on the OS console display ...
             document.getElementById("display").focus();
@@ -215,6 +217,19 @@ module TSOS {
             _SingleStepStep = true;
         }
 
+        public static hostBtnMemoryTrack_click(btn): void
+        {
+            if (_MemoryTracking)
+            {
+                _MemoryTracking = false;
+            }
+            else
+            {
+                _MemoryTracking = true;
+                //(<HTMLButtonElement>document.getElementById("btnMemoryTrack")).disabled = true;
+            }
+        }
+
         public static cpuUpdateTable(oldPC: number): void
         {
             if (_CPU.isExecuting)
@@ -282,6 +297,10 @@ module TSOS {
             for(let i = 1; i <= operandCount; i++)
             {
                 document.getElementById("mem" + ( (pc + offset) + i) ).style.backgroundColor = secondaryHighlight;
+                if (_MemoryTracking)
+                {
+                    document.getElementById("mem" + ( (pc + offset) + i) ).scrollIntoView({block: 'nearest'});
+                }
             }
         }
 

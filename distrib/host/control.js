@@ -111,6 +111,8 @@ var TSOS;
             document.getElementById("btnSingleStepStep").disabled = false;
             // .. disable the Single Step Off button
             document.getElementById("btnSingleStepOff").disabled = true;
+            // .. disable the Memory tracker
+            document.getElementById("btnMemoryTrack").disabled = false;
             // .. set focus on the OS console display ...
             document.getElementById("display").focus();
             // ... Create and initialize the CPU (because it's part of the hardware)  ...
@@ -159,6 +161,15 @@ var TSOS;
         }
         static hostBtnSSStep_click(btn) {
             _SingleStepStep = true;
+        }
+        static hostBtnMemoryTrack_click(btn) {
+            if (_MemoryTracking) {
+                _MemoryTracking = false;
+            }
+            else {
+                _MemoryTracking = true;
+                //(<HTMLButtonElement>document.getElementById("btnMemoryTrack")).disabled = true;
+            }
         }
         static cpuUpdateTable(oldPC) {
             if (_CPU.isExecuting) {
@@ -209,6 +220,9 @@ var TSOS;
             document.getElementById("mem" + (pc + offset)).style.backgroundColor = mainHighlight;
             for (let i = 1; i <= operandCount; i++) {
                 document.getElementById("mem" + ((pc + offset) + i)).style.backgroundColor = secondaryHighlight;
+                if (_MemoryTracking) {
+                    document.getElementById("mem" + ((pc + offset) + i)).scrollIntoView({ block: 'nearest' });
+                }
             }
         }
         static pcbUpdateTable(oldPC) {
