@@ -76,7 +76,7 @@ var _GLaDOS = null; // If the above is linked in, this is the instantiated insta
 var onDocumentLoad = function () {
     TSOS.Control.hostInit();
     const darkModeToggle = document.querySelector('dark-mode-toggle');
-    darkModeToggle.mode = 'dark';
-    _APPEARANCE = darkModeToggle.mode;
+    darkModeToggle.attributes[5].value = 'dark';
+    _APPEARANCE = darkModeToggle.attributes[5].value;
 };
 //# sourceMappingURL=globals.js.map

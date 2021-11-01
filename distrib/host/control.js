@@ -61,9 +61,10 @@ var TSOS;
             // Assuming it has something to do with html importing a script instead
             // of npm installing the dark-mode-toggle
             document.addEventListener('colorschemechange', (e) => {
-                _APPEARANCE = document.querySelector('dark-mode-toggle').mode;
+                _APPEARANCE = document.querySelector('dark-mode-toggle').attributes[5].value;
                 console.log("Apperance switched to " + _APPEARANCE);
                 if (_APPEARANCE === "light") {
+                    console.log("SWITCHING CANVAS TO BLACK TEXT");
                     _DefaultFontColor = "#121212";
                     let image = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
                     let data = image.data;
@@ -72,12 +73,10 @@ var TSOS;
                         data[i + 1] = 0 - data[i + 1];
                         data[i + 2] = 0 - data[i + 2];
                     }
-                    // overwrite original image
                     _DrawingContext.putImageData(image, 0, 0);
                 }
-                // _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
-                //_DrawingContext.putImageData(prevText, 0, 0);
                 else {
+                    console.log("SWITCHING CANVAS TO WHITE TEXT");
                     _DefaultFontColor = "#ffffff";
                     let image = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
                     let data = image.data;
@@ -86,7 +85,6 @@ var TSOS;
                         data[i + 1] = 255 - data[i + 1];
                         data[i + 2] = 255 - data[i + 2];
                     }
-                    // overwrite original image
                     _DrawingContext.putImageData(image, 0, 0);
                 }
             });
