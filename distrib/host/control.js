@@ -124,6 +124,7 @@ var TSOS;
             _PCB = new TSOS.Pcb();
             _Scheduler = new TSOS.Scheduler();
             _Scheduler.init();
+            _Dispatcher = new TSOS.Dispatcher();
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(TSOS.Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.

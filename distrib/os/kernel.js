@@ -122,7 +122,7 @@ var TSOS;
                     _StdIn.handleInput();
                     break;
                 case CONTEXT_SWITCH_IRQ:
-                    _Scheduler.contextSwitch();
+                    _Dispatcher.contextSwitch();
                     break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");

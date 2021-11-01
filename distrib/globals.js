@@ -33,6 +33,7 @@ var _PCBList = [];
 var operandCount;
 var _Quantum = 6;
 var _Scheduler;
+var _Dispatcher;
 var _CycleCount = 0;
 var _OSclock = 0; // Page 23.
 var _Mode = 0; // (currently unused)  0 = Kernel Mode, 1 = User Mode.  See page 21.

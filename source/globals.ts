@@ -40,6 +40,7 @@ var _PCBList: TSOS.Pcb[] = [];
 var operandCount: number;
 var _Quantum: number = 6;
 var _Scheduler: TSOS.Scheduler;
+var _Dispatcher: TSOS.Dispatcher;
 
 var _CycleCount: number = 0;
 
