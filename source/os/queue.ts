@@ -49,5 +49,20 @@ module TSOS {
             }
             return retVal;
         }
+
+        public remove(removePcbPid: number) //not a queue function but is this really even more than just a fancy list?
+        {
+
+            this.q.forEach((element,index)=>{
+                if(element.pid==removePcbPid)
+                    this.q.splice(index,1);
+                });
+
+            if (_Scheduler.runningPCB.pid == removePcbPid)
+            {
+                _Scheduler.runningPCB = null;
+                _Scheduler.doScheduling();
+            }
+        }
     }
 }

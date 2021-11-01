@@ -42,6 +42,16 @@ var TSOS;
             }
             return retVal;
         }
+        remove(removePcbPid) {
+            this.q.forEach((element, index) => {
+                if (element.pid == removePcbPid)
+                    this.q.splice(index, 1);
+            });
+            if (_Scheduler.runningPCB.pid == removePcbPid) {
+                _Scheduler.runningPCB = null;
+                _Scheduler.doScheduling();
+            }
+        }
     }
     TSOS.Queue = Queue;
 })(TSOS || (TSOS = {}));

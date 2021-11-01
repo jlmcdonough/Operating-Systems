@@ -569,16 +569,17 @@ var TSOS;
                 for (let i = 0; i < _PCBList.length; i++) {
                     if (_PCBList[i].pid == thisPID) {
                         notFound = false;
-                        if (_PCBList[i].state === "Running") {
-                            _CPU.isExecuting = false;
-                            _PCB.state = "Stopped";
+                        if (_PCBList[i].state === "Resident" ||
+                            _PCBList[i].state === "Running" ||
+                            _PCBList[i].state === "Ready") {
+                            _PCBList[i].state = "Stopped";
+                            _PCBList[i].endingCycle = _CycleCount;
+                            _Scheduler.readyQueue.remove(_PCBList[i].pid);
                             _StdOut.putText("Process " + thisPID + " terminated.");
+                            _StdOut.advanceLine();
+                            TSOS.Utils.displayPCBAllData(_PCBList[i]);
                         }
-                        if (_PCBList[i].state === "Resident") {
-                            _PCB.state = "Stopped";
-                            _StdOut.putText("Process " + thisPID + " terminated.");
-                        }
-                        if (_PCBList[i].state === "Finished" || _PCBList[i].state === "Stopped") {
+                        else {
                             _StdOut.putText("Process " + thisPID + " is not resident or running.");
                         }
                         TSOS.Control.updateVisuals(0);
@@ -596,6 +597,9 @@ var TSOS;
             _CPU.isExecuting = false;
             for (let i = 0; i < _PCBList.length; i++) {
                 _PCBList[i].state = "Stopped";
+                _StdOut.putText("Process " + _PCBList[i].pid + " terminated.");
+                _StdOut.advanceLine();
+                TSOS.Utils.displayPCBAllData(_PCBList[i]);
             }
             _StdOut.putText("All stored processes killed");
             TSOS.Control.updateVisuals(0);

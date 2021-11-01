@@ -32,7 +32,6 @@ module TSOS {
                         _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, [_Scheduler.readyQueue.peek()]))
                     }
                 }
-
                 _CPU.isExecuting = true;
             }
             else

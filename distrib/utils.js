@@ -75,19 +75,39 @@ var TSOS;
             }
             return [startingPoint, maxPoint];
         }
-        static calculateTurnaroundTime() {
-            return _PCB.endingCycle - _PCB.startingCycle;
+        static calculateTurnaroundTime(turnaroundPcb) {
+            if (typeof turnaroundPcb !== 'undefined') {
+                return turnaroundPcb.endingCycle - turnaroundPcb.startingCycle;
+            }
+            else {
+                return _PCB.endingCycle - _PCB.startingCycle;
+            }
         }
-        static calculateWaitTime() {
-            return this.calculateTurnaroundTime() - _PCB.runningCycle;
+        static calculateWaitTime(waitPcb) {
+            if (typeof waitPcb !== 'undefined') {
+                return this.calculateTurnaroundTime(waitPcb) - waitPcb.runningCycle;
+            }
+            else {
+                return this.calculateTurnaroundTime() - _PCB.runningCycle;
+            }
         }
-        static displayPCBAllData() {
-            _StdOut.putText("Output: " + _PCB.outputData);
-            _StdOut.advanceLine();
-            _StdOut.putText("Turnaround Time: " + Utils.calculateTurnaroundTime());
-            _StdOut.advanceLine();
-            _StdOut.putText("Wait Time: " + Utils.calculateWaitTime());
-            _StdOut.advanceLine();
+        static displayPCBAllData(stoppingPcb) {
+            if (typeof stoppingPcb !== 'undefined') {
+                _StdOut.putText("Output: " + stoppingPcb.outputData);
+                _StdOut.advanceLine();
+                _StdOut.putText("Turnaround Time: " + Utils.calculateTurnaroundTime(stoppingPcb));
+                _StdOut.advanceLine();
+                _StdOut.putText("Wait Time: " + Utils.calculateWaitTime(stoppingPcb));
+                _StdOut.advanceLine();
+            }
+            else {
+                _StdOut.putText("Output: " + _PCB.outputData);
+                _StdOut.advanceLine();
+                _StdOut.putText("Turnaround Time: " + Utils.calculateTurnaroundTime());
+                _StdOut.advanceLine();
+                _StdOut.putText("Wait Time: " + Utils.calculateWaitTime());
+                _StdOut.advanceLine();
+            }
         }
         static memoryOutOfBoundsError() {
             _CPU.isExecuting = false;

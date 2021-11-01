@@ -25,7 +25,6 @@ module TSOS {
                 _Scheduler.runningPCB = _PCB;
                 this.updateCPU(nextPCB);
             }
-
             return nextPCB;
         }
 
