@@ -23,10 +23,12 @@ module TSOS {
             {
                 if ( (_Scheduler.readyQueue.getSize() == 1) && (_Scheduler.runningPCB == null) )
                 {
+                    _Kernel.krnTrace("Scheduling only process");
                     _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, [_Scheduler.readyQueue.peek()]))
                 }
                 else if (_Scheduler.readyQueue.getSize() > 1)
                 {
+                    _Kernel.krnTrace("Scheduling " + _Scheduler.readyQueue.getSize() + " processes with " + _Scheduler.schedulingSystem);
                     if (_Scheduler.runningPCB == null)
                     {
                         _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, [_Scheduler.readyQueue.peek()]))
@@ -42,9 +44,10 @@ module TSOS {
 
         public quantaCheck(): void
         {
-            if (_Scheduler.runningPCB.runningQuanta >= _Quantum && _Scheduler.readyQueue.getSize() > 0)  //don't care about quanta if there is no process to switch to
+            if ( (_Scheduler.runningPCB.runningQuanta >= _Quantum) && (_Scheduler.readyQueue.getSize() > 0) ) //don't care about quanta if there is no process to switch to
             {
                 _Scheduler.runningPCB.runningQuanta = 0;
+                _Kernel.krnTrace("Quanta expired, switching programs");
                 _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, [_Scheduler.readyQueue.peek()]));
             }
         }

@@ -11,6 +11,7 @@ module TSOS {
             let nextPCB = _Scheduler.readyQueue.dequeue();
             if (currPCB == undefined)
             {
+                _Kernel.krnTrace("No process to save. Loading Process " + nextPCB.pid);
                 nextPCB.state = "Running";
                 _PCB = nextPCB;
                 _Scheduler.runningPCB = nextPCB;
@@ -18,6 +19,7 @@ module TSOS {
             }
             else
             {
+                _Kernel.krnTrace("Saving Process " + currPCB.pid + ". Loading Process " + nextPCB.pid);
                 currPCB.state = "Ready";
                 _Scheduler.readyQueue.enqueue(this.storePCB(currPCB));
                 nextPCB.state = "Running";
