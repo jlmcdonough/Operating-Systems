@@ -2,7 +2,16 @@ module TSOS {
 
     export class Memory {
 
-        constructor( public memorySize: number = 256,
+        public segmentOneBase: number = 0;
+        public segmentOneLimit: number = 255;
+
+        public segmentTwoBase: number = 256;
+        public segmentTwoLimit: number = 511;
+
+        public segmentThreeBase: number = 512;
+        public segmentThreeLimit: number = 767;
+
+        constructor( public memorySize: number = 768,
                      public memoryBlock: string[] = new Array(memorySize)
         ) {
         }
@@ -16,24 +25,14 @@ module TSOS {
             Control.memoryUpdateTable();
         }
 
-        public loadMemory(userEntry: string): void
-        {
-            let userArr = userEntry.split(" ");
-
-            for(let i = 0; i < userArr.length; i++)
-            {
-                this.memoryBlock[i] = userArr[i];
-            }
-        }
-
         public getAt(atPC: number): string
         {
             return this.memoryBlock[atPC];
         }
 
-        public override(atAddress: string, newData: string): void
+        public override(atAddress: number, newData: string): void
         {
-            this.memoryBlock[Utils.hexToDecimal(atAddress)] = newData;
+            this.memoryBlock[atAddress] = newData;
         }
 
     }

@@ -33,12 +33,36 @@ module TSOS {
             return retVal;
         }
 
+        public peek()
+        {
+            if (this.q.length > 0)
+            {
+                return this.q[0];
+            }
+            return null;
+        }
+
         public toString() {
             var retVal = "";
             for (var i in this.q) {
                 retVal += "[" + this.q[i] + "] ";
             }
             return retVal;
+        }
+
+        public remove(removePcbPid: number) //not a queue function but is this really even more than just a fancy list?
+        {
+
+            this.q.forEach((element,index)=>{
+                if(element.pid==removePcbPid)
+                    this.q.splice(index,1);
+                });
+
+            if (_Scheduler.runningPCB.pid == removePcbPid)
+            {
+                _Scheduler.runningPCB = null;
+                _Scheduler.doScheduling();
+            }
         }
     }
 }

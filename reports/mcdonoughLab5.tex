@@ -1,0 +1,202 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% CMPT 424
+% Fall 2021
+% Lab Five
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from: http://www.LaTeXTemplates.com
+% Original author: % Frits Wenneker (http://www.howtotex.com)
+% License: CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+% Modified by Alan G. Labouseur  - alan@labouseur.com
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[letterpaper, 10pt,DIV=13]{scrartcl} 
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage[english]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm,xfrac} % Math packages
+\usepackage{sectsty} % Allows customizing section commands
+\usepackage{graphicx}
+\usepackage[lined,linesnumbered,commentsnumbered]{algorithm2e}
+\usepackage{listings}
+\usepackage{parskip}
+\usepackage{lastpage}
+\usepackage{etoolbox}
+\AtBeginEnvironment{quote}{\par\singlespacing\normalsize\normalfont}
+
+\allsectionsfont{\normalfont\scshape} % Make all section titles in default font and small caps.
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{page \thepage\ of \pageref{LastPage}} % Page numbering for right footer
+
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs.
+
+\binoppenalty=3000
+\relpenalty=3000
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+   \normalfont \normalsize 
+   \textsc{CMPT 424 - Fall 2021 - Dr. Labouseur} \\[10pt] % Header stuff.
+   \horrule{0.5pt} \\[0.25cm] 	% Top horizontal rule
+   \huge Lab Five  \\     	    % Assignment title
+   \horrule{0.5pt} \\[0.25cm] 	% Bottom horizontal rule
+}
+
+\author{Joseph McDonough \\ \normalsize Joseph.McDonough1@marist.edu}
+
+\date{\normalsize\today} 	% Today's date.
+
+\begin{document}
+\maketitle % Print the title
+
+%----------------------------------------------------------------------------------------
+%   start PROBLEM ONE
+%----------------------------------------------------------------------------------------
+\section{Problem One}
+
+Consider the following set of processes, with the length of the CPU burst given in milliseconds:
+
+\begin{center}\includegraphics{images/table.PNG}\end{center}
+
+The processes are assumed to have arrived in the order $P_1$, $P_2$, $P_3$, $P_4$, $P_5$, all at the time 0
+
+\subsection{First Come First Serve}
+\subsubsection{Time Chart}
+
+\begin{center}\includegraphics{images/fcfs1.png}\end{center}
+\begin{center}\includegraphics{images/fcfs2.png}\end{center}
+
+\subsubsection{Turnaround Time}
+\begin{itemize}
+    \item $P_1$ - 10 milliseconds
+    \item $P_2$ - 11 milliseconds
+    \item $P_3$ - 13 milliseconds
+    \item $P_4$ - 14 milliseconds
+    \item $P_5$ - 19 milliseconds
+\end{itemize}
+
+\subsubsection{Waiting Time}
+\begin{itemize}
+    \item $P_1$ - 0 milliseconds
+    \item $P_2$ - 10 milliseconds
+    \item $P_3$ - 11 milliseconds
+    \item $P_4$ - 13 milliseconds
+    \item $P_5$ - 14 milliseconds
+\end{itemize}
+
+\subsection{Shortest Job First}
+\subsubsection{Time Chart}
+
+\begin{center}\includegraphics{images/sjf1.png}\end{center}
+\begin{center}\includegraphics{images/sjf2.png}\end{center}
+
+\subsubsection{Turnaround Time}
+\begin{itemize}
+    \item $P_1$ - 19 milliseconds
+    \item $P_2$ - 1 milliseconds
+    \item $P_3$ - 4 milliseconds
+    \item $P_4$ - 2 milliseconds
+    \item $P_5$ - 9 milliseconds
+\end{itemize}
+
+\subsubsection{Waiting Time}
+\begin{itemize}
+    \item $P_1$ - 9 milliseconds
+    \item $P_2$ - 0 milliseconds
+    \item $P_3$ - 2 milliseconds
+    \item $P_4$ - 1 milliseconds
+    \item $P_5$ - 4 milliseconds
+\end{itemize}
+
+\subsection{Nonpreemptive Priority}
+\subsubsection{Time Chart}
+
+\begin{center}\includegraphics{images/prio1.png}\end{center}
+\begin{center}\includegraphics{images/prio2.png}\end{center}
+
+\subsubsection{Turnaround Time}
+\begin{itemize}
+    \item $P_1$ - 16 milliseconds
+    \item $P_2$ - 1 milliseconds
+    \item $P_3$ - 18 milliseconds 
+    \item $P_4$ - 19 milliseconds
+    \item $P_5$ - 6 milliseconds
+\end{itemize}
+
+\subsubsection{Waiting Time}
+\begin{itemize}
+    \item $P_1$ - 6 milliseconds
+    \item $P_2$ - 0 milliseconds
+    \item $P_3$ - 16 milliseconds
+    \item $P_4$ - 18 milliseconds
+    \item $P_5$ - 1 milliseconds
+\end{itemize}
+
+\subsection{Round Robin (Quantum = 1)}
+\subsubsection{Time Chart}
+
+\begin{center}\includegraphics{images/rr1.png}\end{center}
+\begin{center}\includegraphics{images/rr2.png}\end{center}
+
+\subsubsection{Turnaround Time}
+\begin{itemize}
+    \item $P_1$ - 19 milliseconds
+    \item $P_2$ - 2 milliseconds
+    \item $P_3$ - 7 milliseconds
+    \item $P_4$ - 4 milliseconds
+    \item $P_5$ - 14 milliseconds
+\end{itemize}
+
+\subsubsection{Waiting Time}
+\begin{itemize}
+    \item $P_1$ - 9 milliseconds
+    \item $P_2$ - 1 milliseconds
+    \item $P_3$ - 5 milliseconds
+    \item $P_4$ - 3 milliseconds
+    \item $P_5$ - 9 milliseconds
+\end{itemize}
+
+\subsection{Results}
+Average Waiting Times:
+\begin{itemize}
+    \item First Come First Serve - (48/5) = 9.6 milliseconds
+    \item Shortest Job First - (16/5) = 3.2 milliseconds
+    \item Nonpreemptive Priority - (41/5) = 8.2 milliseconds
+    \item Round Robin - (27/5) = 5.4 milliseconds
+\end{itemize}
+
+As a result, the Shortest Job First scheduling type resulted in the minimum average waiting time.
+
+\end{document}

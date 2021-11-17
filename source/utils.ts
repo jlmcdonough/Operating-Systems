@@ -57,7 +57,100 @@ module TSOS {
         public static padHex(hexNum: string)
         {
             let withPadding = "00" + hexNum;
-            return withPadding.substr(withPadding.length - 2).toUpperCase();
+            if (withPadding.length > 4)
+            {
+                return withPadding.substr(2).toUpperCase();
+            }
+            else
+            {
+                return withPadding.substr(withPadding.length - 2).toUpperCase();
+            }
         }
+
+        public static segmentStuff(segmentNumber: number): number[]
+        {
+            let startingPoint, maxPoint;
+            switch (segmentNumber)
+            {
+                case 1:
+                    startingPoint = _Memory.segmentOneBase;
+                    maxPoint = _Memory.segmentOneLimit;
+                    break;
+                case 2:
+                    startingPoint = _Memory.segmentTwoBase;
+                    maxPoint = _Memory.segmentTwoLimit;
+                    break;
+                case 3:
+                    startingPoint = _Memory.segmentThreeBase;
+                    maxPoint = _Memory.segmentThreeLimit;
+                    break;
+            }
+            return [startingPoint, maxPoint];
+        }
+
+        public static calculateTurnaroundTime(turnaroundPcb?: Pcb) : number
+        {
+            if (typeof turnaroundPcb !== 'undefined')
+            {
+                return turnaroundPcb.endingCycle - turnaroundPcb.startingCycle;
+            }
+            else
+            {
+                return _PCB.endingCycle - _PCB.startingCycle;
+            }
+        }
+
+        public static calculateWaitTime(waitPcb?: Pcb): number
+        {
+            if (typeof waitPcb !== 'undefined')
+            {
+                return this.calculateTurnaroundTime(waitPcb) - waitPcb.runningCycle;
+            }
+            else
+            {
+                return this.calculateTurnaroundTime() - _PCB.runningCycle;
+            }
+        }
+
+        public static displayPCBAllData(stoppingPcb?: Pcb): void
+        {
+            if (typeof stoppingPcb !== 'undefined')
+            {
+                _StdOut.putText("Output: " + stoppingPcb.outputData);
+                _StdOut.advanceLine();
+                _StdOut.putText("Turnaround Time: " + Utils.calculateTurnaroundTime(stoppingPcb));
+                _StdOut.advanceLine();
+                _StdOut.putText("Wait Time: " + Utils.calculateWaitTime(stoppingPcb));
+                _StdOut.advanceLine();
+            }
+            else
+            {
+                _StdOut.putText("Output: " + _PCB.outputData);
+                _StdOut.advanceLine();
+                _StdOut.putText("Turnaround Time: " + Utils.calculateTurnaroundTime());
+                _StdOut.advanceLine();
+                _StdOut.putText("Wait Time: " + Utils.calculateWaitTime());
+                _StdOut.advanceLine();
+            }
+        }
+
+        public static memoryOutOfBoundsError(): void
+        {
+            _CPU.isExecuting = false;
+            _PCB.state = "Stopped";
+            _StdOut.putText("Memory out of bounds error on process " + _PCB.pid + ". CPU stopped.");
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
+        }
+
+        public static invalidOPCodeError(): void
+        {
+            _CPU.isExecuting = false;
+            _PCB.state = "Stopped";
+            _StdOut.putText("Invalid OP Code reached on process " + _PCB.pid + ". CPU stopped.");
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
+        }
+
     }
 }

@@ -67,7 +67,54 @@ module TSOS {
             var taLog = <HTMLInputElement> document.getElementById("taHostLog");
             taLog.value = str + taLog.value;
 
+
             // TODO in the future: Optionally update a log database or some streaming service.
+        }
+
+        public static toggleAppearance(): void {
+            // Aware this does not "compile" but it works as if it does.
+            // Assuming it has something to do with html importing a script instead
+            // of npm installing the dark-mode-toggle
+            document.addEventListener('colorschemechange', (e) => {
+                _APPEARANCE = document.querySelector('dark-mode-toggle').attributes[5].value;
+                console.log("Apperance switched to " + _APPEARANCE);
+                if (_APPEARANCE === "light")
+                {
+                    console.log("SWITCHING CANVAS TO BLACK TEXT");
+
+                    _DefaultFontColor = "#121212";
+
+                    let image = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
+                    let data = image.data;
+                    for (let i = 0; i < data.length; i += 4)
+                    {
+                        data[i] = 0 - data[i]
+
+                        data[i + 1] = 0 - data[i + 1];
+
+                        data[i + 2] = 0 - data[i + 2];
+                    }
+                    _DrawingContext.putImageData(image, 0, 0);
+                }
+                else
+                {
+                    console.log("SWITCHING CANVAS TO WHITE TEXT");
+                    _DefaultFontColor = "#ffffff";
+
+                    let image = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
+                    let data = image.data;
+                    for (let i = 0; i < data.length; i += 4)
+                    {
+                        data[i] = 255 - data[i]
+
+                        data[i + 1] = 255 - data[i + 1];
+
+                        data[i + 2] = 255 - data[i + 2];
+                    }
+
+                    _DrawingContext.putImageData(image, 0, 0);
+                }
+            });
         }
 
         //Date and Time for header
@@ -99,6 +146,8 @@ module TSOS {
             // .. disable the Single Step Off button
             (<HTMLButtonElement>document.getElementById("btnSingleStepOff")).disabled = true;
 
+            // .. disable the Memory tracker
+            (<HTMLButtonElement>document.getElementById("btnMemoryTrack")).disabled = false;
 
             // .. set focus on the OS console display ...
             document.getElementById("display").focus();
@@ -113,6 +162,10 @@ module TSOS {
             _MemoryAccessor = new MemoryAccessor();
 
             _PCB = new Pcb();
+            _Scheduler = new Scheduler();
+            _Scheduler.init();
+
+            _Dispatcher = new Dispatcher();
 
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
@@ -164,11 +217,24 @@ module TSOS {
             _SingleStepStep = true;
         }
 
-        public static cpuUpdateTable(): void
+        public static hostBtnMemoryTrack_click(btn): void
+        {
+            if (_MemoryTracking)
+            {
+                _MemoryTracking = false;
+            }
+            else
+            {
+                _MemoryTracking = true;
+                //(<HTMLButtonElement>document.getElementById("btnMemoryTrack")).disabled = true;
+            }
+        }
+
+        public static cpuUpdateTable(oldPC: number): void
         {
             if (_CPU.isExecuting)
             {
-                document.getElementById("cpuPC").innerHTML = _CPU.pc.toString();
+                document.getElementById("cpuPC").innerHTML = Utils.padHex(Utils.decimalToHex(oldPC));
                 document.getElementById("cpuIR").innerHTML = _CPU.ir;
                 document.getElementById("cpuAcc").innerHTML = _CPU.acc;
                 document.getElementById("cpuX").innerHTML = _CPU.xReg;
@@ -202,7 +268,7 @@ module TSOS {
 
                 for (let j = i; j < i + 8; j += 0x1)
                 {
-                    tableBody +=`<td>${_Memory.memoryBlock[j]}</td>`;
+                    tableBody +="<td " + `id=mem${j}>` + _Memory.memoryBlock[j] + "</td>";
                 }
 
                 tableBody += "</tr>";
@@ -212,9 +278,70 @@ module TSOS {
             table.innerHTML = tableBody;
         }
 
-        public static pcbUpdateTable(): void
+        public static memoryTableColor(pc: number, operandCount: number, segment: number): void
         {
-            document.getElementById("pcbPC").innerHTML = _PCB.pc.toString();
+            let offset = (segment - 1) * 256;
+            let mainHighlight, secondaryHighlight;
+
+            if (_APPEARANCE === "dark")
+            {
+                mainHighlight = "#3700B3";
+                secondaryHighlight = "#BB86FC";
+            }
+            else if (_APPEARANCE === "light")
+            {
+                mainHighlight = "#1E88E5";
+                secondaryHighlight = "#BBDEFB";
+            }
+            document.getElementById("mem" + (pc + offset)).style.backgroundColor = mainHighlight;
+            for(let i = 1; i <= operandCount; i++)
+            {
+                document.getElementById("mem" + ( (pc + offset) + i) ).style.backgroundColor = secondaryHighlight;
+                if (_MemoryTracking)
+                {
+                    document.getElementById("mem" + ( (pc + offset) + i) ).scrollIntoView({block: 'nearest'});
+                }
+            }
+        }
+
+
+        public static pcbUpdateTable(oldPC: number): void
+        {
+            let table = document.getElementById("pcbTable");
+            let tableBody = "<tbody>" + "<tr>" +
+        "<th>PID</th><th>PC</th><th>Acc</th><th>X</th><th>Y</th><th>Z</th><th>Priority</th><th>State</th><th>Location</th><th>Mem. Base</th><th>Mem. Limit</th><th>Segment</th><th>Running Quanta</th>" +
+        "</tr>";
+
+            for (let i = 0; i < _PCBList.length; i++)
+            {
+                let pcbPC;
+                if (_PCBList[i].state === "Running")
+                {
+                    pcbPC = Utils.padHex(Utils.decimalToHex(oldPC));
+                }
+                else
+                {
+                    pcbPC = Utils.padHex(Utils.decimalToHex(_PCBList[i].pc));
+                }
+
+                tableBody +="<tr>" +
+                                `<td> ${_PCBList[i].pid} </td>` +
+                                `<td> ${pcbPC} </td>` +
+                                `<td> ${_PCBList[i].acc} </td>` +
+                                `<td> ${_PCBList[i].xReg} </td>` +
+                                `<td> ${_PCBList[i].yReg} </td>` +
+                                `<td> ${_PCBList[i].zFlag.toString()} </td>` +
+                                `<td> ${_PCBList[i].priority.toString()} </td>` +
+                                `<td> ${_PCBList[i].state} </td>` +
+                                `<td> ${_PCBList[i].location} </td>` +
+                                `<td> ${_PCBList[i].base} </td>` +
+                                `<td> ${_PCBList[i].limit} </td>` +
+                                `<td> ${_PCBList[i].segment} </td>` +
+                                `<td> ${_PCBList[i].runningQuanta} </td>` +
+                            "</tr>";
+            }
+
+          /*  document.getElementById("pcbPC").innerHTML = Utils.padHex(Utils.decimalToHex(_PCB.pc));
             document.getElementById("pcbAcc").innerHTML = _PCB.acc;
             document.getElementById("pcbX").innerHTML = _PCB.xReg;
             document.getElementById("pcbY").innerHTML = _PCB.yReg;
@@ -222,6 +349,25 @@ module TSOS {
             document.getElementById("pcbPriority").innerHTML = _PCB.priority.toString();
             document.getElementById("pcbState").innerHTML = _PCB.state;
             document.getElementById("pcbLocation").innerHTML = _PCB.location;
+*/
+            tableBody += "</tbody>";
+            table.innerHTML = tableBody;
+        }
+
+        public static updateVisuals(oldPC: number, segment?: number): void
+        {
+            Control.cpuUpdateTable(oldPC);
+            Control.pcbUpdateTable(oldPC);
+            Control.memoryUpdateTable();
+
+            if (typeof segment !== 'undefined')
+            {
+                Control.memoryTableColor(oldPC, operandCount, segment );
+            }
+            else
+            {
+                Control.memoryTableColor(oldPC, operandCount, _PCB.segment );
+            }
         }
     }
 }

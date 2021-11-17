@@ -1,9 +1,15 @@
 var TSOS;
 (function (TSOS) {
     class Memory {
-        constructor(memorySize = 256, memoryBlock = new Array(memorySize)) {
+        constructor(memorySize = 768, memoryBlock = new Array(memorySize)) {
             this.memorySize = memorySize;
             this.memoryBlock = memoryBlock;
+            this.segmentOneBase = 0;
+            this.segmentOneLimit = 255;
+            this.segmentTwoBase = 256;
+            this.segmentTwoLimit = 511;
+            this.segmentThreeBase = 512;
+            this.segmentThreeLimit = 767;
         }
         init() {
             for (let i = 0; i < this.memorySize; i++) {
@@ -11,17 +17,11 @@ var TSOS;
             }
             TSOS.Control.memoryUpdateTable();
         }
-        loadMemory(userEntry) {
-            let userArr = userEntry.split(" ");
-            for (let i = 0; i < userArr.length; i++) {
-                this.memoryBlock[i] = userArr[i];
-            }
-        }
         getAt(atPC) {
             return this.memoryBlock[atPC];
         }
         override(atAddress, newData) {
-            this.memoryBlock[TSOS.Utils.hexToDecimal(atAddress)] = newData;
+            this.memoryBlock[atAddress] = newData;
         }
     }
     TSOS.Memory = Memory;

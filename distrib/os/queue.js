@@ -29,12 +29,28 @@ var TSOS;
             }
             return retVal;
         }
+        peek() {
+            if (this.q.length > 0) {
+                return this.q[0];
+            }
+            return null;
+        }
         toString() {
             var retVal = "";
             for (var i in this.q) {
                 retVal += "[" + this.q[i] + "] ";
             }
             return retVal;
+        }
+        remove(removePcbPid) {
+            this.q.forEach((element, index) => {
+                if (element.pid == removePcbPid)
+                    this.q.splice(index, 1);
+            });
+            if (_Scheduler.runningPCB.pid == removePcbPid) {
+                _Scheduler.runningPCB = null;
+                _Scheduler.doScheduling();
+            }
         }
     }
     TSOS.Queue = Queue;

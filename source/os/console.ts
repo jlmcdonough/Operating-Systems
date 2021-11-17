@@ -60,17 +60,21 @@ module TSOS {
                 {
                     if (_CPU.isExecuting)  //if no programs are running, don't care
                     {
-                        _CPU.isExecuting = false;
-                        Control.cpuUpdateTable();
+                        Control.cpuUpdateTable(_CPU.pc);
 
                         _PCB.state = "Stopped";
-                        Control.pcbUpdateTable();
-
-                        _CPU.pc = 0;
+                        _PCB.endingCycle = _CycleCount;
+                        Control.pcbUpdateTable(_PCB.pc);
 
                         this.advanceLine();
                         this.putText("Running process " + _PCB.pid + " stopped by user.");
                         this.advanceLine();
+                        Utils.displayPCBAllData();
+
+                        _Scheduler.runningPCB = null;
+
+                        _Scheduler.doScheduling();
+
                         _OsShell.putPrompt();
                     }
 
@@ -196,19 +200,19 @@ module TSOS {
              * Font height margin is extra spacing between the lines.
              */
             //this will allow for a buffer for new line at the bottom
-            let fontHeight = _DefaultFontSize +
+            _FontHeight = _DefaultFontSize +
                              _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                              _FontHeightMargin;
 
-            this.currentYPosition += fontHeight;
+            this.currentYPosition += _FontHeight;
 
             // TODO: Handle scrolling. (iProject 1)
             if (this.currentYPosition > _Canvas.height)
             {
-                var prevText = _DrawingContext.getImageData(0, fontHeight, _Canvas.width, _Canvas.height);
+                var prevText = _DrawingContext.getImageData(0, _FontHeight, _Canvas.width, _Canvas.height);
                 this.clearScreen();
                 _DrawingContext.putImageData(prevText, 0, 0);
-                this.currentYPosition -= fontHeight;
+                this.currentYPosition -= _FontHeight;
             }
         }
 

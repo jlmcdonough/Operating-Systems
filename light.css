@@ -1,0 +1,155 @@
+/* TSOS.css */
+
+body {
+    background: #ffffff;
+    font-family: Helvetica, Verdana, Arial, sans-serif;
+    font-size: 12pt;
+    font-weight: normal;
+    font-style: normal;
+}
+
+h1 {
+    color: #222222;
+    font-size: 24pt;
+    font-weight: normal;
+    font-style: normal;
+    border-bottom: 1px solid #222222;
+}
+
+h2 {
+    color: #222222;
+    font-size: 20pt;
+    font-weight: normal;
+    font-style: normal;
+}
+
+h3 {
+    font-family: Helvetica, Verdana, Arial, sans-serif;
+    font-size: 16pt;
+    font-weight: normal;
+    font-style: normal;
+}
+
+h2 {
+    color: #222222;
+    font-size: 20pt;
+    font-weight: normal;
+    font-style: normal;
+}
+
+#display {
+    background-color:#ECEFF1;
+    border: 1px solid #484b6a;;
+    cursor: default;
+}
+
+.normal_button {
+    width: 100px;
+    color: #ffffff;
+    background-color: #484b6a;
+}
+
+.footerText {
+    color: #222222;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 8pt;
+    text-align: center;
+}
+
+#logo
+{
+    filter: invert(1);
+}
+
+#dateTime
+{
+    color: #222222;
+}
+
+#status
+{
+    color: #222222;
+}
+
+#dark-mode-toggle-1
+{
+    color: #222222
+}
+
+
+
+.hostLog {
+    color: #222222;
+}
+
+.hostLogText {
+    color: #222222;
+    background: #ECEFF1;
+    border-color: #484b6a;
+}
+
+.userProgramInput {
+    color: #222222;
+}
+
+.userProgramInputText {
+    color: #222222;
+    background: #ECEFF1;
+    border-color: #484b6a;
+}
+
+.hostDisplay {
+    color: #222222;
+}
+
+tr:nth-child(even) {
+    background-color: #FCFFFF;
+}
+
+.hostDisplayTable {
+    color: #222222;
+    background: #ECEFF1;
+    border: 1px solid #484b6a;
+    width: 470px;
+    text-align: center;
+}
+
+#divMemoryTable {
+    width: 470px;
+    max-height: 211px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    border-bottom: 1px solid #484b6a;
+}
+
+#divMemoryTable:hover {
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+}
+
+#divPCBTable {
+    width: 585px;
+    max-height: 211px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    border-bottom: 1px solid #484b6a;
+}
+
+#divPCBTable:hover {
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+}
+
+::-webkit-scrollbar {
+    width: 1px;
+}
+
+::-webkit-scrollbar-track {
+    display: none;
+}
+
+input:disabled {
+    background: #3b3b3b;
+}

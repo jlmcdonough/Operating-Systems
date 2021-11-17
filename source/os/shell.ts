@@ -117,7 +117,40 @@ module TSOS {
             this.commandList[this.commandList.length] = sc;
 
             // ps  - list the running processes and their IDs
-            // kill <id> - kills the specified process id.
+            sc = new ShellCommand(this.shellPs,
+                "ps",
+                "displays the PID and state of all current processes.");
+            this.commandList[this.commandList.length] = sc;
+
+            // clearmem
+            sc = new ShellCommand(this.shellClearMem,
+                "clearmem",
+                "resets all memory");
+            this.commandList[this.commandList.length] = sc;
+
+            // runall
+            sc = new ShellCommand(this.shellRunAll,
+                "runall",
+                "runs every program");
+            this.commandList[this.commandList.length] = sc;
+
+            // kill
+            sc = new ShellCommand(this.shellKill,
+                "kill",
+                "<id> - kills the specified process id.");
+            this.commandList[this.commandList.length] = sc;
+
+            // killall
+            sc = new ShellCommand(this.shellKillAll,
+                "killall",
+                "kills all processes.");
+            this.commandList[this.commandList.length] = sc;
+
+            // kill
+            sc = new ShellCommand(this.shellQuantum,
+                "quantum",
+                "<number> - sets the quantum to number.");
+            this.commandList[this.commandList.length] = sc;
 
             // Display the initial prompt.
             this.putPrompt();
@@ -220,12 +253,9 @@ module TSOS {
             {
                 for (var i in tempList) {
                     var arg = Utils.trim(tempList[i]);
-                    if (arg != "") {
+                    if (arg != "")
+                    {
                         retVal.args[retVal.args.length] = tempList[i];
-<<<<<<< HEAD
-                        console.log("argsLength: " + retVal.args.length);
-=======
->>>>>>> iProject2
                     }
                 }
             }
@@ -340,6 +370,24 @@ module TSOS {
                     case "run":
                         _StdOut.putText("RUN will run the specified user program, denoted by the process ID that was assigned when loaded.");
                         break;
+                    case "ps":
+                        _StdOut.putText("PS will print a list of all the PCBs that are currently stored as well as their Process IDs.");
+                        break;
+                    case "clearmem":
+                        _StdOut.putText("CLEARMEM will empty out all the memory partitions and essentially reset all memory.");
+                        break;
+                    case "runall":
+                        _StdOut.putText("RUNALL will begin to execute all programs at once.");
+                        break;
+                    case "kill":
+                        _StdOut.putText("KILL will the program specified by the entered process ID.");
+                        break;
+                    case "killall":
+                        _StdOut.putText("KILLALL will kill every process that is running.");
+                        break;
+                    case "quantum":
+                        _StdOut.putText("QUANTUM will set the quantum for round robin scheduling by the user entered number.");
+                        break;
 
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -426,87 +474,128 @@ module TSOS {
             //do not want the input to either be blank or just spaces
             if (_taProgramInput.value.length > 0 && _taProgramInput.value.trim())
             {
-                //ensures that the load priority is a number
-                if (!isNaN(Number(args[0])))
+                let validHex = true;
+                let trimmedInput = _taProgramInput.value.replace(/(\r\n|\n|\r)/gm,"").replace(/\s/g,"");  //removes whitespace
+
+                trimmedInput = trimmedInput.replace(/.{1,2}(?=(.{2})+$)/g, '$& ');  //add space after every second character
+
+                let charArray = Array.from(trimmedInput.toLocaleUpperCase());
+
+                charArray.forEach(function (char)
                 {
-                    let priority = Number(args[0]);
-                    let validHex = true;
-                    let trimmedInput = _taProgramInput.value.replace(/(\r\n|\n|\r)/gm,"").replace(/\s/g,"");  //removes whitespace
+                    switch (char){      //checks to make sure only hex digits were entered
+                        case " ":
+                            break;
+                        case "0":
+                            break;
+                        case "1":
+                            break;
+                        case "2":
+                            break;
+                        case "3":
+                            break;
+                        case "4":
+                            break;
+                        case "5":
+                            break;
+                        case "6":
+                            break;
+                        case "7":
+                            break;
+                        case "8":
+                            break;
+                        case "9":
+                            break;
+                        case "A":
+                            break;
+                        case "B":
+                            break;
+                        case "C":
+                            break;
+                        case "D":
+                            break;
+                        case "E":
+                            break;
+                        case "F":
+                            break;
 
-                    trimmedInput = trimmedInput.replace(/.{1,2}(?=(.{2})+$)/g, '$& ');  //add space after every second character
+                        default: validHex = false;
+                    }
+                });
 
-                    let charArray = Array.from(trimmedInput.toLocaleUpperCase());
+                if(validHex)
+                {
+                    Control.memoryUpdateTable();
 
-                    charArray.forEach(function (char)
+                    let segmentOneAvailable = _MemoryManager.segmentEmpty(1);
+                    let segmentTwoAvailable = _MemoryManager.segmentEmpty(2);
+                    let segmentThreeAvailable = _MemoryManager.segmentEmpty(3);
+
+
+                    if (!segmentOneAvailable && !segmentTwoAvailable && !segmentThreeAvailable)
                     {
-                        switch (char){      //checks to make sure only hex digits were entered
-                            case " ":
-                                break;
-                            case "0":
-                                break;
-                            case "1":
-                                break;
-                            case "2":
-                                break;
-                            case "3":
-                                break;
-                            case "4":
-                                break;
-                            case "5":
-                                break;
-                            case "6":
-                                break;
-                            case "7":
-                                break;
-                            case "8":
-                                break;
-                            case "9":
-                                break;
-                            case "A":
-                                break;
-                            case "B":
-                                break;
-                            case "C":
-                                break;
-                            case "D":
-                                break;
-                            case "E":
-                                break;
-                            case "F":
-                                break;
+                        segmentOneAvailable = _MemoryManager.segmentReallocate(1);
+                        segmentTwoAvailable = _MemoryManager.segmentReallocate(2);
+                        segmentThreeAvailable = _MemoryManager.segmentReallocate(3);
+                    }
 
-                            default: validHex = false;
-                        }
-                    });
-
-                    if(validHex)
+                    if(_PCBList.length > 0 && (
+                        ( !segmentOneAvailable ) && ( !segmentTwoAvailable) && ( !segmentThreeAvailable) )
+                    )
                     {
-                        if(_ReadyQueue.length > 0)
+                        _StdOut.putText("There is already 3 programs stored in memory. Cannot load another");
+                    }
+                    else
+                    {
+                        let priority;
+                        //ensures that the load priority is a number
+                        if (isNaN(Number(args[0])))
                         {
-                            _StdOut.putText("There is already a program stored in memory. Cannot load another");
+                            _StdOut.putText("It is recommended to include a priority after the load command. Priority was given 32 to this instance.");
+                            priority = 32;
                         }
                         else
                         {
-                            _PCB = new Pcb();
-                            _PCB.init(priority);
-                            _ReadyQueue[_PCB.pid] = _PCB;
+                            priority = Number(args[0]);
+                        }
 
-                            _Memory.loadMemory(trimmedInput);
-                            Control.memoryUpdateTable();
+                        let thisSegment;
+                        if(segmentOneAvailable)
+                        {
+                            thisSegment = 1;
+                        }
+                        else if(segmentTwoAvailable)
+                        {
+                            thisSegment = 2;
+                        }
+                        else if(segmentThreeAvailable)
+                        {
+                            thisSegment = 3;
+                        }
+                        else
+                        {
+                            _StdOut.putText("ERROR LOADING PROGRAM INTO MEMORY");
+                        }
+
+                        if (segmentOneAvailable || segmentTwoAvailable || segmentThreeAvailable)
+                        {
+                            let newPCB = new Pcb();
+                            newPCB.init(priority, thisSegment);
+                            _PCBList[_PCBList.length] = newPCB;
+
+                            _MemoryAccessor.nukeMemory(thisSegment);
+                            _MemoryAccessor.loadMemory(trimmedInput, thisSegment);
+                            Control.updateVisuals(0, thisSegment);
 
                             _StdOut.putText("Successfully loaded user program with priority " + priority);
                             _StdOut.advanceLine();
                             _StdOut.putText("Your program is stored at process ID " + (_ProcessID - 1) );
                         }
                     }
-                    else
-                    {
-                        _StdOut.putText("Please enter valid hex in the program input area.");
-                    }
                 }
                 else
                 {
-                    _StdOut.putText("The load function must be entered with a priority number after it");
+                    _StdOut.putText("Please enter valid hex in the program input area.");
                 }
             }
             else
@@ -520,21 +609,202 @@ module TSOS {
             //ensures that the run is a number
             if (!isNaN(Number(args[0])))
             {
-                if( (_ReadyQueue.length - 1) >= Number(args[0]) )
+                let neverFound = true;
+                for(let i = 0; i < _PCBList.length; i++)
                 {
-                    _CPU.isExecuting = true;
-                    _PCB.state = "Running";
-                    _StdOut.putText("Running the program stored at: " + args[0]);
+                    if (_PCBList[i].pid === Number(args[0]) )
+                    {
+                        if (_PCBList[i].state === "Resident")
+                        {
+                            _PCBList[i].state = "Ready";
+                            _Scheduler.readyQueue.enqueue(_PCBList[i]);
+                            _Scheduler.doScheduling();
+                        }
+                        else
+                        {
+                            _StdOut.putText("The program stored at " + args[0] + " is not resident");
+                        }
+
+                        neverFound = false;
+                        break;
+                    }
                 }
-                else
+
+                if (neverFound)
                 {
                     _StdOut.putText("There is no program with that PID number");
+                }
+
+            }
+            else
+            {
+                _StdOut.putText("A positive integer must follow the run command.");
+            }
+        }
+
+        public shellPs(args: string[])
+        {
+            if (_PCBList.length > 0)
+            {
+                for (let i = 0; i < _PCBList.length; i++)
+                {
+                    _StdOut.putText("Process ID: " + _PCBList[i].pid + " State: " + _PCBList[i].state + " Segment: " + _PCBList[i].segment + " Program Counter: " + _PCBList[i].pc + " Priority: " + _PCBList[i].priority);
+                    _StdOut.advanceLine();
                 }
             }
             else
             {
-                _StdOut.putText("Run function must be followed by a number")
+                _StdOut.putText("No loaded processes to display");
             }
         }
+
+        public shellClearMem(args: string[])
+        {
+            if (_CPU.isExecuting)
+            {
+                _StdOut.putText("Cannot clear the memory while there are running processes.")
+            }
+            else
+            {
+                if (args.length == 0)
+                {
+                    _MemoryAccessor.nukeMemory(1);
+                    _MemoryAccessor.nukeMemory(2);
+                    _MemoryAccessor.nukeMemory(3);
+                    Control.memoryUpdateTable();
+                    _StdOut.putText("Memory has been reset.");
+                }
+                else if (args.length == 1 && !isNaN(Number(args[0])))
+                {
+                    let segment = Number(args[0]);
+                    if (0 < segment && segment < 4)
+                    {
+                        _MemoryAccessor.nukeMemory(segment);
+                        Control.memoryUpdateTable();
+                        _StdOut.putText("Memory in segment " + segment + " has been reset.");
+                    }
+                    else
+                    {
+                        _StdOut.putText("Segment must be between 1 and 3 (inclusive).")
+                    }
+                }
+                else
+                {
+                    _StdOut.putText("Quantum command must have nothing follow it, or just a valid positive integer.")
+                }
+            }
+        }
+
+        public shellRunAll(args: string[])
+        {
+            let canRun = false;
+
+            for(let i = 0; i < _PCBList.length; i++)
+            {
+                if (_PCBList[i].state === "Resident")
+                {
+                    _PCBList[i].state = "Ready";
+                    _Scheduler.readyQueue.enqueue(_PCBList[i]);
+                    canRun = true;
+                }
+            }
+
+            if (canRun)
+            {
+                _Scheduler.doScheduling();
+            }
+            else
+            {
+                _StdOut.putText("There are no programs to run.");
+            }
+        }
+
+        public shellKill(args: string[])
+        {
+            if (!isNaN(Number(args[0])))
+            {
+                let thisPID = Number(args[0]);
+                let notFound = true;
+                for (let i = 0; i < _PCBList.length; i++)
+                {
+                    if (_PCBList[i].pid == thisPID )
+                    {
+                        notFound = false;
+                        if (_PCBList[i].state === "Resident" ||
+                            _PCBList[i].state === "Running" ||
+                            _PCBList[i].state === "Ready"
+                        )
+                        {
+                            _PCBList[i].state = "Stopped";
+                            _PCBList[i].endingCycle = _CycleCount;
+                            _Scheduler.readyQueue.remove(_PCBList[i].pid);
+                            _StdOut.putText("Process " + thisPID + " terminated.");
+                            _StdOut.advanceLine();
+                            Utils.displayPCBAllData(_PCBList[i]);
+                        }
+                        else
+                        {
+                            _StdOut.putText("Process " + thisPID + " is not resident or running.");
+                        }
+
+
+                        Control.updateVisuals(0);
+                    }
+                }
+
+                if (notFound)
+                {
+                    _StdOut.putText("Process " + thisPID + " does not exist in the current queue.");
+                }
+            }
+            else
+            {
+                _StdOut.putText("Enter a valid process id after kill")
+            }
+        }
+
+        public shellKillAll(args: string[])
+        {
+            _CPU.isExecuting = false;
+
+            for (let i = 0; i < _PCBList.length; i++)
+            {
+                _PCBList[i].state = "Stopped";
+                _StdOut.putText("Process " + _PCBList[i].pid + " terminated.");
+                _StdOut.advanceLine();
+                Utils.displayPCBAllData(_PCBList[i]);
+            }
+            _StdOut.putText("All stored processes killed");
+            Control.updateVisuals(0);
+        }
+
+        public shellQuantum(args: string[])
+        {
+            if (args.length == 0)
+            {
+                _StdOut.putText("Current quantum is " + _Quantum);
+                _StdOut.advanceLine();
+                _StdOut.putText("To change this, add a number to the quantum command.");
+            }
+            else if (args.length == 1 && !isNaN(Number(args[0])))
+            {
+                let userQuantum = Number(args[0]);
+                if (userQuantum > 0)
+                {
+                    _Quantum = userQuantum;
+                    _StdOut.putText("Quantum updated to " + _Quantum);
+                }
+                else
+                {
+                    _StdOut.putText("Quantum must be greater than 0.")
+                }
+            }
+            else
+            {
+                _StdOut.putText("Quantum command must have nothing follow it, or just a valid positive integer.")
+            }
+
+        }
+
     }
 }

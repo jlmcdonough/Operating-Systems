@@ -12,13 +12,14 @@
 // Global CONSTANTS (TypeScript 1.5 introduced const. Very cool.)
 //
 const APP_NAME: string    = "RhinOS";
-const APP_VERSION: string = "0.2";
+const APP_VERSION: string = "0.3";
 
 const CPU_CLOCK_INTERVAL: number = 100;   // This is in ms (milliseconds) so 1000 = 1 second.
 
 const TIMER_IRQ: number = 0;  // Pages 23 (timer), 9 (interrupts), and 561 (interrupt priority).
                               // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
 const KEYBOARD_IRQ: number = 1;
+const CONTEXT_SWITCH_IRQ: number = 2;
 
 
 //
@@ -35,8 +36,13 @@ var _MemoryAccessor: TSOS.MemoryAccessor;
 var _MemoryManager: TSOS.MemoryManager;
 var _PCB: TSOS.Pcb;
 var _ProcessID: number = 0;
-var _ReadyQueue: TSOS.Pcb[] = [];
+var _PCBList: TSOS.Pcb[] = [];
+var operandCount: number;
+var _Quantum: number = 6;
+var _Scheduler: TSOS.Scheduler;
+var _Dispatcher: TSOS.Dispatcher;
 
+var _CycleCount: number = 0;
 
 var _OSclock: number = 0;  // Page 23.
 
@@ -48,6 +54,8 @@ var _DefaultFontFamily: string = "sans"; // Ignored, I think. The was just a pla
 var _DefaultFontSize: number = 13;
 var _DefaultFontColor: string = "#ffffff";
 var _FontHeightMargin: number = 4;       // Additional space added to font size when advancing a line.
+var _FontHeight: number = _FontHeightMargin + 3.64 + _DefaultFontSize;
+var _APPEARANCE: string;
 
 var _Trace: boolean = true;              // Default the OS trace to be on.
 
@@ -83,10 +91,16 @@ var _PCBdisplay: HTMLTextAreaElement;
 var _SingleStep: boolean = false;
 var _SingleStepStep: boolean = false;
 
+// For Memory Tracking
+var _MemoryTracking: boolean = false;
+
 // For testing (and enrichment)...
 var Glados: any = null;  // This is the function Glados() in glados-ip*.js http://alanclasses.github.io/TSOS/test/ .
 var _GLaDOS: any = null; // If the above is linked in, this is the instantiated instance of Glados.
 
 var onDocumentLoad = function() {
 	TSOS.Control.hostInit();
+	const darkModeToggle = document.querySelector('dark-mode-toggle');
+	darkModeToggle.attributes[5].value = 'dark';
+	_APPEARANCE = darkModeToggle.attributes[5].value;
 };

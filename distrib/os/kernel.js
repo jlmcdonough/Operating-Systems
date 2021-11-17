@@ -51,9 +51,9 @@ var TSOS;
             // TODO: Check for running processes.  If there are some, alert and stop. Else...
             if (_CPU.isExecuting) {
                 _CPU.isExecuting = false;
-                TSOS.Control.cpuUpdateTable();
+                TSOS.Control.cpuUpdateTable(_CPU.pc);
                 _PCB.state = "Shutdown";
-                TSOS.Control.pcbUpdateTable();
+                TSOS.Control.pcbUpdateTable(_PCB.pc);
             }
             // ... Disable the Interrupts.
             this.krnTrace("Disabling the interrupts.");
@@ -81,10 +81,12 @@ var TSOS;
                 if (_CPU.isExecuting && _SingleStepStep) {
                     _CPU.cycle();
                     _SingleStepStep = false;
+                    _Scheduler.quantaCheck();
                 }
             }
             else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed.
                 _CPU.cycle();
+                _Scheduler.quantaCheck();
             }
             else { // If there are no interrupts and there is nothing being executed then just be idle.
                 this.krnTrace("Idle");
@@ -118,6 +120,9 @@ var TSOS;
                 case KEYBOARD_IRQ:
                     _krnKeyboardDriver.isr(params); // Kernel mode device driver
                     _StdIn.handleInput();
+                    break;
+                case CONTEXT_SWITCH_IRQ:
+                    _Dispatcher.contextSwitch();
                     break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");

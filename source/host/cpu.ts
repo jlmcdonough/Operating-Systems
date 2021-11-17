@@ -33,7 +33,7 @@ module TSOS {
             this.zFlag = 0;
             this.isExecuting = false;
 
-            Control.cpuUpdateTable();
+            Control.cpuUpdateTable(_CPU.pc);
         }
 
         public cycle(): void {
@@ -43,14 +43,16 @@ module TSOS {
 
             if(_CPU.isExecuting)
             {
+                let oldPC = this.pc;
+                operandCount = 1;
                 this.fetch();
                 this.decode();
+                this.updatePcbMatchCpu();
+                _PCB.runningCycle++;
+                _PCB.runningQuanta++;
+                _CycleCount++;
+                Control.updateVisuals(oldPC);
             }
-
-            Control.cpuUpdateTable();
-            this.updatePcbMatchCpu();
-            Control.pcbUpdateTable();
-            Control.memoryUpdateTable();
         }
 
         public updatePcbMatchCpu(): void
@@ -63,9 +65,20 @@ module TSOS {
             _PCB.zFlag = this.zFlag;
         }
 
+        public updateCpuMatchPcb(): void
+        {
+            this.pc = _PCB.pc;
+            this.ir = _PCB.ir;
+            this.acc = _PCB.acc;
+            this.xReg = _PCB.xReg;
+            this.yReg = _PCB.yReg;
+            this.zFlag = _PCB.zFlag;
+        }
+
         public fetch(): void
         {
-            this.ir = _MemoryAccessor.read(this.pc);
+            this.ir = _MemoryAccessor.read(_PCB.segment,
+                this.pc);
         }
 
         public decode(): void
@@ -75,50 +88,8 @@ module TSOS {
                 case "00":
                     this.brk();
                     break;
-                case "01":
-                    this.opcode();
-                    break;
-                case "02":
-                    this.opcode();
-                    break;
-                case "03":
-                    this.opcode();
-                    break;
-                case "05":
-                    this.opcode();
-                    break;
-                case "20":
-                    this.opcode();
-                    break;
-                case "33":
-                    this.opcode();
-                    break;
-                case "49":
-                    this.opcode();
-                    break;
-                case "65":
-                    this.opcode();
-                    break;
-                case "69":
-                    this.opcode();
-                    break;
                 case "6D":
                     this.adc();
-                    break;
-                case "6E":
-                    this.opcode();
-                    break;
-                case "6F":
-                    this.opcode();
-                    break;
-                case "72":
-                    this.opcode();
-                    break;
-                case "74":
-                    this.opcode();
-                    break;
-                case "75":
-                    this.opcode();
                     break;
                 case "8D":
                     this.staMemory();
@@ -128,9 +99,6 @@ module TSOS {
                     break;
                 case "A2":
                     this.ldaXConstant();
-                    break;
-                case "A4":
-                    this.opcode();
                     break;
                 case "A9":
                     this.ldaConstant();
@@ -144,9 +112,6 @@ module TSOS {
                 case "AE":
                     this.ldaXMemory();
                     break;
-                case "BA":
-                    this.opcode();
-                    break;
                 case "D0":
                     this.bne();
                     break;
@@ -156,20 +121,8 @@ module TSOS {
                 case "EC":
                     this.cpx();
                     break;
-                case "ED":
-                    this.opcode();
-                    break;
                 case "EE":
                     this.inc();
-                    break;
-                case "EF":
-                    this.opcode();
-                    break;
-                case "F1":
-                    this.opcode();
-                    break;
-                case "F8":
-                    this.opcode();
                     break;
                 case "FF":
                     this.sys();
@@ -188,7 +141,8 @@ module TSOS {
         {
             this.pc++
 
-            this.acc = _MemoryAccessor.read(this.pc);
+            this.acc = _MemoryAccessor.read(_PCB.segment,
+                this.pc);
 
             this.pc++;
         }
@@ -199,7 +153,7 @@ module TSOS {
         {
             this.pc++;
 
-            this.acc = _MemoryAccessor.read(
+            this.acc = _MemoryAccessor.read(_PCB.segment,
                 Utils.hexToDecimal(this.littleEndian(this.pc)));
 
             this.pc++;
@@ -212,7 +166,8 @@ module TSOS {
         {
             this.pc++;
 
-            _MemoryAccessor.write(this.littleEndian(this.pc), Utils.padHex(this.acc));
+            _MemoryAccessor.write(_PCB.segment,
+                this.littleEndian(this.pc), Utils.padHex(this.acc));
 
             this.pc++;
             this.pc++;
@@ -228,7 +183,8 @@ module TSOS {
 
             let accumulator = (Utils.hexToDecimal(this.acc));
 
-            let storage = Utils.hexToDecimal(_MemoryAccessor.read(Utils.hexToDecimal(param)));
+            let storage = Utils.hexToDecimal(_MemoryAccessor.read(_PCB.segment,
+                Utils.hexToDecimal(param)));
 
             this.acc = Utils.padHex(Utils.decimalToHex(storage + accumulator));
 
@@ -241,7 +197,8 @@ module TSOS {
         {
             this.pc++;
 
-            this.xReg = Utils.padHex(_MemoryAccessor.read(this.pc));
+            this.xReg = Utils.padHex(_MemoryAccessor.read(_PCB.segment,
+                this.pc));
 
             this.pc++;
         }
@@ -251,7 +208,7 @@ module TSOS {
         {
             this.pc++;
 
-            let secondValue = _MemoryAccessor.read(
+            let secondValue = _MemoryAccessor.read(_PCB.segment,
                 Utils.hexToDecimal(this.littleEndian(this.pc)));
 
             this.xReg = Utils.padHex(secondValue);
@@ -266,7 +223,8 @@ module TSOS {
         {
             this.pc++
 
-            this.yReg = _MemoryAccessor.read(this.pc);
+            this.yReg = _MemoryAccessor.read(_PCB.segment,
+                this.pc);
 
             this.pc++;
         }
@@ -276,9 +234,8 @@ module TSOS {
         {
             this.pc++;
 
-            let secondValue = _MemoryAccessor.read(
+            let secondValue = _MemoryAccessor.read(_PCB.segment,
                 Utils.hexToDecimal(this.littleEndian(this.pc)));
-
             this.yReg = secondValue;
 
             this.pc++;
@@ -294,14 +251,20 @@ module TSOS {
         //00
         public brk(): void
         {
+            _CPU.isExecuting = false;
+            _PCB.state = "Finished";
+            _PCB.endingCycle = _CycleCount;
+
             _StdOut.advanceLine();
             _StdOut.putText("Process " + _PCB.pid + " has finished");
             _StdOut.advanceLine();
+
+            Utils.displayPCBAllData();
+
+            _Scheduler.runningPCB = null;
+
+            _Scheduler.doScheduling();
             _OsShell.putPrompt();
-
-            _CPU.isExecuting = false;
-            _PCB.state = "Finished";
-
         }
 
         //EC
@@ -309,7 +272,7 @@ module TSOS {
         {
             this.pc++;
 
-            let secondValue = _MemoryAccessor.read(
+            let secondValue = _MemoryAccessor.read(_PCB.segment,
                 Utils.hexToDecimal(this.littleEndian(this.pc)));
 
             if (secondValue == this.xReg)
@@ -332,7 +295,8 @@ module TSOS {
 
             if (this.zFlag == 0)
             {
-                let fastForward = Utils.hexToDecimal(_MemoryAccessor.read(this.pc));
+                let fastForward = Utils.hexToDecimal(_MemoryAccessor.read(_PCB.segment,
+                    this.pc));
                 this.pc += fastForward;
 
                 if(this.pc > 256)
@@ -353,12 +317,15 @@ module TSOS {
         {
             this.pc++;
 
-            let byteLookingFor = _MemoryAccessor.read(this.pc);
-            let valueToInc = _MemoryAccessor.read(Utils.hexToDecimal(byteLookingFor));
+            let byteLookingFor = _MemoryAccessor.read(_PCB.segment,
+                this.pc);
+            let valueToInc = _MemoryAccessor.read(_PCB.segment,
+                Utils.hexToDecimal(byteLookingFor));
             let asDeci = Utils.hexToDecimal(valueToInc);
             asDeci++;
             let asHex = Utils.decimalToHex(asDeci);
-            _MemoryAccessor.write(byteLookingFor, Utils.padHex(asHex.toString()));
+            _MemoryAccessor.write(_PCB.segment,
+                byteLookingFor, Utils.padHex(asHex.toString()));
 
             this.pc++;
             this.pc++;
@@ -372,10 +339,12 @@ module TSOS {
             if(Number(this.xReg) == 1)
             {
                 _StdOut.putText(this.yReg);
+                _PCB.outputData += this.yReg;
             }
             else if(Number(this.xReg) == 2)
             {
                 let location = Utils.hexToDecimal(this.yReg);
+                location += _PCB.base;
                 let output: string = "";
                 let byteString: string;
                 for (let i = 0; i + location < _Memory.memorySize; i++)
@@ -393,6 +362,7 @@ module TSOS {
                 }
 
                 _StdOut.putText(output);
+                _PCB.outputData += output;
             }
         }
         
@@ -402,15 +372,17 @@ module TSOS {
         //so far only working with the explicitly defined ones
         public opcode(): void
         {
-            console.log("OpCode " + this.ir + " not yet added.");
+            Utils.invalidOPCodeError();
         }
 
         public littleEndian(programCounter: number) : string
         {
-            let second = _MemoryAccessor.read(programCounter);
-            let first = _MemoryAccessor.read((programCounter + 1));
+            let second = _MemoryAccessor.read(_PCB.segment,
+                programCounter);
+            let first = _MemoryAccessor.read(_PCB.segment,
+                (programCounter + 1));
             let result = first + second;
-
+            operandCount = 2;
             return result;
         }
 

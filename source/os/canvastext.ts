@@ -159,7 +159,6 @@ module TSOS {
             ctx.lineWidth = 2.0 * mag;
             ctx.strokeStyle = _DefaultFontColor;
 
-
             for (var i = 0; i < len; i++)
             {
                 var c = CanvasTextFunctions.letter(str.charAt(i));
