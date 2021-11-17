@@ -28,50 +28,50 @@ module TSOS {
 
             // ver
             sc = new ShellCommand(this.shellVer,
-                                  "ver",
-                                  "- Displays the current version data.");
+                "ver",
+                "- Displays the current version data.");
             this.commandList[this.commandList.length] = sc;
 
             // help
             sc = new ShellCommand(this.shellHelp,
-                                  "help",
-                                  "- This is the help command. Seek help.");
+                "help",
+                "- This is the help command. Seek help.");
             this.commandList[this.commandList.length] = sc;
 
             // shutdown
             sc = new ShellCommand(this.shellShutdown,
-                                  "shutdown",
-                                  "- Shuts down the virtual OS but leaves the underlying host / hardware simulation running.");
+                "shutdown",
+                "- Shuts down the virtual OS but leaves the underlying host / hardware simulation running.");
             this.commandList[this.commandList.length] = sc;
 
             // cls
             sc = new ShellCommand(this.shellCls,
-                                  "cls",
-                                  "- Clears the screen and resets the cursor position.");
+                "cls",
+                "- Clears the screen and resets the cursor position.");
             this.commandList[this.commandList.length] = sc;
 
             // man <topic>
             sc = new ShellCommand(this.shellMan,
-                                  "man",
-                                  "<topic> - Displays the MANual page for <topic>.");
+                "man",
+                "<topic> - Displays the MANual page for <topic>.");
             this.commandList[this.commandList.length] = sc;
 
             // trace <on | off>
             sc = new ShellCommand(this.shellTrace,
-                                  "trace",
-                                  "<on | off> - Turns the OS trace on or off.");
+                "trace",
+                "<on | off> - Turns the OS trace on or off.");
             this.commandList[this.commandList.length] = sc;
 
             // rot13 <string>
             sc = new ShellCommand(this.shellRot13,
-                                  "rot13",
-                                  "<string> - Does rot13 obfuscation on <string>.");
+                "rot13",
+                "<string> - Does rot13 obfuscation on <string>.");
             this.commandList[this.commandList.length] = sc;
 
             // prompt <string>
             sc = new ShellCommand(this.shellPrompt,
-                                  "prompt",
-                                  "<string> - Sets the prompt.");
+                "prompt",
+                "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
 
             // date
@@ -119,38 +119,87 @@ module TSOS {
             // ps  - list the running processes and their IDs
             sc = new ShellCommand(this.shellPs,
                 "ps",
-                "displays the PID and state of all current processes.");
+                "- Displays the PID and state of all current processes.");
             this.commandList[this.commandList.length] = sc;
 
             // clearmem
             sc = new ShellCommand(this.shellClearMem,
                 "clearmem",
-                "resets all memory");
+                "- Resets all memory");
             this.commandList[this.commandList.length] = sc;
 
             // runall
             sc = new ShellCommand(this.shellRunAll,
                 "runall",
-                "runs every program");
+                "- Runs every program");
             this.commandList[this.commandList.length] = sc;
 
             // kill
             sc = new ShellCommand(this.shellKill,
                 "kill",
-                "<id> - kills the specified process id.");
+                "<id> - Kills the specified process id.");
             this.commandList[this.commandList.length] = sc;
 
             // killall
             sc = new ShellCommand(this.shellKillAll,
                 "killall",
-                "kills all processes.");
+                "- Kills all processes.");
             this.commandList[this.commandList.length] = sc;
 
-            // kill
+            // quantum
             sc = new ShellCommand(this.shellQuantum,
                 "quantum",
-                "<number> - sets the quantum to number.");
+                "<number> - Sets the quantum to number.");
             this.commandList[this.commandList.length] = sc;
+
+            // create
+            sc = new ShellCommand(this.shellCreate,
+                "create",
+                "<filename> - Creates new file.");
+            this.commandList[this.commandList.length] = sc;
+
+            // read
+            sc = new ShellCommand(this.shellRead,
+                "read",
+                "<filename> - Reads the file.");
+            this.commandList[this.commandList.length] = sc;
+
+            // write
+            sc = new ShellCommand(this.shellWrite,
+                "write",
+                "<filename> \"<data>\" - Writes to the following file.");
+            this.commandList[this.commandList.length] = sc;
+
+            // delete
+            sc = new ShellCommand(this.shellDelete,
+                "delete",
+                "<filename> - Removes the specified file.");
+            this.commandList[this.commandList.length] = sc;
+
+            // format
+            sc = new ShellCommand(this.shellFormat,
+                "format",
+                "- Initializes disks.");
+            this.commandList[this.commandList.length] = sc;
+
+            // ls
+            sc = new ShellCommand(this.shellLs,
+                "ls",
+                "- Displays files");
+            this.commandList[this.commandList.length] = sc;
+
+            // setschedule
+            sc = new ShellCommand(this.shellSetSchedule,
+                "setschedule",
+                "<type> - Sets the scheduling algorithm.");
+            this.commandList[this.commandList.length] = sc;
+
+            // getschedule
+            sc = new ShellCommand(this.shellGetSchedule,
+                "getschedule",
+                "- Displays current scheduler");
+            this.commandList[this.commandList.length] = sc;
+
 
             // Display the initial prompt.
             this.putPrompt();
@@ -173,7 +222,7 @@ module TSOS {
             // Determine the command and execute it.
             //
             // TypeScript/JavaScript may not support associative arrays in all browsers so we have to iterate over the
-            // command list in attempt to find a match. 
+            // command list in attempt to find a match.
             // TODO: Is there a better way? Probably. Someone work it out and tell me in class.
             var index: number = 0;
             var found: boolean = false;
@@ -285,17 +334,17 @@ module TSOS {
         }
 
         public shellApology() {
-           if (_SarcasticMode) {
-              _StdOut.putText("I think we can put our differences behind us.");
-              _StdOut.advanceLine();
-              _StdOut.putText("For science . . . You monster.");
-              _SarcasticMode = false;
-           } else {
-              _StdOut.putText("For what?");
-           }
+            if (_SarcasticMode) {
+                _StdOut.putText("I think we can put our differences behind us.");
+                _StdOut.advanceLine();
+                _StdOut.putText("For science . . . You monster.");
+                _SarcasticMode = false;
+            } else {
+                _StdOut.putText("For what?");
+            }
         }
 
-        // Although args is unused in some of these functions, it is always provided in the 
+        // Although args is unused in some of these functions, it is always provided in the
         // actual parameter list when this function is called, so I feel like we need it.
 
         public shellVer(args: string[]) {
@@ -311,14 +360,14 @@ module TSOS {
         }
 
         public shellShutdown(args: string[]) {
-             _StdOut.putText("Shutting down...");
-             // Call Kernel shutdown routine.
+            _StdOut.putText("Shutting down...");
+            // Call Kernel shutdown routine.
             _Kernel.krnShutdown();
             // TODO: Stop the final prompt from being displayed. If possible. Not a high priority. (Damn OCD!)
         }
 
-        public shellCls(args: string[]) {         
-            _StdOut.clearScreen();     
+        public shellCls(args: string[]) {
+            _StdOut.clearScreen();
             _StdOut.resetXY();
         }
 
@@ -388,6 +437,30 @@ module TSOS {
                     case "quantum":
                         _StdOut.putText("QUANTUM will set the quantum for round robin scheduling by the user entered number.");
                         break;
+                    case "create":
+                        _StdOut.putText("CREATE will use the given name to create and store an empty file with the name");
+                        break;
+                    case "read":
+                        _StdOut.putText("READ will display the contents of the file with the given name.");
+                        break;
+                    case "write":
+                        _StdOut.putText("WRITE will use the given name to write the following data to the file.");
+                        break;
+                    case "delete":
+                        _StdOut.putText("DELETE will remove the file with the given name from disk.");
+                        break;
+                    case "format":
+                        _StdOut.putText("FORMAT will initialize all blocks in all sectors in all tracks");
+                        break;
+                    case "ls":
+                        _StdOut.putText("LS will list all  the files currently stored on disk.");
+                        break;
+                    case "setschedule":
+                        _StdOut.putText("SETSCHEDULE will change the scheduling strategy to requested type. Acceptable inputs are rr, fcfs, priority");
+                        break;
+                    case "getschedule":
+                        _StdOut.putText("GETSCHEDULE will return the currently selected scheduling algorithm.");
+                        break;
 
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -456,7 +529,7 @@ module TSOS {
             if(args.length > 0) {
                 let status = "";
                 args.forEach(function (char) {
-                   status += char;
+                    status += char;
                 });
                 _StdOut.putText("Status updated to: " + status);
                 Control.hostStatus(status)
@@ -804,6 +877,46 @@ module TSOS {
                 _StdOut.putText("Quantum command must have nothing follow it, or just a valid positive integer.")
             }
 
+        }
+
+        public shellCreate(args: string[])
+        {
+            _StdOut.putText("CREATING " + args[0]);
+        }
+
+        public shellRead(args: string[])
+        {
+            _StdOut.putText("READING " + args[0]);
+        }
+
+        public shellWrite(args: string[])
+        {
+            _StdOut.putText("WRITING " + args[1] + " into " + args[0]);
+        }
+
+        public shellDelete(args: string[])
+        {
+            _StdOut.putText("DELETING " + args[0]);
+        }
+
+        public shellFormat(args: string[])
+        {
+            _StdOut.putText("FORMATTING DISKS ");
+        }
+
+        public shellLs(args: string[])
+        {
+            _StdOut.putText("DISPLAYING FILES ");
+        }
+
+        public shellSetSchedule(args: string[])
+        {
+            _StdOut.putText("SETTING SCHEDULE TO " + args[0]);
+        }
+
+        public shellGetSchedule(args: string[])
+        {
+            _StdOut.putText("Current scheduling algorithm is " + _Scheduler.schedulingSystem);
         }
 
     }
