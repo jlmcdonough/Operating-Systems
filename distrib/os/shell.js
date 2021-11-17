@@ -67,22 +67,46 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellRun, "run", "<pid> - Runs the specified user program.");
             this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
-            sc = new TSOS.ShellCommand(this.shellPs, "ps", "displays the PID and state of all current processes.");
+            sc = new TSOS.ShellCommand(this.shellPs, "ps", "- Displays the PID and state of all current processes.");
             this.commandList[this.commandList.length] = sc;
             // clearmem
-            sc = new TSOS.ShellCommand(this.shellClearMem, "clearmem", "resets all memory");
+            sc = new TSOS.ShellCommand(this.shellClearMem, "clearmem", "- Resets all memory");
             this.commandList[this.commandList.length] = sc;
             // runall
-            sc = new TSOS.ShellCommand(this.shellRunAll, "runall", "runs every program");
+            sc = new TSOS.ShellCommand(this.shellRunAll, "runall", "- Runs every program");
             this.commandList[this.commandList.length] = sc;
             // kill
-            sc = new TSOS.ShellCommand(this.shellKill, "kill", "<id> - kills the specified process id.");
+            sc = new TSOS.ShellCommand(this.shellKill, "kill", "<id> - Kills the specified process id.");
             this.commandList[this.commandList.length] = sc;
             // killall
-            sc = new TSOS.ShellCommand(this.shellKillAll, "killall", "kills all processes.");
+            sc = new TSOS.ShellCommand(this.shellKillAll, "killall", "- Kills all processes.");
             this.commandList[this.commandList.length] = sc;
-            // kill
-            sc = new TSOS.ShellCommand(this.shellQuantum, "quantum", "<number> - sets the quantum to number.");
+            // quantum
+            sc = new TSOS.ShellCommand(this.shellQuantum, "quantum", "<number> - Sets the quantum to number.");
+            this.commandList[this.commandList.length] = sc;
+            // create
+            sc = new TSOS.ShellCommand(this.shellCreate, "create", "<filename> - Creates new file.");
+            this.commandList[this.commandList.length] = sc;
+            // read
+            sc = new TSOS.ShellCommand(this.shellRead, "read", "<filename> - Reads the file.");
+            this.commandList[this.commandList.length] = sc;
+            // write
+            sc = new TSOS.ShellCommand(this.shellWrite, "write", "<filename> \"<data>\" - Writes to the following file.");
+            this.commandList[this.commandList.length] = sc;
+            // delete
+            sc = new TSOS.ShellCommand(this.shellDelete, "delete", "<filename> - Removes the specified file.");
+            this.commandList[this.commandList.length] = sc;
+            // format
+            sc = new TSOS.ShellCommand(this.shellFormat, "format", "- Initializes disks.");
+            this.commandList[this.commandList.length] = sc;
+            // ls
+            sc = new TSOS.ShellCommand(this.shellLs, "ls", "- Displays files");
+            this.commandList[this.commandList.length] = sc;
+            // setschedule
+            sc = new TSOS.ShellCommand(this.shellSetSchedule, "setschedule", "<type> - Sets the scheduling algorithm.");
+            this.commandList[this.commandList.length] = sc;
+            // getschedule
+            sc = new TSOS.ShellCommand(this.shellGetSchedule, "getschedule", "- Displays current scheduler");
             this.commandList[this.commandList.length] = sc;
             // Display the initial prompt.
             this.putPrompt();
@@ -103,7 +127,7 @@ var TSOS;
             // Determine the command and execute it.
             //
             // TypeScript/JavaScript may not support associative arrays in all browsers so we have to iterate over the
-            // command list in attempt to find a match. 
+            // command list in attempt to find a match.
             // TODO: Is there a better way? Probably. Someone work it out and tell me in class.
             var index = 0;
             var found = false;
@@ -214,7 +238,7 @@ var TSOS;
                 _StdOut.putText("For what?");
             }
         }
-        // Although args is unused in some of these functions, it is always provided in the 
+        // Although args is unused in some of these functions, it is always provided in the
         // actual parameter list when this function is called, so I feel like we need it.
         shellVer(args) {
             _StdOut.putText(APP_NAME + " version " + APP_VERSION);
@@ -300,6 +324,30 @@ var TSOS;
                         break;
                     case "quantum":
                         _StdOut.putText("QUANTUM will set the quantum for round robin scheduling by the user entered number.");
+                        break;
+                    case "create":
+                        _StdOut.putText("CREATE will use the given name to create and store an empty file with the name");
+                        break;
+                    case "read":
+                        _StdOut.putText("READ will display the contents of the file with the given name.");
+                        break;
+                    case "write":
+                        _StdOut.putText("WRITE will use the given name to write the following data to the file.");
+                        break;
+                    case "delete":
+                        _StdOut.putText("DELETE will remove the file with the given name from disk.");
+                        break;
+                    case "format":
+                        _StdOut.putText("FORMAT will initialize all blocks in all sectors in all tracks");
+                        break;
+                    case "ls":
+                        _StdOut.putText("LS will list all  the files currently stored on disk.");
+                        break;
+                    case "setschedule":
+                        _StdOut.putText("SETSCHEDULE will change the scheduling strategy to requested type. Acceptable inputs are rr, fcfs, priority");
+                        break;
+                    case "getschedule":
+                        _StdOut.putText("GETSCHEDULE will return the currently selected scheduling algorithm.");
                         break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -623,6 +671,30 @@ var TSOS;
             else {
                 _StdOut.putText("Quantum command must have nothing follow it, or just a valid positive integer.");
             }
+        }
+        shellCreate(args) {
+            _StdOut.putText("CREATING " + args[0]);
+        }
+        shellRead(args) {
+            _StdOut.putText("READING " + args[0]);
+        }
+        shellWrite(args) {
+            _StdOut.putText("WRITING " + args[1] + " into " + args[0]);
+        }
+        shellDelete(args) {
+            _StdOut.putText("DELETING " + args[0]);
+        }
+        shellFormat(args) {
+            _StdOut.putText("FORMATTING DISKS ");
+        }
+        shellLs(args) {
+            _StdOut.putText("DISPLAYING FILES ");
+        }
+        shellSetSchedule(args) {
+            _StdOut.putText("SETTING SCHEDULE TO " + args[0]);
+        }
+        shellGetSchedule(args) {
+            _StdOut.putText("Current scheduling algorithm is " + _Scheduler.schedulingSystem);
         }
     }
     TSOS.Shell = Shell;
