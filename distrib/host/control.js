@@ -121,6 +121,7 @@ var TSOS;
             _Memory = new TSOS.Memory();
             _Memory.init();
             _MemoryAccessor = new TSOS.MemoryAccessor();
+            _Disk = new TSOS.Disk();
             _PCB = new TSOS.Pcb();
             _Scheduler = new TSOS.Scheduler();
             _Scheduler.init();
@@ -254,21 +255,34 @@ var TSOS;
                     `<td> ${_PCBList[i].runningQuanta} </td>` +
                     "</tr>";
             }
-            /*  document.getElementById("pcbPC").innerHTML = Utils.padHex(Utils.decimalToHex(_PCB.pc));
-              document.getElementById("pcbAcc").innerHTML = _PCB.acc;
-              document.getElementById("pcbX").innerHTML = _PCB.xReg;
-              document.getElementById("pcbY").innerHTML = _PCB.yReg;
-              document.getElementById("pcbZ").innerHTML = _PCB.zFlag.toString();
-              document.getElementById("pcbPriority").innerHTML = _PCB.priority.toString();
-              document.getElementById("pcbState").innerHTML = _PCB.state;
-              document.getElementById("pcbLocation").innerHTML = _PCB.location;
-  */
+            tableBody += "</tbody>";
+            table.innerHTML = tableBody;
+        }
+        static diskUpdateTable(oldPC) {
+            let table = document.getElementById("diskTable");
+            let tableBody = "<tbody>" + "<tr>" +
+                "<th>Track</th><th>Sector</th><th>Block</th><th>Data</th>" +
+                "</tr>";
+            for (let i = 0; i < _Disk.trackCount; i++) {
+                for (let j = 0; j < _Disk.sectorCount; j++) {
+                    for (let k = 0; k < _Disk.blockCount; k++) {
+                        let data = sessionStorage.getItem(i + "," + j + "," + k).split(",");
+                        console.log("DATA: " + data);
+                        tableBody += "<tr>" +
+                            `<td> ${i} </td>` +
+                            `<td> ${j} </td>` +
+                            `<td> ${k} </td>` +
+                            `<td> ${data} </td>`;
+                    }
+                }
+            }
             tableBody += "</tbody>";
             table.innerHTML = tableBody;
         }
         static updateVisuals(oldPC, segment) {
             Control.cpuUpdateTable(oldPC);
             Control.pcbUpdateTable(oldPC);
+            Control.diskUpdateTable(0);
             Control.memoryUpdateTable();
             if (typeof segment !== 'undefined') {
                 Control.memoryTableColor(oldPC, operandCount, segment);

@@ -125,7 +125,6 @@ tr:nth-child(even) {
 #divMemoryTable:hover {
     overflow-x: hidden;
     overflow-y: scroll;
-
 }
 
 #divPCBTable {
@@ -139,7 +138,27 @@ tr:nth-child(even) {
 #divPCBTable:hover {
     overflow-x: hidden;
     overflow-y: scroll;
+}
 
+.diskDisplayTable {
+    color: #222222;
+    background: #ECEFF1;
+    border: 1px solid #484b6a;
+    width: 850px;
+    text-align: center;
+ }
+
+#divDiskTable {
+    width: 850px;
+    max-height: 211px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    border-bottom: 1px solid #484b6a;
+}
+
+#divDiskTable:hover {
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 ::-webkit-scrollbar {

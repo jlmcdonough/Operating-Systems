@@ -150,5 +150,25 @@ input:disabled {
 #divPCBTable:hover {
     overflow-x: hidden;
     overflow-y: scroll;
+}
 
+.diskDisplayTable {
+    color: #ffffff;
+    background: #2c2c2c;
+    border: 1px solid #018786;
+    width: 850px;
+    text-align: center;
+}
+
+#divDiskTable {
+    width: 850px;
+    max-height: 211px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    border-bottom: 1px solid #018786;
+}
+
+#divDiskTable:hover {
+    overflow-x: hidden;
+    overflow-y: scroll;
 }

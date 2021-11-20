@@ -901,6 +901,7 @@ module TSOS {
 
         public shellFormat(args: string[])
         {
+            _krnDiskDriver.format();
             _StdOut.putText("FORMATTING DISKS ");
         }
 

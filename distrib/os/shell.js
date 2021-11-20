@@ -685,6 +685,7 @@ var TSOS;
             _StdOut.putText("DELETING " + args[0]);
         }
         shellFormat(args) {
+            _krnDiskDriver.format();
             _StdOut.putText("FORMATTING DISKS ");
         }
         shellLs(args) {

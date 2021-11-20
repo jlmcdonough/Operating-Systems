@@ -31,6 +31,7 @@ const CONTEXT_SWITCH_IRQ: number = 2;
 var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class.
 var _Memory: TSOS.Memory;
 var _MemoryAccessor: TSOS.MemoryAccessor;
+var _Disk: TSOS.Disk;
 
 //Software
 var _MemoryManager: TSOS.MemoryManager;
@@ -78,7 +79,7 @@ var _SarcasticMode: boolean = false;
 
 // Global Device Driver Objects - page 12
 var _krnKeyboardDriver: TSOS.DeviceDriverKeyboard  = null;
-
+var _krnDiskDriver: TSOS.DeviceDriverDisk = null;
 var _hardwareClockID: number = null;
 
 // Sections to show on HTML
