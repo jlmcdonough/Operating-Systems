@@ -344,7 +344,7 @@ var TSOS;
                         _StdOut.putText("LS will list all  the files currently stored on disk.");
                         break;
                     case "setschedule":
-                        _StdOut.putText("SETSCHEDULE will change the scheduling strategy to requested type. Acceptable inputs are rr, fcfs, priority");
+                        _StdOut.putText("SETSCHEDULE will change the scheduling strategy to requested type. Acceptable inputs are rr (round robin scheduling), fcfs (first come firt serve scheduling), priority (non-preemptive priority scheduling)");
                         break;
                     case "getschedule":
                         _StdOut.putText("GETSCHEDULE will return the currently selected scheduling algorithm.");
@@ -645,6 +645,7 @@ var TSOS;
             _CPU.isExecuting = false;
             for (let i = 0; i < _PCBList.length; i++) {
                 _PCBList[i].state = "Stopped";
+                _PCBList[i].endingCycle = _CycleCount;
                 _StdOut.putText("Process " + _PCBList[i].pid + " terminated.");
                 _StdOut.advanceLine();
                 TSOS.Utils.displayPCBAllData(_PCBList[i]);
@@ -654,15 +655,18 @@ var TSOS;
         }
         shellQuantum(args) {
             if (args.length == 0) {
-                _StdOut.putText("Current quantum is " + _Quantum);
+                _StdOut.putText("Current quantum is " + _RRQuantum);
                 _StdOut.advanceLine();
                 _StdOut.putText("To change this, add a number to the quantum command.");
             }
             else if (args.length == 1 && !isNaN(Number(args[0]))) {
                 let userQuantum = Number(args[0]);
                 if (userQuantum > 0) {
-                    _Quantum = userQuantum;
-                    _StdOut.putText("Quantum updated to " + _Quantum);
+                    _RRQuantum = userQuantum;
+                    _StdOut.putText("Quantum updated to " + _RRQuantum);
+                    if (_Scheduler.schedulingSystem === "RR") {
+                        _Scheduler.quanta = _RRQuantum;
+                    }
                 }
                 else {
                     _StdOut.putText("Quantum must be greater than 0.");
@@ -686,13 +690,35 @@ var TSOS;
         }
         shellFormat(args) {
             _krnDiskDriver.format();
+            _diskFormatted = true;
             _StdOut.putText("FORMATTING DISKS ");
         }
         shellLs(args) {
             _StdOut.putText("DISPLAYING FILES ");
         }
         shellSetSchedule(args) {
-            _StdOut.putText("SETTING SCHEDULE TO " + args[0]);
+            if (!(_CPU.isExecuting)) {
+                if (args[0].toLocaleUpperCase() === "FCFS") {
+                    _Scheduler.quanta = _FCFSQuantum;
+                    _Scheduler.schedulingSystem = "FCFS";
+                    _StdOut.putText("Scheduling algorithm set to First Come First Serve (FCFS)");
+                }
+                else if (args[0].toLocaleUpperCase() === "RR") {
+                    _Scheduler.quanta = _RRQuantum;
+                    _Scheduler.schedulingSystem = "RR";
+                    _StdOut.putText("Scheduling algorithm set to Round Robin (RR) with a quantum of " + _Scheduler.quanta);
+                }
+                else if (args[0].toLocaleUpperCase() === "PRIORITY") {
+                    _Scheduler.schedulingSystem = "PRIORITY";
+                    _StdOut.putText("Scheduling algorithm set to Non-Preemptive Priority (PRIORITY)");
+                }
+                else {
+                    _StdOut.putText("Please make sure you are only entering the correct abbreviation for the valid scheduling types. See manual for help.");
+                }
+            }
+            else {
+                _StdOut.putText("Changing scheduler whilst programs are running is not permitted.");
+            }
         }
         shellGetSchedule(args) {
             _StdOut.putText("Current scheduling algorithm is " + _Scheduler.schedulingSystem);

@@ -48,7 +48,7 @@ module TSOS {
                 }
             }
 
-            Control.diskUpdateTable(0);
+            Control.diskUpdateTable();
         }
 
     }

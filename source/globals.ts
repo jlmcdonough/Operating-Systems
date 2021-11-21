@@ -32,6 +32,7 @@ var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure th
 var _Memory: TSOS.Memory;
 var _MemoryAccessor: TSOS.MemoryAccessor;
 var _Disk: TSOS.Disk;
+var _diskFormatted: boolean = false;
 
 //Software
 var _MemoryManager: TSOS.MemoryManager;
@@ -39,7 +40,8 @@ var _PCB: TSOS.Pcb;
 var _ProcessID: number = 0;
 var _PCBList: TSOS.Pcb[] = [];
 var operandCount: number;
-var _Quantum: number = 6;
+var _RRQuantum: number = 6;
+var _FCFSQuantum: number = Number.MAX_SAFE_INTEGER;
 var _Scheduler: TSOS.Scheduler;
 var _Dispatcher: TSOS.Dispatcher;
 

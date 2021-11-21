@@ -26,13 +26,15 @@ var _CPU; // Utilize TypeScript's type annotation system to ensure that _CPU is 
 var _Memory;
 var _MemoryAccessor;
 var _Disk;
+var _diskFormatted = false;
 //Software
 var _MemoryManager;
 var _PCB;
 var _ProcessID = 0;
 var _PCBList = [];
 var operandCount;
-var _Quantum = 6;
+var _RRQuantum = 6;
+var _FCFSQuantum = Number.MAX_SAFE_INTEGER;
 var _Scheduler;
 var _Dispatcher;
 var _CycleCount = 0;

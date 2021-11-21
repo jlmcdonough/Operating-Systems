@@ -33,7 +33,7 @@ var TSOS;
                     }
                 }
             }
-            TSOS.Control.diskUpdateTable(0);
+            TSOS.Control.diskUpdateTable();
         }
     }
     TSOS.DeviceDriverDisk = DeviceDriverDisk;

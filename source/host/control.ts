@@ -347,7 +347,7 @@ module TSOS {
             table.innerHTML = tableBody;
         }
 
-        public static diskUpdateTable(oldPC: number): void
+        public static diskUpdateTable(): void
         {
             let table = document.getElementById("diskTable");
             let tableBody = "<tbody>" + "<tr>" +
@@ -379,7 +379,12 @@ module TSOS {
         {
             Control.cpuUpdateTable(oldPC);
             Control.pcbUpdateTable(oldPC);
-            Control.diskUpdateTable(0);
+
+            if (_diskFormatted)
+            {
+                Control.diskUpdateTable();
+            }
+
             Control.memoryUpdateTable();
 
             if (typeof segment !== 'undefined')

@@ -258,7 +258,7 @@ var TSOS;
             tableBody += "</tbody>";
             table.innerHTML = tableBody;
         }
-        static diskUpdateTable(oldPC) {
+        static diskUpdateTable() {
             let table = document.getElementById("diskTable");
             let tableBody = "<tbody>" + "<tr>" +
                 "<th>Track</th><th>Sector</th><th>Block</th><th>Data</th>" +
@@ -267,7 +267,6 @@ var TSOS;
                 for (let j = 0; j < _Disk.sectorCount; j++) {
                     for (let k = 0; k < _Disk.blockCount; k++) {
                         let data = sessionStorage.getItem(i + "," + j + "," + k).split(",");
-                        console.log("DATA: " + data);
                         tableBody += "<tr>" +
                             `<td> ${i} </td>` +
                             `<td> ${j} </td>` +
@@ -282,7 +281,9 @@ var TSOS;
         static updateVisuals(oldPC, segment) {
             Control.cpuUpdateTable(oldPC);
             Control.pcbUpdateTable(oldPC);
-            Control.diskUpdateTable(0);
+            if (_diskFormatted) {
+                Control.diskUpdateTable();
+            }
             Control.memoryUpdateTable();
             if (typeof segment !== 'undefined') {
                 Control.memoryTableColor(oldPC, operandCount, segment);

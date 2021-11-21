@@ -64,5 +64,10 @@ module TSOS {
                 _Scheduler.doScheduling();
             }
         }
+
+        public prioritySort()
+        {
+            this.q = this.q.sort((a, b) => (a.priority > b.priority) ? 1 : -1);
+        }
     }
 }

@@ -52,6 +52,9 @@ var TSOS;
                 _Scheduler.doScheduling();
             }
         }
+        prioritySort() {
+            this.q = this.q.sort((a, b) => (a.priority > b.priority) ? 1 : -1);
+        }
     }
     TSOS.Queue = Queue;
 })(TSOS || (TSOS = {}));
