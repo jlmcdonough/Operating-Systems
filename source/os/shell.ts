@@ -984,7 +984,9 @@ module TSOS {
 
         public shellDelete(args: string[])
         {
+            _krnDiskDriver.fileDelete(args[0]);
             _StdOut.putText("DELETING " + args[0]);
+            Control.diskUpdateTable();
         }
 
         public shellFormat(args: string[])

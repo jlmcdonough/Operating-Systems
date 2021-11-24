@@ -747,7 +747,9 @@ var TSOS;
             }
         }
         shellDelete(args) {
+            _krnDiskDriver.fileDelete(args[0]);
             _StdOut.putText("DELETING " + args[0]);
+            TSOS.Control.diskUpdateTable();
         }
         shellFormat(args) {
             _krnDiskDriver.format();
