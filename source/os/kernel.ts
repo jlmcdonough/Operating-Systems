@@ -98,12 +98,12 @@ module TSOS {
                 // TODO (maybe): Implement a priority queue based on the IRQ number/id to enforce interrupt priority.
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
-            } else if (_SingleStep)
+            } else if (_IsSingleStep)
             {
-              if(_CPU.isExecuting && _SingleStepStep)
+              if(_CPU.isExecuting && _IsSingleStepStep)
               {
                   _CPU.cycle();
-                  _SingleStepStep = false;
+                  _IsSingleStepStep = false;
                   if (_Scheduler.schedulingSystem === "FCFS" || _Scheduler.schedulingSystem === "RR")
                   {
                       _Scheduler.quantaCheck();

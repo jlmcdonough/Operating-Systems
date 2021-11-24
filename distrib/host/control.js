@@ -149,19 +149,19 @@ var TSOS;
             // page from its cache, which is not what we want.
         }
         static hostBtnSSOff_click(btn) {
-            _SingleStep = false;
+            _IsSingleStep = false;
             document.getElementById("btnSingleStepOff").disabled = true;
             document.getElementById("btnSingleStepOn").disabled = false;
             document.getElementById("btnSingleStepStep").disabled = true;
         }
         static hostBtnSSOn_click(btn) {
-            _SingleStep = true;
+            _IsSingleStep = true;
             document.getElementById("btnSingleStepOff").disabled = false;
             document.getElementById("btnSingleStepOn").disabled = true;
             document.getElementById("btnSingleStepStep").disabled = false;
         }
         static hostBtnSSStep_click(btn) {
-            _SingleStepStep = true;
+            _IsSingleStepStep = true;
         }
         static hostBtnMemoryTrack_click(btn) {
             if (_MemoryTracking) {
@@ -261,17 +261,22 @@ var TSOS;
         static diskUpdateTable() {
             let table = document.getElementById("diskTable");
             let tableBody = "<tbody>" + "<tr>" +
-                "<th>Track</th><th>Sector</th><th>Block</th><th>Data</th>" +
+                "<th>T:S:B</th><th>Used</th><th>Next</th><th>Data</th>" +
                 "</tr>";
             for (let i = 0; i < _Disk.trackCount; i++) {
                 for (let j = 0; j < _Disk.sectorCount; j++) {
                     for (let k = 0; k < _Disk.blockCount; k++) {
-                        let data = sessionStorage.getItem(i + "," + j + "," + k).split(",");
+                        let data = sessionStorage.getItem(i + "," + j + "," + k).split(" ");
+                        let thisData = "";
+                        for (let x = 4; x < data.length; x++) {
+                            thisData += (data[x] + " ");
+                        }
+                        thisData.trim();
                         tableBody += "<tr>" +
-                            `<td> ${i} </td>` +
-                            `<td> ${j} </td>` +
-                            `<td> ${k} </td>` +
-                            `<td> ${data} </td>`;
+                            `<td> ${i + ',' + j + ',' + k} </td>` +
+                            `<td> ${data[0]} </td>` +
+                            `<td> ${data[1] + ',' + data[2] + ',' + data[3]} </td>` +
+                            `<td> ${thisData} </td>`;
                     }
                 }
             }
@@ -281,7 +286,7 @@ var TSOS;
         static updateVisuals(oldPC, segment) {
             Control.cpuUpdateTable(oldPC);
             Control.pcbUpdateTable(oldPC);
-            if (_diskFormatted) {
+            if (_IsDiskFormatted) {
                 Control.diskUpdateTable();
             }
             Control.memoryUpdateTable();

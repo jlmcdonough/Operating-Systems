@@ -196,7 +196,7 @@ module TSOS {
 
         public static hostBtnSSOff_click(btn): void
         {
-            _SingleStep = false;
+            _IsSingleStep = false;
 
             (<HTMLButtonElement>document.getElementById("btnSingleStepOff")).disabled = true;
             (<HTMLButtonElement>document.getElementById("btnSingleStepOn")).disabled = false;
@@ -206,7 +206,7 @@ module TSOS {
 
         public static hostBtnSSOn_click(btn): void
         {
-            _SingleStep = true;
+            _IsSingleStep = true;
 
             (<HTMLButtonElement>document.getElementById("btnSingleStepOff")).disabled = false;
             (<HTMLButtonElement>document.getElementById("btnSingleStepOn")).disabled = true;
@@ -216,7 +216,7 @@ module TSOS {
 
         public static hostBtnSSStep_click(btn): void
         {
-            _SingleStepStep = true;
+            _IsSingleStepStep = true;
         }
 
         public static hostBtnMemoryTrack_click(btn): void
@@ -351,7 +351,7 @@ module TSOS {
         {
             let table = document.getElementById("diskTable");
             let tableBody = "<tbody>" + "<tr>" +
-                "<th>Track</th><th>Sector</th><th>Block</th><th>Data</th>" +
+                "<th>T:S:B</th><th>Used</th><th>Next</th><th>Data</th>" +
                 "</tr>";
 
             for (let i = 0; i < _Disk.trackCount; i++)
@@ -360,13 +360,20 @@ module TSOS {
                 {
                     for (let k = 0; k < _Disk.blockCount; k++)
                     {
-                        let data = sessionStorage.getItem(i + "," + j + "," + k).split(",");
+                        let data = sessionStorage.getItem(i + "," + j + "," + k).split(" ");
+
+                        let thisData = "";
+                        for(let x = 4; x < data.length; x++)
+                        {
+                            thisData += (data[x] + " ");
+                        }
+                        thisData.trim();
 
                         tableBody += "<tr>" +
-                            `<td> ${i} </td>` +
-                            `<td> ${j} </td>` +
-                            `<td> ${k} </td>` +
-                            `<td> ${data} </td>`
+                            `<td> ${i + ',' + j + ',' + k} </td>` +
+                            `<td> ${data[0]} </td>` +
+                            `<td> ${data[1] + ',' + data[2] + ',' + data[3]} </td>` +
+                            `<td> ${thisData} </td>`
                     }
                 }
             }
@@ -380,7 +387,7 @@ module TSOS {
             Control.cpuUpdateTable(oldPC);
             Control.pcbUpdateTable(oldPC);
 
-            if (_diskFormatted)
+            if (_IsDiskFormatted)
             {
                 Control.diskUpdateTable();
             }

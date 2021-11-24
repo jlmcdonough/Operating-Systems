@@ -82,10 +82,10 @@ var TSOS;
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             }
-            else if (_SingleStep) {
-                if (_CPU.isExecuting && _SingleStepStep) {
+            else if (_IsSingleStep) {
+                if (_CPU.isExecuting && _IsSingleStepStep) {
                     _CPU.cycle();
-                    _SingleStepStep = false;
+                    _IsSingleStepStep = false;
                     if (_Scheduler.schedulingSystem === "FCFS" || _Scheduler.schedulingSystem === "RR") {
                         _Scheduler.quantaCheck();
                     }

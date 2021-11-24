@@ -26,7 +26,7 @@ var _CPU; // Utilize TypeScript's type annotation system to ensure that _CPU is 
 var _Memory;
 var _MemoryAccessor;
 var _Disk;
-var _diskFormatted = false;
+var _IsDiskFormatted = false;
 //Software
 var _MemoryManager;
 var _PCB;
@@ -72,8 +72,8 @@ var _cpuDisplay;
 var _memoryDisplay;
 var _PCBdisplay;
 // For Single Step
-var _SingleStep = false;
-var _SingleStepStep = false;
+var _IsSingleStep = false;
+var _IsSingleStepStep = false;
 // For Memory Tracking
 var _MemoryTracking = false;
 // For testing (and enrichment)...

@@ -32,7 +32,7 @@ var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure th
 var _Memory: TSOS.Memory;
 var _MemoryAccessor: TSOS.MemoryAccessor;
 var _Disk: TSOS.Disk;
-var _diskFormatted: boolean = false;
+var _IsDiskFormatted: boolean = false;
 
 //Software
 var _MemoryManager: TSOS.MemoryManager;
@@ -91,8 +91,8 @@ var _memoryDisplay: HTMLTextAreaElement;
 var _PCBdisplay: HTMLTextAreaElement;
 
 // For Single Step
-var _SingleStep: boolean = false;
-var _SingleStepStep: boolean = false;
+var _IsSingleStep: boolean = false;
+var _IsSingleStepStep: boolean = false;
 
 // For Memory Tracking
 var _MemoryTracking: boolean = false;

@@ -677,20 +677,49 @@ var TSOS;
             }
         }
         shellCreate(args) {
-            _StdOut.putText("CREATING " + args[0]);
+            if (_IsDiskFormatted) {
+                if (args.length == 1) {
+                    _krnDiskDriver.fileCreate(args[0]);
+                    _StdOut.putText("CREATED " + args[0]);
+                }
+                else {
+                    _StdOut.putText("Must enter the name for file after the create command");
+                }
+            }
+            else {
+                _StdOut.putText("Disk must be formatted before it can be used.");
+            }
         }
         shellRead(args) {
-            _StdOut.putText("READING " + args[0]);
+            if (_IsDiskFormatted) {
+                if (args.length > 1) {
+                }
+                else {
+                    _StdOut.putText("Must enter the name for file after the read command");
+                }
+            }
+            else {
+                _StdOut.putText("Disk must be formatted before it can be used.");
+            }
         }
         shellWrite(args) {
-            _StdOut.putText("WRITING " + args[1] + " into " + args[0]);
+            if (_IsDiskFormatted) {
+                if (args.length > 1) {
+                }
+                else {
+                    _StdOut.putText("Must enter the name for file after the create command");
+                }
+            }
+            else {
+                _StdOut.putText("Disk must be formatted before it can be used.");
+            }
         }
         shellDelete(args) {
             _StdOut.putText("DELETING " + args[0]);
         }
         shellFormat(args) {
             _krnDiskDriver.format();
-            _diskFormatted = true;
+            _IsDiskFormatted = true;
             _StdOut.putText("FORMATTING DISKS ");
         }
         shellLs(args) {
