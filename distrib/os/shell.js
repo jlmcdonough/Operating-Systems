@@ -688,7 +688,7 @@ var TSOS;
                 }
             }
             else {
-                _StdOut.putText("Disk must be formatted before it can be used.");
+                _StdOut.putText("Disk must be formatted before performing any disk actions.");
             }
         }
         shellRead(args) {
@@ -704,14 +704,11 @@ var TSOS;
                 }
             }
             else {
-                _StdOut.putText("Disk must be formatted before it can be used.");
+                _StdOut.putText("Disk must be formatted before performing any disk actions.");
             }
         }
         shellWrite(args) {
             if (_IsDiskFormatted) {
-                for (let i = 0; i < args.length; i++) {
-                    console.log("args[" + i + "]: " + args[i]);
-                }
                 if (args.length > 1) {
                     let fileName = args[0];
                     let writeFirst = args[1];
@@ -720,24 +717,15 @@ var TSOS;
                     if ((writeFirst.charAt(0) === "\"") && (writeLast.charAt(writeLast.length - 1) === "\"")) {
                         if (args.length == 2) {
                             toWrite = writeFirst.substring(1, (writeFirst.length - 1));
-                            console.log("TO WRITE ARGS 2: " + toWrite);
                         }
                         else {
-                            console.log("MANY!!");
                             toWrite = writeFirst.substring(1, writeFirst.length) + " ";
-                            console.log("First: " + toWrite);
                             for (let i = 2; i < args.length - 1; i++) {
                                 toWrite += args[i] + " ";
-                                console.log(i + " " + toWrite);
                             }
                             toWrite += writeLast.substring(0, writeLast.length - 1);
-                            console.log("TO WRITE WITH MULTIPLE: " + toWrite);
                         }
                     }
-                    console.log("ARGS[0] " + args[0]);
-                    console.log("ARGS[1] " + args[1]);
-                    console.log("typeof ARGS[0] " + typeof args[0]);
-                    console.log("typeof ARGS[1] " + typeof [1]);
                     _krnDiskDriver.fileWrite(args[0], toWrite);
                     _StdOut.putText("Writing to file " + args[0]);
                     TSOS.Control.diskUpdateTable();
@@ -747,31 +735,41 @@ var TSOS;
                 }
             }
             else {
-                _StdOut.putText("Disk must be formatted before it can be used.");
+                _StdOut.putText("Disk must be formatted before performing any disk actions.");
             }
         }
         shellDelete(args) {
-            _krnDiskDriver.fileDelete(args[0]);
-            _StdOut.putText("DELETING " + args[0]);
-            TSOS.Control.diskUpdateTable();
+            if (_IsDiskFormatted) {
+                _krnDiskDriver.fileDelete(args[0]);
+                _StdOut.putText("Deleting " + args[0]);
+                TSOS.Control.diskUpdateTable();
+            }
+            else {
+                _StdOut.putText("Disk must be formatted before performing any disk actions.");
+            }
         }
         shellFormat(args) {
             _krnDiskDriver.format();
             _IsDiskFormatted = true;
-            _StdOut.putText("FORMATTING DISKS ");
+            _StdOut.putText("Disk has been formatted");
         }
         shellLs(args) {
-            let list = _krnDiskDriver.fileList();
-            if (list.length > 0) {
-                _StdOut.putText("Current files:");
-                _StdOut.advanceLine();
-                for (let i = 0; i < list.length; i++) {
-                    _StdOut.putText("   -> " + list[i]);
+            if (_IsDiskFormatted) {
+                let list = _krnDiskDriver.fileList();
+                if (list.length > 0) {
+                    _StdOut.putText("Current files:");
                     _StdOut.advanceLine();
+                    for (let i = 0; i < list.length; i++) {
+                        _StdOut.putText("   -> " + list[i]);
+                        _StdOut.advanceLine();
+                    }
+                }
+                else {
+                    _StdOut.putText("There are currently no files on disk.");
                 }
             }
             else {
-                _StdOut.putText("There are currently no files on disk.");
+                _StdOut.putText("Disk must be formatted before performing any disk actions.");
             }
         }
         shellSetSchedule(args) {
