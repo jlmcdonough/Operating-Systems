@@ -63,7 +63,26 @@ var TSOS;
             }
             sessionStorage.setItem(tsbName, tsbNameData.join(" "));
             sessionStorage.setItem(tsbData, tsbDataData.join(" "));
-            TSOS.Control.diskUpdateTable();
+        }
+        fileWrite(fileName, fileData) {
+            console.log("PASSED FILE NAME: " + fileName);
+            console.log("PASSED FILE DATA: " + fileData);
+            console.log("PASSED FILE NAME TYPE: " + typeof fileName);
+            console.log("PASSED FILE DATA TYPE: " + typeof fileData);
+            let tsbFile = this.getFileTSB(fileName);
+            let tsbFileName = sessionStorage.getItem(tsbFile).split(" ");
+            let tsbLocToWrite = tsbFileName[1] + "," + tsbFileName[2] + "," + tsbFileName[3];
+            let tsbLocData = sessionStorage.getItem(tsbLocToWrite).split(" ");
+            if (fileData.length <= 60) {
+                for (let i = 0; i < fileData.length; i++) {
+                    tsbLocData[i + 4] = TSOS.Utils.decimalToHex(fileData.charCodeAt(i));
+                }
+                tsbLocData[0] = "1";
+                sessionStorage.setItem(tsbLocToWrite, tsbLocData.join(" "));
+            }
+            else {
+                console.log("FILE TO LARGE");
+            }
         }
         nextTSBName() {
             for (let i = 0; i < _Disk.sectorCount; i++) {
@@ -74,7 +93,7 @@ var TSOS;
                     }
                 }
             }
-            return "full";
+            return null;
         }
         nextTSBData() {
             for (let i = 1; i < _Disk.trackCount; i++) {
@@ -87,7 +106,31 @@ var TSOS;
                     }
                 }
             }
-            return "full";
+            return null;
+        }
+        getFileName(fileNameData) {
+            let fileName = "";
+            for (let i = 4; i < fileNameData.length; i++) {
+                if (fileNameData[i] === "-") {
+                    return fileName;
+                }
+                else {
+                    fileName += String.fromCharCode(TSOS.Utils.hexToDecimal(fileNameData[i]));
+                }
+            }
+            return fileName;
+        }
+        getFileTSB(fileName) {
+            for (let i = 0; i < _Disk.sectorCount; i++) {
+                for (let j = 0; j < _Disk.blockCount; j++) {
+                    let thisData = sessionStorage.getItem("0," + i + "," + j).split(" ");
+                    let thisFileName = this.getFileName(thisData);
+                    if (thisFileName == fileName) {
+                        return "0" + "," + i + "," + j;
+                    }
+                }
+            }
+            return null;
         }
     }
     TSOS.DeviceDriverDisk = DeviceDriverDisk;

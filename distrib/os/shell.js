@@ -681,6 +681,7 @@ var TSOS;
                 if (args.length == 1) {
                     _krnDiskDriver.fileCreate(args[0]);
                     _StdOut.putText("CREATED " + args[0]);
+                    TSOS.Control.diskUpdateTable();
                 }
                 else {
                     _StdOut.putText("Must enter the name for file after the create command");
@@ -704,7 +705,17 @@ var TSOS;
         }
         shellWrite(args) {
             if (_IsDiskFormatted) {
+                for (let i = 0; i < args.length; i++) {
+                    console.log("args[" + i + "]: " + args[i]);
+                }
                 if (args.length > 1) {
+                    console.log("ARGS[0] " + args[0]);
+                    console.log("ARGS[1] " + args[1]);
+                    console.log("typeof ARGS[0] " + typeof args[0]);
+                    console.log("typeof ARGS[1] " + typeof [1]);
+                    _krnDiskDriver.fileWrite(args[0], args[1].toString());
+                    _StdOut.putText("Writing to file " + args[0]);
+                    TSOS.Control.diskUpdateTable();
                 }
                 else {
                     _StdOut.putText("Must enter the name for file after the create command");
