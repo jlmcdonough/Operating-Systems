@@ -709,11 +709,32 @@ var TSOS;
                     console.log("args[" + i + "]: " + args[i]);
                 }
                 if (args.length > 1) {
+                    let fileName = args[0];
+                    let writeFirst = args[1];
+                    let writeLast = args[args.length - 1];
+                    let toWrite = "";
+                    if ((writeFirst.charAt(0) === "\"") && (writeLast.charAt(writeLast.length - 1) === "\"")) {
+                        if (args.length == 2) {
+                            toWrite = writeFirst.substring(1, (writeFirst.length - 1));
+                            console.log("TO WRITE ARGS 2: " + toWrite);
+                        }
+                        else {
+                            console.log("MANY!!");
+                            toWrite = writeFirst.substring(1, writeFirst.length) + " ";
+                            console.log("First: " + toWrite);
+                            for (let i = 2; i < args.length - 1; i++) {
+                                toWrite += args[i] + " ";
+                                console.log(i + " " + toWrite);
+                            }
+                            toWrite += writeLast.substring(0, writeLast.length - 1);
+                            console.log("TO WRITE WITH MULTIPLE: " + toWrite);
+                        }
+                    }
                     console.log("ARGS[0] " + args[0]);
                     console.log("ARGS[1] " + args[1]);
                     console.log("typeof ARGS[0] " + typeof args[0]);
                     console.log("typeof ARGS[1] " + typeof [1]);
-                    _krnDiskDriver.fileWrite(args[0], args[1].toString());
+                    _krnDiskDriver.fileWrite(args[0], toWrite);
                     _StdOut.putText("Writing to file " + args[0]);
                     TSOS.Control.diskUpdateTable();
                 }

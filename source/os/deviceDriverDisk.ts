@@ -93,11 +93,6 @@ module TSOS {
 
         public fileWrite(fileName: string, fileData: string): void
         {
-            console.log("PASSED FILE NAME: " + fileName);
-            console.log("PASSED FILE DATA: " + fileData);
-            console.log("PASSED FILE NAME TYPE: " + typeof fileName);
-            console.log("PASSED FILE DATA TYPE: " + typeof fileData);
-
             let tsbFile = this.getFileTSB(fileName);
             let tsbFileName = sessionStorage.getItem(tsbFile).split(" ");
 
