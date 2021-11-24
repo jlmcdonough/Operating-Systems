@@ -94,8 +94,6 @@ module TSOS {
 
         public fileWrite(fileName: string, fileData: string, nextTSB?: string): boolean
         {
-            console.log("WRITING " + fileData);
-            console.log("FILE DATA LENGTH: " + fileData.length);
             let tsbLocToWrite = this.dataTSBFromFileName(fileName);
 
             if (tsbLocToWrite != null)
@@ -103,7 +101,7 @@ module TSOS {
                 //let tsbLocData = sessionStorage.getItem(tsbLocToWrite).split(" ");
                 let tsbLocData = this.createEmptyBlock();
 
-                if (fileData.length <= 5)
+                if (fileData.length <= 60)
                 {
                     for (let i = 0; i < fileData.length; i++)
                     {
@@ -115,14 +113,10 @@ module TSOS {
 
                     if (nextTSB != undefined)
                     {
-                        console.log("1");
-                        console.log("To: " + nextTSB);
                         newLoc = nextTSB;
                     }
                     else
                     {
-                        console.log("2");
-                        console.log("To: " + tsbLocToWrite);
                         newLoc = tsbLocToWrite;
                     }
 
@@ -136,7 +130,7 @@ module TSOS {
                 {
                     let tsbLocData = this.createEmptyBlock();
 
-                    for (let j = 0; j < 5; j++)
+                    for (let j = 0; j < 60; j++)
                     {
                         tsbLocData[j + 4] = Utils.decimalToHex(fileData.charCodeAt(j));
                     }
@@ -145,14 +139,10 @@ module TSOS {
                     let newLoc;
                     if (nextTSB != undefined)
                     {
-                        console.log("3");
-                        console.log("To: " + nextTSB);
                         newLoc = nextTSB;
                     }
                     else
                     {
-                        console.log("4");
-                        console.log("To: " + tsbLocToWrite);
                         newLoc = tsbLocToWrite;
                     }
                     sessionStorage.setItem(newLoc, tsbLocData.join(" "));
@@ -166,9 +156,8 @@ module TSOS {
                     tempStorage[3] = goNextSplit[2];
                     sessionStorage.setItem(newLoc, tempStorage.join(" "));
 
-                    let dataLeft = fileData.substring(5, fileData.length);
+                    let dataLeft = fileData.substring(60, fileData.length);
 
-                    console.log("NEXT IS " + goNext);
                     this.fileWrite(fileName, dataLeft, goNext);
                 }
                 return true;
@@ -181,7 +170,9 @@ module TSOS {
 
         public fileDelete(fileName: string): boolean
         {
-            if ( ( this.deleteFileData(fileName) ) && ( this.deleteFileTSB(fileName) ) )
+            let tsbToDelete = this.dataTSBFromFileName(fileName);
+
+            if ( ( this.deleteFileData(tsbToDelete) ) && ( this.deleteFileTSB(fileName) ) )
             {
                 return true;
             }
@@ -193,16 +184,13 @@ module TSOS {
 
         public fileShellRead(fileName: string): string
         {
-            console.log("IN SHELL READ");
             let tsbLocToWrite = this.dataTSBFromFileName(fileName);
             let ans = this.fileRead(tsbLocToWrite, "");
-            console.log("ANS: " + ans);
             return ans;
         }
 
         public fileRead(fileLoc: string, fileData: string): string
         {
-            console.log("IN FILE READ WITH FILELOC: " + fileLoc + " FILEDATA: " + fileData);
             if (fileLoc != null)
             {
                 let tsbLocData = sessionStorage.getItem(fileLoc).split(" ");
@@ -219,14 +207,11 @@ module TSOS {
                 }
                 else
                 {
-                    console.log("RETURNING " + fileData);
-                    console.log("RETURNING " + typeof fileData);
                     return fileData;
                 }
             }
             else
             {
-                console.log("RETUNIGN NULL");
                 return null;
             }
         }
@@ -348,15 +333,25 @@ module TSOS {
             }
         }
 
-        public deleteFileData(fileName: string): boolean
+        public deleteFileData(fileLoc: string): boolean
         {
             let emptyBlockMemory = this.createEmptyBlock();
-            let tsbToDelete = this.dataTSBFromFileName(fileName);
 
-            if (tsbToDelete != null)
+            if (fileLoc != null)
             {
-                sessionStorage.setItem(tsbToDelete, emptyBlockMemory.join(" "));
-                return true;
+                let prevData = sessionStorage.getItem(fileLoc).split(" ");
+
+                if ( prevData[1] === "*")
+                {
+                    sessionStorage.setItem(fileLoc, emptyBlockMemory.join(" "));
+                    return true;
+                }
+                else
+                {
+                    let nextLoc = prevData[1] + "," + prevData[2] + "," + prevData[3];
+                    sessionStorage.setItem(fileLoc, emptyBlockMemory.join(" "));
+                    return this.deleteFileData(nextLoc);
+                }
             }
             else
             {
