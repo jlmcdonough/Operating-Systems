@@ -761,7 +761,18 @@ var TSOS;
             _StdOut.putText("FORMATTING DISKS ");
         }
         shellLs(args) {
-            _StdOut.putText("DISPLAYING FILES ");
+            let list = _krnDiskDriver.fileList();
+            if (list.length > 0) {
+                _StdOut.putText("Current files:");
+                _StdOut.advanceLine();
+                for (let i = 0; i < list.length; i++) {
+                    _StdOut.putText("   -> " + list[i]);
+                    _StdOut.advanceLine();
+                }
+            }
+            else {
+                _StdOut.putText("There are currently no files on disk.");
+            }
         }
         shellSetSchedule(args) {
             if (!(_CPU.isExecuting)) {

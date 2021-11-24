@@ -85,6 +85,21 @@ var TSOS;
             }
             return fileData;
         }
+        fileList() {
+            let list = [];
+            for (let i = 0; i < _Disk.sectorCount; i++) {
+                for (let j = 0; j < _Disk.blockCount; j++) {
+                    let thisData = sessionStorage.getItem("0," + i + "," + j).split(" ");
+                    if (!((i == 0) && (j == 0))) //ignore master boot record
+                     {
+                        if (thisData[0] === "1") {
+                            list[list.length] = this.getFileName(thisData);
+                        }
+                    }
+                }
+            }
+            return list;
+        }
         nextTSBName() {
             for (let i = 0; i < _Disk.sectorCount; i++) {
                 for (let j = 0; j < _Disk.blockCount; j++) {
