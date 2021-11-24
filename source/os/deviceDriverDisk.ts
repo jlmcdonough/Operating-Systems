@@ -92,8 +92,10 @@ module TSOS {
             }
         }
 
-        public fileWrite(fileName: string, fileData: string): boolean
+        public fileWrite(fileName: string, fileData: string, nextTSB?: string): boolean
         {
+            console.log("WRITING " + fileData);
+            console.log("FILE DATA LENGTH: " + fileData.length);
             let tsbLocToWrite = this.dataTSBFromFileName(fileName);
 
             if (tsbLocToWrite != null)
@@ -103,16 +105,71 @@ module TSOS {
 
                 if (fileData.length <= 60)
                 {
-                    for (let i = 0; i < fileData.length; i++) {
-
+                    for (let i = 0; i < fileData.length; i++)
+                    {
                         tsbLocData[i + 4] = Utils.decimalToHex(fileData.charCodeAt(i));
                     }
                     tsbLocData[0] = "1";
-                    sessionStorage.setItem(tsbLocToWrite, tsbLocData.join(" "));
+
+                    let newLoc;
+
+                    if (nextTSB != undefined)
+                    {
+                        console.log("1");
+                        console.log("To: " + nextTSB);
+                        newLoc = nextTSB;
+                    }
+                    else
+                    {
+                        console.log("2");
+                        console.log("To: " + tsbLocToWrite);
+                        newLoc = tsbLocToWrite;
+                    }
+
+                    tsbLocData[1] = "*";
+                    tsbLocData[2] = "*";
+                    tsbLocData[3] = "*";
+
+                    sessionStorage.setItem(newLoc, tsbLocData.join(" "));
                 }
                 else
                 {
-                    console.log("FILE TOO LARGE")
+                    let tsbLocData = this.createEmptyBlock();
+
+                    for (let j = 0; j < 60; j++)
+                    {
+                        tsbLocData[j + 4] = Utils.decimalToHex(fileData.charCodeAt(j));
+                    }
+                    tsbLocData[0] = "1";
+
+                    let newLoc;
+                    if (nextTSB != undefined)
+                    {
+                        console.log("3");
+                        console.log("To: " + nextTSB);
+                        newLoc = nextTSB;
+                    }
+                    else
+                    {
+                        console.log("4");
+                        console.log("To: " + tsbLocToWrite);
+                        newLoc = tsbLocToWrite;
+                    }
+                    sessionStorage.setItem(newLoc, tsbLocData.join(" "));
+
+                    let goNext = this.nextTSBData();
+                    let goNextSplit = goNext.split(",");
+
+                    let tempStorage = sessionStorage.getItem(newLoc).split(" ");
+                    tempStorage[1] = goNextSplit[0];
+                    tempStorage[2] = goNextSplit[1];
+                    tempStorage[3] = goNextSplit[2];
+                    sessionStorage.setItem(newLoc, tempStorage.join(" "));
+
+                    let dataLeft = fileData.substring(60, fileData.length);
+
+                    console.log("NEXT IS " + goNext);
+                    this.fileWrite(fileName, dataLeft, goNext);
                 }
                 return true;
             }
