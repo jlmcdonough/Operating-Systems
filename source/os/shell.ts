@@ -918,7 +918,7 @@ module TSOS {
             {
                 if (args.length == 1)
                 {
-                    let fileData = _krnDiskDriver.fileRead(args[0]);
+                    let fileData = _krnDiskDriver.fileShellRead(args[0]);
                     if (fileData != null)
                     {
                         _StdOut.putText("Contents of file " + args[0] + ":");

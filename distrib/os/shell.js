@@ -698,7 +698,7 @@ var TSOS;
         shellRead(args) {
             if (_IsDiskFormatted) {
                 if (args.length == 1) {
-                    let fileData = _krnDiskDriver.fileRead(args[0]);
+                    let fileData = _krnDiskDriver.fileShellRead(args[0]);
                     if (fileData != null) {
                         _StdOut.putText("Contents of file " + args[0] + ":");
                         _StdOut.advanceLine();

@@ -71,7 +71,7 @@ var TSOS;
             if (tsbLocToWrite != null) {
                 //let tsbLocData = sessionStorage.getItem(tsbLocToWrite).split(" ");
                 let tsbLocData = this.createEmptyBlock();
-                if (fileData.length <= 60) {
+                if (fileData.length <= 5) {
                     for (let i = 0; i < fileData.length; i++) {
                         tsbLocData[i + 4] = TSOS.Utils.decimalToHex(fileData.charCodeAt(i));
                     }
@@ -94,7 +94,7 @@ var TSOS;
                 }
                 else {
                     let tsbLocData = this.createEmptyBlock();
-                    for (let j = 0; j < 60; j++) {
+                    for (let j = 0; j < 5; j++) {
                         tsbLocData[j + 4] = TSOS.Utils.decimalToHex(fileData.charCodeAt(j));
                     }
                     tsbLocData[0] = "1";
@@ -117,7 +117,7 @@ var TSOS;
                     tempStorage[2] = goNextSplit[1];
                     tempStorage[3] = goNextSplit[2];
                     sessionStorage.setItem(newLoc, tempStorage.join(" "));
-                    let dataLeft = fileData.substring(60, fileData.length);
+                    let dataLeft = fileData.substring(5, fileData.length);
                     console.log("NEXT IS " + goNext);
                     this.fileWrite(fileName, dataLeft, goNext);
                 }
@@ -135,17 +135,32 @@ var TSOS;
                 return false;
             }
         }
-        fileRead(fileName) {
+        fileShellRead(fileName) {
+            console.log("IN SHELL READ");
             let tsbLocToWrite = this.dataTSBFromFileName(fileName);
-            if (tsbLocToWrite != null) {
-                let tsbLocData = sessionStorage.getItem(tsbLocToWrite).split(" ");
-                let fileData = "";
+            let ans = this.fileRead(tsbLocToWrite, "");
+            console.log("ANS: " + ans);
+            return ans;
+        }
+        fileRead(fileLoc, fileData) {
+            console.log("IN FILE READ WITH FILELOC: " + fileLoc + " FILEDATA: " + fileData);
+            if (fileLoc != null) {
+                let tsbLocData = sessionStorage.getItem(fileLoc).split(" ");
                 for (let i = 4; i < tsbLocData.length; i++) {
                     fileData += String.fromCharCode(TSOS.Utils.hexToDecimal(tsbLocData[i]));
                 }
-                return fileData;
+                if (tsbLocData[1] != "*") {
+                    let thisNext = tsbLocData[1] + "," + tsbLocData[2] + "," + tsbLocData[3];
+                    return this.fileRead(thisNext, fileData);
+                }
+                else {
+                    console.log("RETURNING " + fileData);
+                    console.log("RETURNING " + typeof fileData);
+                    return fileData;
+                }
             }
             else {
+                console.log("RETUNIGN NULL");
                 return null;
             }
         }
