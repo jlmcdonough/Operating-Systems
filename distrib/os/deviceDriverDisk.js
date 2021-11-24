@@ -23,7 +23,6 @@ var TSOS;
         }
         format() {
             let emptyBlockMemory = this.createEmptyBlock();
-            console.log("EMPTY: " + emptyBlockMemory);
             for (let x = 0; x < _Disk.trackCount; x++) {
                 for (let y = 0; y < _Disk.sectorCount; y++) {
                     for (let z = 0; z < _Disk.blockCount; z++) {
@@ -77,6 +76,15 @@ var TSOS;
             this.deleteFileData(fileName);
             this.deleteFileTSB(fileName);
         }
+        fileRead(fileName) {
+            let tsbLocToWrite = this.dataTSBFromFileName(fileName);
+            let tsbLocData = sessionStorage.getItem(tsbLocToWrite).split(" ");
+            let fileData = "";
+            for (let i = 4; i < tsbLocData.length; i++) {
+                fileData += String.fromCharCode(TSOS.Utils.hexToDecimal(tsbLocData[i]));
+            }
+            return fileData;
+        }
         nextTSBName() {
             for (let i = 0; i < _Disk.sectorCount; i++) {
                 for (let j = 0; j < _Disk.blockCount; j++) {
@@ -114,13 +122,10 @@ var TSOS;
             return fileName;
         }
         getFileTSB(fileName) {
-            console.log("HELPER NAME: " + fileName);
             for (let i = 0; i < _Disk.sectorCount; i++) {
                 for (let j = 0; j < _Disk.blockCount; j++) {
                     let thisData = sessionStorage.getItem("0," + i + "," + j).split(" ");
-                    console.log("THIS : " + thisData);
                     let thisFileName = this.getFileName(thisData);
-                    console.log("THIS NAME: " + thisFileName);
                     if (thisFileName == fileName) {
                         return "0" + "," + i + "," + j;
                         break;
@@ -131,31 +136,15 @@ var TSOS;
         }
         deleteFileTSB(fileName) {
             let emptyBlockMemory = this.createEmptyBlock();
-            console.log("GETFILETSB: " + this.getFileTSB(fileName));
-            console.log("GETFILETSB type: " + typeof this.getFileTSB(fileName));
-            console.log("GETFILETSB[0]: " + this.getFileTSB(fileName)[0]);
-            console.log("GETFILETSB[1]: " + this.getFileTSB(fileName)[1]);
-            console.log("GETFILETSB[2]: " + this.getFileTSB(fileName)[2]);
             sessionStorage.setItem(this.getFileTSB(fileName), emptyBlockMemory.join(" "));
         }
         deleteFileData(fileName) {
-            console.log("DELETE FILE NAMED: " + fileName);
             let emptyBlockMemory = this.createEmptyBlock();
             let tsbToDelete = this.dataTSBFromFileName(fileName);
-            console.log("SECONDL: " + tsbToDelete);
-            console.log("SECONDL type: " + typeof tsbToDelete);
-            console.log("SECONDL[0]: " + tsbToDelete[0]);
-            console.log("SECONDL[1]: " + tsbToDelete[1]);
-            console.log("SECONDL[2]: " + tsbToDelete[2]);
-            console.log("SECONDL[3]: " + tsbToDelete[3]);
-            console.log("SECONDL[4]: " + tsbToDelete[4]);
             sessionStorage.setItem(tsbToDelete, emptyBlockMemory.join(" "));
         }
         dataTSBFromFileName(fileName) {
-            console.log("FILE NAME: " + fileName);
             let tsbFile = this.getFileTSB(fileName);
-            console.log("TSB FILE: " + tsbFile);
-            console.log("FILE NAME TSB: " + sessionStorage.getItem(tsbFile));
             let tsbFileName = sessionStorage.getItem(tsbFile).split(" ");
             return tsbFileName[1] + "," + tsbFileName[2] + "," + tsbFileName[3];
         }

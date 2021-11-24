@@ -910,9 +910,12 @@ module TSOS {
         {
             if (_IsDiskFormatted)
             {
-                if (args.length > 1)
+                if (args.length == 1)
                 {
-
+                    let fileData = _krnDiskDriver.fileRead(args[0]);
+                    _StdOut.putText("Contents of file " + args[0] + ":");
+                    _StdOut.advanceLine();
+                    _StdOut.putText(fileData);
                 }
                 else
                 {
