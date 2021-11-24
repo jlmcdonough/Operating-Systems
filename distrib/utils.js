@@ -112,14 +112,14 @@ var TSOS;
         static memoryOutOfBoundsError() {
             _CPU.isExecuting = false;
             _PCB.state = "Stopped";
-            _StdOut.putText("Memory out of bounds error on process " + _PCB.pid + ". CPU stopped.");
+            _StdOut.putText("Memory out of bounds error on process " + _PCB.pid + ". CPU stopped");
             _StdOut.advanceLine();
             _OsShell.putPrompt();
         }
         static invalidOPCodeError() {
             _CPU.isExecuting = false;
             _PCB.state = "Stopped";
-            _StdOut.putText("Invalid OP Code reached on process " + _PCB.pid + ". CPU stopped.");
+            _StdOut.putText("Invalid OP Code reached on process " + _PCB.pid + ". CPU stopped");
             _StdOut.advanceLine();
             _OsShell.putPrompt();
         }

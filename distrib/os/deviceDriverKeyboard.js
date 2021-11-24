@@ -63,7 +63,7 @@ var TSOS;
             }
             // various punctuation
             else if ((keyCode >= 186) && (keyCode <= 191)) {
-                let punctuation = [";", "=", ",", "-", ".", "/"];
+                let punctuation = [";", "=", ",", "-", "", "/"];
                 let shiftedPunctuation = [":", "+", "<", "_", ">", "?"];
                 if (isShifted && (keyCode >= 186) && (keyCode <= 191)) {
                     chr = shiftedPunctuation[keyCode - 186]; //186 is ; and ; is shifted :

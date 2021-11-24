@@ -56,71 +56,102 @@ module TSOS {
             Control.diskUpdateTable();
         }
 
-        public fileCreate(fileName: string): void
+        public fileCreate(fileName: string): boolean
         {
-            let tsbName = this.nextTSBName();
-            let tsbData = this.nextTSBData();
+            let nameCheck = this.getFileTSB(fileName);
 
-            let tsbNameData = sessionStorage.getItem(tsbName).split(" ");
-            let tsbDataData = sessionStorage.getItem(tsbData).split(" ");
-
-            tsbNameData[0] = "1"
-            tsbDataData[0] = "1"
-
-            let tsbDataSplit = tsbData.split(",")
-            tsbNameData[1] = tsbDataSplit[0];
-            tsbNameData[2] = tsbDataSplit[1];
-            tsbNameData[3] = tsbDataSplit[2];
-
-            for (let i = 0; i < fileName.length; i++)
+            if (nameCheck != null)
             {
-                tsbNameData[i + 4] = Utils.decimalToHex(fileName.charCodeAt(i));
-            }
-
-            sessionStorage.setItem(tsbName, tsbNameData.join(" "));
-            sessionStorage.setItem(tsbData, tsbDataData.join(" "));
-        }
-
-        public fileWrite(fileName: string, fileData: string): void
-        {
-            let tsbLocToWrite = this.dataTSBFromFileName(fileName);
-            //let tsbLocData = sessionStorage.getItem(tsbLocToWrite).split(" ");
-            let tsbLocData = this.createEmptyBlock();
-
-            if (fileData.length <= 60)
-            {
-                for (let i = 0; i < fileData.length; i++)
-                {
-                    tsbLocData[i + 4] = Utils.decimalToHex(fileData.charCodeAt(i));
-                }
-                tsbLocData[0] = "1";
-                sessionStorage.setItem(tsbLocToWrite, tsbLocData.join(" "));
+                return false;
             }
             else
             {
-                console.log("FILE TO LARGE")
-            }
+                let tsbName = this.nextTSBName();
+                let tsbData = this.nextTSBData();
 
+                let tsbNameData = sessionStorage.getItem(tsbName).split(" ");
+                let tsbDataData = sessionStorage.getItem(tsbData).split(" ");
+
+                tsbNameData[0] = "1"
+                tsbDataData[0] = "1"
+
+                let tsbDataSplit = tsbData.split(",")
+                tsbNameData[1] = tsbDataSplit[0];
+                tsbNameData[2] = tsbDataSplit[1];
+                tsbNameData[3] = tsbDataSplit[2];
+
+                for (let i = 0; i < fileName.length; i++)
+                {
+                    tsbNameData[i + 4] = Utils.decimalToHex(fileName.charCodeAt(i));
+                }
+
+                sessionStorage.setItem(tsbName, tsbNameData.join(" "));
+                sessionStorage.setItem(tsbData, tsbDataData.join(" "));
+
+                return true;
+            }
         }
 
-        public fileDelete(fileName: string): void
+        public fileWrite(fileName: string, fileData: string): boolean
         {
-            this.deleteFileData(fileName);
-            this.deleteFileTSB(fileName);
+            let tsbLocToWrite = this.dataTSBFromFileName(fileName);
+
+            if (tsbLocToWrite != null)
+            {
+                //let tsbLocData = sessionStorage.getItem(tsbLocToWrite).split(" ");
+                let tsbLocData = this.createEmptyBlock();
+
+                if (fileData.length <= 60)
+                {
+                    for (let i = 0; i < fileData.length; i++) {
+
+                        tsbLocData[i + 4] = Utils.decimalToHex(fileData.charCodeAt(i));
+                    }
+                    tsbLocData[0] = "1";
+                    sessionStorage.setItem(tsbLocToWrite, tsbLocData.join(" "));
+                }
+                else
+                {
+                    console.log("FILE TOO LARGE")
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public fileDelete(fileName: string): boolean
+        {
+            if ( ( this.deleteFileData(fileName) ) && ( this.deleteFileTSB(fileName) ) )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public fileRead(fileName: string): string
         {
             let tsbLocToWrite = this.dataTSBFromFileName(fileName);
-            let tsbLocData = sessionStorage.getItem(tsbLocToWrite).split(" ");
-            let fileData = "";
-
-            for (let i = 4; i < tsbLocData.length; i++)
+            if (tsbLocToWrite != null)
             {
-                fileData += String.fromCharCode(Utils.hexToDecimal(tsbLocData[i]));
-            }
+                let tsbLocData = sessionStorage.getItem(tsbLocToWrite).split(" ");
+                let fileData = "";
 
-            return fileData;
+                for (let i = 4; i < tsbLocData.length; i++)
+                {
+                    fileData += String.fromCharCode(Utils.hexToDecimal(tsbLocData[i]));
+                }
+                return fileData;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public fileList(): string[]
@@ -224,26 +255,52 @@ module TSOS {
             return null;
         }
 
-        public deleteFileTSB(fileName: string): void
+        public deleteFileTSB(fileName: string): boolean
         {
             let emptyBlockMemory = this.createEmptyBlock();
-            sessionStorage.setItem(this.getFileTSB(fileName), emptyBlockMemory.join(" "));
+            let fileTSB = this.getFileTSB(fileName);
+
+            if (fileTSB != null)
+            {
+                sessionStorage.setItem(fileTSB, emptyBlockMemory.join(" "));
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        public deleteFileData(fileName: string): void
+        public deleteFileData(fileName: string): boolean
         {
             let emptyBlockMemory = this.createEmptyBlock();
             let tsbToDelete = this.dataTSBFromFileName(fileName);
 
-            sessionStorage.setItem(tsbToDelete, emptyBlockMemory.join(" "));
+            if (tsbToDelete != null)
+            {
+                sessionStorage.setItem(tsbToDelete, emptyBlockMemory.join(" "));
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public dataTSBFromFileName(fileName: string): string
         {
             let tsbFile = this.getFileTSB(fileName);
-            let tsbFileName = sessionStorage.getItem(tsbFile).split(" ");
 
-            return tsbFileName[1] + "," + tsbFileName[2] + "," + tsbFileName[3];
+            if (tsbFile != null)
+            {
+                let tsbFileName = sessionStorage.getItem(tsbFile).split(" ");
+
+                return tsbFileName[1] + "," + tsbFileName[2] + "," + tsbFileName[3];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public createEmptyBlock(): any[]

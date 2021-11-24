@@ -41,49 +41,71 @@ var TSOS;
             TSOS.Control.diskUpdateTable();
         }
         fileCreate(fileName) {
-            let tsbName = this.nextTSBName();
-            let tsbData = this.nextTSBData();
-            let tsbNameData = sessionStorage.getItem(tsbName).split(" ");
-            let tsbDataData = sessionStorage.getItem(tsbData).split(" ");
-            tsbNameData[0] = "1";
-            tsbDataData[0] = "1";
-            let tsbDataSplit = tsbData.split(",");
-            tsbNameData[1] = tsbDataSplit[0];
-            tsbNameData[2] = tsbDataSplit[1];
-            tsbNameData[3] = tsbDataSplit[2];
-            for (let i = 0; i < fileName.length; i++) {
-                tsbNameData[i + 4] = TSOS.Utils.decimalToHex(fileName.charCodeAt(i));
+            let nameCheck = this.getFileTSB(fileName);
+            if (nameCheck != null) {
+                return false;
             }
-            sessionStorage.setItem(tsbName, tsbNameData.join(" "));
-            sessionStorage.setItem(tsbData, tsbDataData.join(" "));
+            else {
+                let tsbName = this.nextTSBName();
+                let tsbData = this.nextTSBData();
+                let tsbNameData = sessionStorage.getItem(tsbName).split(" ");
+                let tsbDataData = sessionStorage.getItem(tsbData).split(" ");
+                tsbNameData[0] = "1";
+                tsbDataData[0] = "1";
+                let tsbDataSplit = tsbData.split(",");
+                tsbNameData[1] = tsbDataSplit[0];
+                tsbNameData[2] = tsbDataSplit[1];
+                tsbNameData[3] = tsbDataSplit[2];
+                for (let i = 0; i < fileName.length; i++) {
+                    tsbNameData[i + 4] = TSOS.Utils.decimalToHex(fileName.charCodeAt(i));
+                }
+                sessionStorage.setItem(tsbName, tsbNameData.join(" "));
+                sessionStorage.setItem(tsbData, tsbDataData.join(" "));
+                return true;
+            }
         }
         fileWrite(fileName, fileData) {
             let tsbLocToWrite = this.dataTSBFromFileName(fileName);
-            //let tsbLocData = sessionStorage.getItem(tsbLocToWrite).split(" ");
-            let tsbLocData = this.createEmptyBlock();
-            if (fileData.length <= 60) {
-                for (let i = 0; i < fileData.length; i++) {
-                    tsbLocData[i + 4] = TSOS.Utils.decimalToHex(fileData.charCodeAt(i));
+            if (tsbLocToWrite != null) {
+                //let tsbLocData = sessionStorage.getItem(tsbLocToWrite).split(" ");
+                let tsbLocData = this.createEmptyBlock();
+                if (fileData.length <= 60) {
+                    for (let i = 0; i < fileData.length; i++) {
+                        tsbLocData[i + 4] = TSOS.Utils.decimalToHex(fileData.charCodeAt(i));
+                    }
+                    tsbLocData[0] = "1";
+                    sessionStorage.setItem(tsbLocToWrite, tsbLocData.join(" "));
                 }
-                tsbLocData[0] = "1";
-                sessionStorage.setItem(tsbLocToWrite, tsbLocData.join(" "));
+                else {
+                    console.log("FILE TOO LARGE");
+                }
+                return true;
             }
             else {
-                console.log("FILE TO LARGE");
+                return false;
             }
         }
         fileDelete(fileName) {
-            this.deleteFileData(fileName);
-            this.deleteFileTSB(fileName);
+            if ((this.deleteFileData(fileName)) && (this.deleteFileTSB(fileName))) {
+                return true;
+            }
+            else {
+                return false;
+            }
         }
         fileRead(fileName) {
             let tsbLocToWrite = this.dataTSBFromFileName(fileName);
-            let tsbLocData = sessionStorage.getItem(tsbLocToWrite).split(" ");
-            let fileData = "";
-            for (let i = 4; i < tsbLocData.length; i++) {
-                fileData += String.fromCharCode(TSOS.Utils.hexToDecimal(tsbLocData[i]));
+            if (tsbLocToWrite != null) {
+                let tsbLocData = sessionStorage.getItem(tsbLocToWrite).split(" ");
+                let fileData = "";
+                for (let i = 4; i < tsbLocData.length; i++) {
+                    fileData += String.fromCharCode(TSOS.Utils.hexToDecimal(tsbLocData[i]));
+                }
+                return fileData;
             }
-            return fileData;
+            else {
+                return null;
+            }
         }
         fileList() {
             let list = [];
@@ -151,17 +173,35 @@ var TSOS;
         }
         deleteFileTSB(fileName) {
             let emptyBlockMemory = this.createEmptyBlock();
-            sessionStorage.setItem(this.getFileTSB(fileName), emptyBlockMemory.join(" "));
+            let fileTSB = this.getFileTSB(fileName);
+            if (fileTSB != null) {
+                sessionStorage.setItem(fileTSB, emptyBlockMemory.join(" "));
+                return true;
+            }
+            else {
+                return false;
+            }
         }
         deleteFileData(fileName) {
             let emptyBlockMemory = this.createEmptyBlock();
             let tsbToDelete = this.dataTSBFromFileName(fileName);
-            sessionStorage.setItem(tsbToDelete, emptyBlockMemory.join(" "));
+            if (tsbToDelete != null) {
+                sessionStorage.setItem(tsbToDelete, emptyBlockMemory.join(" "));
+                return true;
+            }
+            else {
+                return false;
+            }
         }
         dataTSBFromFileName(fileName) {
             let tsbFile = this.getFileTSB(fileName);
-            let tsbFileName = sessionStorage.getItem(tsbFile).split(" ");
-            return tsbFileName[1] + "," + tsbFileName[2] + "," + tsbFileName[3];
+            if (tsbFile != null) {
+                let tsbFileName = sessionStorage.getItem(tsbFile).split(" ");
+                return tsbFileName[1] + "," + tsbFileName[2] + "," + tsbFileName[3];
+            }
+            else {
+                return null;
+            }
         }
         createEmptyBlock() {
             let emptyBlockMemory = new Array(64);

@@ -25,12 +25,12 @@ var TSOS;
             _StdIn = _Console;
             _StdOut = _Console;
             // Load the Keyboard Device Driver
-            this.krnTrace("Loading the keyboard device driver.");
+            this.krnTrace("Loading the keyboard device driver");
             _krnKeyboardDriver = new TSOS.DeviceDriverKeyboard(); // Construct it.
             _krnKeyboardDriver.driverEntry(); // Call the driverEntry() initialization routine.
             this.krnTrace(_krnKeyboardDriver.status);
             // Load the Disk Device Driver
-            this.krnTrace("Loading the disk device driver.");
+            this.krnTrace("Loading the disk device driver");
             _krnDiskDriver = new TSOS.DeviceDriverDisk(); // Construct it.
             _krnDiskDriver.driverEntry(); // Call the driverEntry() initialization routine.
             this.krnTrace(_krnDiskDriver.status);
@@ -40,10 +40,10 @@ var TSOS;
             // Memory
             _MemoryManager = new TSOS.MemoryManager();
             // Enable the OS Interrupts.  (Not the CPU clock interrupt, as that is done in the hardware sim.)
-            this.krnTrace("Enabling the interrupts.");
+            this.krnTrace("Enabling the interrupts");
             this.krnEnableInterrupts();
             // Launch the shell.
-            this.krnTrace("Creating and Launching the shell.");
+            this.krnTrace("Creating and Launching the shell");
             _OsShell = new TSOS.Shell();
             _OsShell.init();
             // Finally, initiate student testing protocol.
@@ -61,7 +61,7 @@ var TSOS;
                 TSOS.Control.pcbUpdateTable(_PCB.pc);
             }
             // ... Disable the Interrupts.
-            this.krnTrace("Disabling the interrupts.");
+            this.krnTrace("Disabling the interrupts");
             this.krnDisableInterrupts();
             //
             // Unload the Device Drivers?
