@@ -498,7 +498,7 @@ var TSOS;
                             newPCB.location = "Disk";
                             newPCB.base = 768;
                             newPCB.limit = 768;
-                            newPCB.segment = 4;
+                            newPCB.segment = -1;
                             _PCBList[_PCBList.length] = newPCB;
                             _MemoryAccessor.loadMemory(trimmedInput, newPCB.segment, newPCB.pid);
                             TSOS.Control.updateVisuals(0, newPCB.segment);
@@ -606,7 +606,7 @@ var TSOS;
                 }
                 else if (args.length == 1 && !isNaN(Number(args[0]))) {
                     let segment = Number(args[0]);
-                    if (0 < segment && segment < 4) {
+                    if ((segment > 0) && (segment < 4)) {
                         _MemoryAccessor.nukeMemory(segment);
                         TSOS.Control.memoryUpdateTable();
                         _StdOut.putText("Memory in segment " + segment + " has been reset");
@@ -722,7 +722,6 @@ var TSOS;
             }
         }
         shellRead(args) {
-            _Swapper.rollOut(_PCBList[0]);
             if (_IsDiskFormatted) {
                 if (args.length == 1) {
                     let fileData = _krnDiskDriver.fileShellRead(args[0]);
@@ -801,6 +800,10 @@ var TSOS;
             _StdOut.putText("Disk has been formatted");
         }
         shellLs(args) {
+            console.log("PEEK: " + _Scheduler.readyQueue.peek());
+            console.log("SIZE: " + _Scheduler.readyQueue.getSize());
+            let tail = _Scheduler.readyQueue.getTail();
+            console.log("TAIL: " + tail.pid);
             if (_IsDiskFormatted) {
                 let list = _krnDiskDriver.fileList();
                 if (list.length > 0) {

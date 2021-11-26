@@ -1,7 +1,8 @@
 var TSOS;
 (function (TSOS) {
     class Scheduler {
-        constructor(quanta = 0, schedulingSystem = "", readyQueue = new TSOS.Queue(), runningPCB = undefined) {
+        constructor(quanta = 0, schedulingSystem = "", //RR, FCFS, PRIORITY
+        readyQueue = new TSOS.Queue(), runningPCB = undefined) {
             this.quanta = quanta;
             this.schedulingSystem = schedulingSystem;
             this.readyQueue = readyQueue;
@@ -53,11 +54,13 @@ var TSOS;
         }
         quantaCheck() {
             console.log("QUANTA IS: " + _Scheduler.quanta);
-            if ((_Scheduler.runningPCB.runningQuanta >= _Scheduler.quanta) && (_Scheduler.readyQueue.getSize() > 0)) //don't care about quanta if there is no process to switch to
-             {
-                _Scheduler.runningPCB.runningQuanta = 0;
-                _Kernel.krnTrace("Quanta expired, switching programs");
-                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, [_Scheduler.readyQueue.peek()]));
+            if (_Scheduler.runningPCB != null) {
+                if ((_Scheduler.runningPCB.runningQuanta >= _Scheduler.quanta) && (_Scheduler.readyQueue.getSize() > 0)) //don't care about quanta if there is no process to switch to
+                 {
+                    _Scheduler.runningPCB.runningQuanta = 0;
+                    _Kernel.krnTrace("Quanta expired, switching programs");
+                    _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, [_Scheduler.readyQueue.peek()]));
+                }
             }
         }
     }

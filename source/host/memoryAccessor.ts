@@ -46,7 +46,7 @@ module TSOS {
         {
             let userArr = userEntry.split(" ");
 
-            if (segmentNumber < 4)
+            if ( (segmentNumber > 0) && (segmentNumber < 4) )
             {
                 let points = Utils.segmentStuff(segmentNumber);
                 let startingPoint = points[0];

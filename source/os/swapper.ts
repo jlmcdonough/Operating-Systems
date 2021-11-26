@@ -20,6 +20,8 @@ module TSOS
             diskPCB.segmentData(segment);
             _PCB = diskPCB;
 
+            _MemoryAccessor.nukeMemory(diskPCB.segment);
+
             for (let i = 0; i < (diskPCB.limit - diskPCB.base); i+=3)
             {
                 if ( i < (this.rolledInData.length - 3) )
@@ -28,7 +30,7 @@ module TSOS
 
                     if (! ( (byteToWrite.charCodeAt(0) == 0) && (byteToWrite.charCodeAt(1) == 0) ) )
                     {
-                        _MemoryAccessor.write(diskPCB.segment, Utils.decimalToHex(diskPCB.base + addressCounter), byteToWrite);
+                        _MemoryAccessor.write(diskPCB.segment, Utils.decimalToHex(addressCounter), byteToWrite);
                         addressCounter++;
                     }
                 }
@@ -59,11 +61,12 @@ module TSOS
             memPCB.location = "Disk";
             memPCB.base = 768;
             memPCB.limit = 768;
-            memPCB.segment = 4;
+            memPCB.segment = -1;
 
             _krnDiskDriver.fileCreateSwap(memPCB.pid, splitData);
 
-            this.rollIn(_PCBList[3], 1);
+            this.rolledOutData = "";
+            //this.rollIn(_PCBList[3], 1);
         }
 
     }

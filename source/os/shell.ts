@@ -636,7 +636,7 @@ module TSOS {
                             newPCB.location = "Disk";
                             newPCB.base = 768;
                             newPCB.limit = 768;
-                            newPCB.segment = 4;
+                            newPCB.segment = -1;
 
                             _PCBList[_PCBList.length] = newPCB;
 
@@ -785,7 +785,7 @@ module TSOS {
                 else if (args.length == 1 && !isNaN(Number(args[0])))
                 {
                     let segment = Number(args[0]);
-                    if (0 < segment && segment < 4)
+                    if ( (segment > 0) && (segment < 4) )
                     {
                         _MemoryAccessor.nukeMemory(segment);
                         Control.memoryUpdateTable();
@@ -949,7 +949,6 @@ module TSOS {
 
         public shellRead(args: string[])
         {
-            _Swapper.rollOut(_PCBList[0]);
             if (_IsDiskFormatted)
             {
                 if (args.length == 1)
@@ -1062,6 +1061,10 @@ module TSOS {
 
         public shellLs(args: string[])
         {
+            console.log("PEEK: " + _Scheduler.readyQueue.peek());
+            console.log("SIZE: " + _Scheduler.readyQueue.getSize());
+            let tail = _Scheduler.readyQueue.getTail();
+            console.log("TAIL: " + tail.pid);
             if (_IsDiskFormatted)
             {
                 let list = _krnDiskDriver.fileList();

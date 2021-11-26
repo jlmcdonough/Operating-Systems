@@ -21,7 +21,7 @@ var TSOS;
             if (0 < segment && segment <= 3) {
                 for (let i = 0; i < _PCBList.length; i++) {
                     if (_PCBList[i].segment == segment) {
-                        if ((_PCBList[i].state === "Running") || (_PCBList[i].state === "Resident")) {
+                        if ((_PCBList[i].state === "Running") || (_PCBList[i].state === "Resident") || (_PCBList[i].state === "Ready")) {
                             return false;
                         }
                     }

@@ -4,7 +4,7 @@ module TSOS {
 
         constructor(
             public quanta: number = 0,
-            public schedulingSystem: string = "",
+            public schedulingSystem: string = "",  //RR, FCFS, PRIORITY
             public readyQueue: Queue = new Queue(),
             public runningPCB: Pcb = undefined
         ) {
@@ -75,11 +75,14 @@ module TSOS {
         public quantaCheck(): void
         {
             console.log("QUANTA IS: " + _Scheduler.quanta);
-            if ( (_Scheduler.runningPCB.runningQuanta >= _Scheduler.quanta) && (_Scheduler.readyQueue.getSize() > 0) ) //don't care about quanta if there is no process to switch to
+            if (_Scheduler.runningPCB != null)
             {
-                _Scheduler.runningPCB.runningQuanta = 0;
-                _Kernel.krnTrace("Quanta expired, switching programs");
-                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, [_Scheduler.readyQueue.peek()]));
+                if ( (_Scheduler.runningPCB.runningQuanta >= _Scheduler.quanta) && (_Scheduler.readyQueue.getSize() > 0) ) //don't care about quanta if there is no process to switch to
+                {
+                    _Scheduler.runningPCB.runningQuanta = 0;
+                    _Kernel.krnTrace("Quanta expired, switching programs");
+                    _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, [_Scheduler.readyQueue.peek()]));
+                }
             }
         }
 

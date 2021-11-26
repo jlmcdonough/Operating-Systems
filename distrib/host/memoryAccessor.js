@@ -30,7 +30,7 @@ var TSOS;
         }
         loadMemory(userEntry, segmentNumber, pid) {
             let userArr = userEntry.split(" ");
-            if (segmentNumber < 4) {
+            if ((segmentNumber > 0) && (segmentNumber < 4)) {
                 let points = TSOS.Utils.segmentStuff(segmentNumber);
                 let startingPoint = points[0];
                 let maxPoint = points[1];
