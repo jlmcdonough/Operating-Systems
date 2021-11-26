@@ -22,9 +22,14 @@ var TSOS;
             this.outputData = outputData;
         }
         init(priorityNum, segment) {
-            let points = TSOS.Utils.segmentStuff(segment);
-            let startingPoint = points[0];
-            let maxPoint = points[1];
+            if (segment != undefined) {
+                let points = TSOS.Utils.segmentStuff(segment);
+                let startingPoint = points[0];
+                let maxPoint = points[1];
+                this.segment = segment;
+                this.base = startingPoint;
+                this.limit = maxPoint;
+            }
             this.pid = _ProcessID;
             _ProcessID++;
             this.pc = 0;
@@ -37,10 +42,7 @@ var TSOS;
             this.state = "Resident";
             this.location = "Memory";
             this.runningQuanta = 0,
-                this.segment = segment;
-            this.base = startingPoint;
-            this.limit = maxPoint;
-            this.startingCycle = _CycleCount;
+                this.startingCycle = _CycleCount;
         }
     }
     TSOS.Pcb = Pcb;

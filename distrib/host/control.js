@@ -208,22 +208,27 @@ var TSOS;
             table.innerHTML = tableBody;
         }
         static memoryTableColor(pc, operandCount, segment) {
-            let offset = (segment - 1) * 256;
-            let mainHighlight, secondaryHighlight;
-            if (_APPEARANCE === "dark") {
-                mainHighlight = "#3700B3";
-                secondaryHighlight = "#BB86FC";
-            }
-            else if (_APPEARANCE === "light") {
-                mainHighlight = "#1E88E5";
-                secondaryHighlight = "#BBDEFB";
-            }
-            document.getElementById("mem" + (pc + offset)).style.backgroundColor = mainHighlight;
-            for (let i = 1; i <= operandCount; i++) {
-                document.getElementById("mem" + ((pc + offset) + i)).style.backgroundColor = secondaryHighlight;
-                if (_MemoryTracking) {
-                    document.getElementById("mem" + ((pc + offset) + i)).scrollIntoView({ block: 'nearest' });
+            if ((segment > 0) && (segment < 4)) {
+                let offset = (segment - 1) * 256;
+                let mainHighlight, secondaryHighlight;
+                if (_APPEARANCE === "dark") {
+                    mainHighlight = "#3700B3";
+                    secondaryHighlight = "#BB86FC";
                 }
+                else if (_APPEARANCE === "light") {
+                    mainHighlight = "#1E88E5";
+                    secondaryHighlight = "#BBDEFB";
+                }
+                document.getElementById("mem" + (pc + offset)).style.backgroundColor = mainHighlight;
+                for (let i = 1; i <= operandCount; i++) {
+                    document.getElementById("mem" + ((pc + offset) + i)).style.backgroundColor = secondaryHighlight;
+                    if (_MemoryTracking) {
+                        document.getElementById("mem" + ((pc + offset) + i)).scrollIntoView({ block: 'nearest' });
+                    }
+                }
+            }
+            else {
+                console.log("Not in memory");
             }
         }
         static pcbUpdateTable(oldPC) {

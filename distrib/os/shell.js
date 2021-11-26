@@ -483,7 +483,30 @@ var TSOS;
                         segmentThreeAvailable = _MemoryManager.segmentReallocate(3);
                     }
                     if (_PCBList.length > 0 && ((!segmentOneAvailable) && (!segmentTwoAvailable) && (!segmentThreeAvailable))) {
-                        _StdOut.putText("There is already 3 programs stored in memory. Cannot load another");
+                        if (_IsDiskFormatted) {
+                            let priority;
+                            //ensures that the load priority is a number
+                            if (isNaN(Number(args[0]))) {
+                                _StdOut.putText("It is recommended to include a priority after the load command. Priority was given 32 to this instance");
+                                priority = 32;
+                            }
+                            else {
+                                priority = Number(args[0]);
+                            }
+                            let newPCB = new TSOS.Pcb();
+                            newPCB.init(priority);
+                            newPCB.location = "Disk";
+                            newPCB.segment = 4;
+                            _PCBList[_PCBList.length] = newPCB;
+                            TSOS.Control.updateVisuals(0);
+                            _StdOut.putText("Successfully loaded user program with priority " + priority);
+                            _StdOut.advanceLine();
+                            _StdOut.putText("Your program is stored at process ID " + (_ProcessID - 1));
+                        }
+                        else {
+                            _StdOut.putText("There is already 3 programs stored in memory. Cannot load another");
+                            _StdOut.putText("Format the disk to allow for more programs to be stored");
+                        }
                     }
                     else {
                         let priority;
