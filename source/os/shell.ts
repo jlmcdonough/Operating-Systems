@@ -632,8 +632,12 @@ module TSOS {
 
                             let newPCB = new Pcb();
                             newPCB.init(priority);
+
                             newPCB.location = "Disk";
+                            newPCB.base = 768;
+                            newPCB.limit = 768;
                             newPCB.segment = 4;
+
                             _PCBList[_PCBList.length] = newPCB;
 
                             _MemoryAccessor.loadMemory(trimmedInput, newPCB.segment, newPCB.pid);
@@ -945,6 +949,7 @@ module TSOS {
 
         public shellRead(args: string[])
         {
+            _Swapper.rollOut(_PCBList[0]);
             if (_IsDiskFormatted)
             {
                 if (args.length == 1)

@@ -37,6 +37,7 @@ var _RRQuantum = 6;
 var _FCFSQuantum = Number.MAX_SAFE_INTEGER;
 var _Scheduler;
 var _Dispatcher;
+var _Swapper;
 var _CycleCount = 0;
 var _OSclock = 0; // Page 23.
 var _Mode = 0; // (currently unused)  0 = Kernel Mode, 1 = User Mode.  See page 21.

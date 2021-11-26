@@ -12,14 +12,28 @@ var TSOS;
                 TSOS.Utils.memoryOutOfBoundsError();
             }
         }
-        read(segment, atAddress) {
+        read(segment, atAddress, pcb) {
             let valueToRead = _MemoryManager.segmentOffset(segment, atAddress);
-            if ((_PCB.base <= valueToRead) && (valueToRead <= _PCB.limit)) {
+            let useThisPcb;
+            if (pcb != undefined) {
+                console.log("DEFINED, THEREFORE USING: " + pcb.pid);
+                useThisPcb = pcb;
+            }
+            else {
+                console.log("UNDEFINED, THEREFORE USING: " + _PCB.pid);
+                useThisPcb = _PCB;
+            }
+            console.log("VAL TO READ: " + valueToRead + " SEG: " + segment + " @ ADD: " + atAddress);
+            console.log("BASE : " + useThisPcb.base + " LIMIT: " + useThisPcb.limit);
+            if ((useThisPcb.base <= valueToRead) && (valueToRead <= useThisPcb.limit)) {
+                console.log("SHOULD BE: " + _Memory.memoryBlock[valueToRead]);
                 return _Memory.getAt(valueToRead);
             }
             else {
+                console.log("IN ELSE");
                 TSOS.Utils.memoryOutOfBoundsError();
             }
+            console.log("END OF READ");
         }
         loadMemory(userEntry, segmentNumber, pid) {
             let userArr = userEntry.split(" ");

@@ -140,7 +140,7 @@ input:disabled {
 
 
 #divPCBTable {
-    width: 585px;
+    width: 580px;
     max-height: 211px;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -150,6 +150,14 @@ input:disabled {
 #divPCBTable:hover {
     overflow-x: hidden;
     overflow-y: scroll;
+}
+
+.pcbDisplayTable {
+    color: #ffffff;
+    background: #2c2c2c;
+    border: 1px solid #018786;
+    width: 580px;
+    text-align: center;
 }
 
 .diskDisplayTable {

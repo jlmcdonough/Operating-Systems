@@ -128,7 +128,7 @@ tr:nth-child(even) {
 }
 
 #divPCBTable {
-    width: 585px;
+    width: 580px;
     max-height: 211px;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -138,6 +138,14 @@ tr:nth-child(even) {
 #divPCBTable:hover {
     overflow-x: hidden;
     overflow-y: scroll;
+}
+
+.diskDisplayTable {
+    color: #222222;
+    background: #ECEFF1;
+    border: 1px solid #484b6a;
+    width: 580px;
+    text-align: center;
 }
 
 .diskDisplayTable {

@@ -9,6 +9,14 @@ module TSOS {
         {
             let currPCB = _Scheduler.runningPCB;
             let nextPCB = _Scheduler.readyQueue.dequeue();
+
+        /*    if (nextPCB.location === "Disk")
+            {
+                _MemoryManager.rollInMemory()
+            } */
+
+
+
             if (currPCB == undefined)
             {
                 _Kernel.krnTrace("No process to save. Loading Process " + nextPCB.pid);

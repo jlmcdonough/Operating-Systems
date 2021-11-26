@@ -44,6 +44,7 @@ var _RRQuantum: number = 6;
 var _FCFSQuantum: number = Number.MAX_SAFE_INTEGER;
 var _Scheduler: TSOS.Scheduler;
 var _Dispatcher: TSOS.Dispatcher;
+var _Swapper: TSOS.Swapper;
 
 var _CycleCount: number = 0;
 
