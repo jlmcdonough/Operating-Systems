@@ -64,6 +64,23 @@ var TSOS;
                 return true;
             }
         }
+        fileCreateSwap(pid, fileData) {
+            let fileName = "~" + pid;
+            if (this.fileCreate(fileName)) {
+                if (this.fileWrite(fileName, fileData.join(" "))) {
+                    console.log("Success with " + fileName);
+                }
+                else {
+                    console.log("Error writing");
+                    return false;
+                }
+            }
+            else {
+                console.log("Error creating");
+                return false;
+            }
+            return true;
+        }
         fileWrite(fileName, fileData, nextTSB) {
             let tsbLocToWrite = this.dataTSBFromFileName(fileName);
             if (tsbLocToWrite != null) {

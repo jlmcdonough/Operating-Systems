@@ -21,18 +21,23 @@ var TSOS;
                 TSOS.Utils.memoryOutOfBoundsError();
             }
         }
-        loadMemory(userEntry, segmentNumber) {
+        loadMemory(userEntry, segmentNumber, pid) {
             let userArr = userEntry.split(" ");
-            let points = TSOS.Utils.segmentStuff(segmentNumber);
-            let startingPoint = points[0];
-            let maxPoint = points[1];
-            for (let i = 0; i < userArr.length; i++) {
-                if (i <= maxPoint - startingPoint) {
-                    _Memory.memoryBlock[i + startingPoint] = userArr[i];
+            if (segmentNumber < 4) {
+                let points = TSOS.Utils.segmentStuff(segmentNumber);
+                let startingPoint = points[0];
+                let maxPoint = points[1];
+                for (let i = 0; i < userArr.length; i++) {
+                    if (i <= maxPoint - startingPoint) {
+                        _Memory.memoryBlock[i + startingPoint] = userArr[i];
+                    }
+                    else {
+                        TSOS.Utils.memoryOutOfBoundsError();
+                    }
                 }
-                else {
-                    TSOS.Utils.memoryOutOfBoundsError();
-                }
+            }
+            else {
+                _krnDiskDriver.fileCreateSwap(pid, userArr);
             }
         }
         nukeMemory(segmentNumber) {

@@ -635,7 +635,9 @@ module TSOS {
                             newPCB.location = "Disk";
                             newPCB.segment = 4;
                             _PCBList[_PCBList.length] = newPCB;
-                            Control.updateVisuals(0);
+
+                            _MemoryAccessor.loadMemory(trimmedInput, newPCB.segment, newPCB.pid);
+                            Control.updateVisuals(0, newPCB.segment);
 
                             _StdOut.putText("Successfully loaded user program with priority " + priority);
                             _StdOut.advanceLine();
