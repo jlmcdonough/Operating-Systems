@@ -173,7 +173,10 @@ var TSOS;
                     if (!((i == 0) && (j == 0))) //ignore master boot record
                      {
                         if (thisData[0] === "1") {
-                            list[list.length] = this.getFileName(thisData);
+                            let fileName = this.getFileName(thisData);
+                            if (fileName.charAt(0) != "~") {
+                                list[list.length] = fileName;
+                            }
                         }
                     }
                 }
