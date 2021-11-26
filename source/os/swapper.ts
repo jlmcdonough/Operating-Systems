@@ -28,20 +28,13 @@ module TSOS
 
                     if (! ( (byteToWrite.charCodeAt(0) == 0) && (byteToWrite.charCodeAt(1) == 0) ) )
                     {
-                        console.log("WRITING AT SEG: " + diskPCB.segment + " LOC: " + (diskPCB.base + addressCounter).toString() + " DATA " + byteToWrite);
                         _MemoryAccessor.write(diskPCB.segment, Utils.decimalToHex(diskPCB.base + addressCounter), byteToWrite);
                         addressCounter++;
                     }
-                    else
-                    {
-                        console.log("CARRIAGE RETURN");
-                    }
-                }
-                else
-                {
-                    console.log("EMPTY");
                 }
             }
+            let fileName = "~" + diskPCB.pid;
+            _krnDiskDriver.fileDelete(fileName);
 
             diskPCB.location = "Memory";
 
@@ -54,10 +47,12 @@ module TSOS
 
             for (let i = 0; i < (memPCB.limit - memPCB.base); i++)
             {
-                this.rolledOutData += _MemoryAccessor.read(memPCB.segment, i, memPCB);
-               // console.log(i + " READ: " + _MemoryAccessor.read(memPCB.segment, i));
+                this.rolledOutData += _MemoryAccessor.read(memPCB.segment, i, memPCB) + " ";
             }
+
             console.log("ROLLED OUT DATA: " + this.rolledOutData)
+            this.rolledOutData = this.rolledOutData.trim();
+            let splitData = this.rolledOutData.split(" ");
 
             _MemoryAccessor.nukeMemory(memPCB.segment);
 
@@ -65,6 +60,8 @@ module TSOS
             memPCB.base = 768;
             memPCB.limit = 768;
             memPCB.segment = 4;
+
+            _krnDiskDriver.fileCreateSwap(memPCB.pid, splitData);
 
             this.rollIn(_PCBList[3], 1);
         }
