@@ -56,9 +56,6 @@ var TSOS;
             this.q = this.q.sort((a, b) => (a.priority > b.priority) ? 1 : -1);
         }
         getTail() {
-            console.log("IN TAIL");
-            console.log("Q: " + this.q[0]);
-            console.log("SIZE: " + this.q.length);
             return this.q[this.q.length - 1];
         }
     }

@@ -99,17 +99,15 @@ module TSOS {
             {
                 if ( this.fileWrite(fileName, fileData.join(" ")) )
                 {
-                    console.log("Success with " + fileName);
+                    _Kernel.krnTrace("Swap file " + fileName + " created");
                 }
                 else
                 {
-                    console.log("Error writing");
                     return false;
                 }
             }
             else
             {
-                console.log("Error creating");
                 return false;
             }
 

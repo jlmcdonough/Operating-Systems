@@ -228,9 +228,6 @@ var TSOS;
                     }
                 }
             }
-            else {
-                console.log("Not in memory");
-            }
         }
         static pcbUpdateTable(oldPC) {
             let table = document.getElementById("pcbTable");

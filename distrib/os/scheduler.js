@@ -53,7 +53,6 @@ var TSOS;
             }
         }
         quantaCheck() {
-            console.log("QUANTA IS: " + _Scheduler.quanta);
             if (_Scheduler.runningPCB != null) {
                 if ((_Scheduler.runningPCB.runningQuanta >= _Scheduler.quanta) && (_Scheduler.readyQueue.getSize() > 0)) //don't care about quanta if there is no process to switch to
                  {

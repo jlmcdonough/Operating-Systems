@@ -71,9 +71,6 @@ module TSOS {
 
         public getTail(): Pcb
         {
-            console.log("IN TAIL");
-            console.log("Q: " + this.q[0]);
-            console.log("SIZE: " + this.q.length);
             return this.q[this.q.length - 1];
         }
     }

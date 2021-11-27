@@ -6,9 +6,7 @@ var TSOS;
             this.rolledInData = rolledInData;
         }
         rollIn(diskPCB, segment) {
-            console.log("ROLLLING IN");
             this.rolledInData = _krnDiskDriver.fileShellRead("~" + diskPCB.pid);
-            console.log("ROLLED IN DATA: " + this.rolledInData);
             let byteToWrite = "";
             let addressCounter = 0;
             let oldPCB = _PCB;
@@ -27,14 +25,13 @@ var TSOS;
             let fileName = "~" + diskPCB.pid;
             _krnDiskDriver.fileDelete(fileName);
             diskPCB.location = "Memory";
+            _Kernel.krnTrace("Rolling in process " + diskPCB.pid);
             TSOS.Control.updateVisuals(diskPCB.pc, diskPCB.segment);
         }
         rollOut(memPCB) {
-            console.log("ROLLING OUT");
             for (let i = 0; i < (memPCB.limit - memPCB.base); i++) {
                 this.rolledOutData += _MemoryAccessor.read(memPCB.segment, i, memPCB) + " ";
             }
-            console.log("ROLLED OUT DATA: " + this.rolledOutData);
             this.rolledOutData = this.rolledOutData.trim();
             let splitData = this.rolledOutData.split(" ");
             _MemoryAccessor.nukeMemory(memPCB.segment);
@@ -43,8 +40,8 @@ var TSOS;
             memPCB.limit = 768;
             memPCB.segment = -1;
             _krnDiskDriver.fileCreateSwap(memPCB.pid, splitData);
+            _Kernel.krnTrace("Rolling out process " + memPCB.pid);
             this.rolledOutData = "";
-            //this.rollIn(_PCBList[3], 1);
         }
     }
     TSOS.Swapper = Swapper;

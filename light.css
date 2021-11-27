@@ -140,7 +140,7 @@ tr:nth-child(even) {
     overflow-y: scroll;
 }
 
-.diskDisplayTable {
+.pcbDisplayTable {
     color: #222222;
     background: #ECEFF1;
     border: 1px solid #484b6a;

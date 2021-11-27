@@ -309,10 +309,6 @@ module TSOS {
                     }
                 }
             }
-            else
-            {
-                console.log("Not in memory");
-            }
         }
 
 

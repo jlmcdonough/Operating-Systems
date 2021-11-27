@@ -9,9 +9,7 @@ module TSOS
 
         public rollIn(diskPCB: Pcb, segment: number): void
         {
-            console.log("ROLLLING IN");
             this.rolledInData = _krnDiskDriver.fileShellRead("~" + diskPCB.pid);
-            console.log("ROLLED IN DATA: " + this.rolledInData);
             let byteToWrite = "";
             let addressCounter = 0;
 
@@ -39,20 +37,17 @@ module TSOS
             _krnDiskDriver.fileDelete(fileName);
 
             diskPCB.location = "Memory";
-
+            _Kernel.krnTrace("Rolling in process " + diskPCB.pid);
             Control.updateVisuals(diskPCB.pc, diskPCB.segment);
         }
 
         public rollOut(memPCB: Pcb): void
         {
-            console.log("ROLLING OUT");
-
             for (let i = 0; i < (memPCB.limit - memPCB.base); i++)
             {
                 this.rolledOutData += _MemoryAccessor.read(memPCB.segment, i, memPCB) + " ";
             }
 
-            console.log("ROLLED OUT DATA: " + this.rolledOutData)
             this.rolledOutData = this.rolledOutData.trim();
             let splitData = this.rolledOutData.split(" ");
 
@@ -64,9 +59,9 @@ module TSOS
             memPCB.segment = -1;
 
             _krnDiskDriver.fileCreateSwap(memPCB.pid, splitData);
+            _Kernel.krnTrace("Rolling out process " + memPCB.pid);
 
             this.rolledOutData = "";
-            //this.rollIn(_PCBList[3], 1);
         }
 
     }

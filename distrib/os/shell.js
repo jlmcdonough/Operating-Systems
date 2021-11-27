@@ -800,10 +800,6 @@ var TSOS;
             _StdOut.putText("Disk has been formatted");
         }
         shellLs(args) {
-            console.log("PEEK: " + _Scheduler.readyQueue.peek());
-            console.log("SIZE: " + _Scheduler.readyQueue.getSize());
-            let tail = _Scheduler.readyQueue.getTail();
-            console.log("TAIL: " + tail.pid);
             if (_IsDiskFormatted) {
                 let list = _krnDiskDriver.fileList();
                 if (list.length > 0) {
