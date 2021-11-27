@@ -7,16 +7,18 @@ var TSOS;
         }
         rollIn(diskPCB, segment) {
             this.rolledInData = _krnDiskDriver.fileShellRead("~" + diskPCB.pid);
+            console.log("ROLLED IN: " + this.rolledInData);
             let byteToWrite = "";
             let addressCounter = 0;
             let oldPCB = _PCB;
             diskPCB.segmentData(segment);
             _PCB = diskPCB;
             _MemoryAccessor.nukeMemory(diskPCB.segment);
-            for (let i = 0; i < (diskPCB.limit - diskPCB.base); i += 3) {
+            for (let i = 0; i < ((diskPCB.limit - diskPCB.base) * 3); i += 3) {
                 if (i < (this.rolledInData.length - 3)) {
                     byteToWrite = this.rolledInData.charAt(i) + this.rolledInData.charAt(i + 1);
                     if (!((byteToWrite.charCodeAt(0) == 0) && (byteToWrite.charCodeAt(1) == 0))) {
+                        console.log("WRITING BYTE " + byteToWrite + " @ ADDRESS " + addressCounter + " I " + i);
                         _MemoryAccessor.write(diskPCB.segment, TSOS.Utils.decimalToHex(addressCounter), byteToWrite);
                         addressCounter++;
                     }
@@ -33,6 +35,7 @@ var TSOS;
                 this.rolledOutData += _MemoryAccessor.read(memPCB.segment, i, memPCB) + " ";
             }
             this.rolledOutData = this.rolledOutData.trim();
+            console.log("ROLLED OUT DATA: " + this.rolledOutData);
             let splitData = this.rolledOutData.split(" ");
             _MemoryAccessor.nukeMemory(memPCB.segment);
             memPCB.location = "Disk";

@@ -10,6 +10,9 @@ module TSOS
         public rollIn(diskPCB: Pcb, segment: number): void
         {
             this.rolledInData = _krnDiskDriver.fileShellRead("~" + diskPCB.pid);
+
+            console.log("ROLLED IN: " + this.rolledInData);
+
             let byteToWrite = "";
             let addressCounter = 0;
 
@@ -20,7 +23,7 @@ module TSOS
 
             _MemoryAccessor.nukeMemory(diskPCB.segment);
 
-            for (let i = 0; i < (diskPCB.limit - diskPCB.base); i+=3)
+            for (let i = 0; i < ( (diskPCB.limit - diskPCB.base) * 3); i+=3)
             {
                 if ( i < (this.rolledInData.length - 3) )
                 {
@@ -28,11 +31,13 @@ module TSOS
 
                     if (! ( (byteToWrite.charCodeAt(0) == 0) && (byteToWrite.charCodeAt(1) == 0) ) )
                     {
+                        console.log("WRITING BYTE " + byteToWrite + " @ ADDRESS " + addressCounter + " I " + i);
                         _MemoryAccessor.write(diskPCB.segment, Utils.decimalToHex(addressCounter), byteToWrite);
                         addressCounter++;
                     }
                 }
             }
+
             let fileName = "~" + diskPCB.pid;
             _krnDiskDriver.fileDelete(fileName);
 
@@ -49,6 +54,9 @@ module TSOS
             }
 
             this.rolledOutData = this.rolledOutData.trim();
+
+            console.log("ROLLED OUT DATA: " + this.rolledOutData);
+
             let splitData = this.rolledOutData.split(" ");
 
             _MemoryAccessor.nukeMemory(memPCB.segment);
