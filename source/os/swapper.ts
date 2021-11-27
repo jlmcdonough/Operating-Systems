@@ -31,7 +31,6 @@ module TSOS
 
                     if (! ( (byteToWrite.charCodeAt(0) == 0) && (byteToWrite.charCodeAt(1) == 0) ) )
                     {
-                        console.log("WRITING BYTE " + byteToWrite + " @ ADDRESS " + addressCounter + " I " + i);
                         _MemoryAccessor.write(diskPCB.segment, Utils.decimalToHex(addressCounter), byteToWrite);
                         addressCounter++;
                     }
