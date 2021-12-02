@@ -11,12 +11,8 @@ module TSOS
         {
             this.rolledInData = _krnDiskDriver.fileShellRead("~" + diskPCB.pid);
 
-            console.log("ROLLED IN: " + this.rolledInData);
-
             let byteToWrite = "";
             let addressCounter = 0;
-
-            let oldPCB = _PCB;
 
             diskPCB.segmentData(segment);
             _PCB = diskPCB;
@@ -53,8 +49,6 @@ module TSOS
             }
 
             this.rolledOutData = this.rolledOutData.trim();
-
-            console.log("ROLLED OUT DATA: " + this.rolledOutData);
 
             let splitData = this.rolledOutData.split(" ");
 

@@ -926,7 +926,11 @@ module TSOS {
             {
                 if (args.length == 1)
                 {
-                    if ( _krnDiskDriver.fileCreate(args[0]) )
+                    if ( args[0].charAt(0) === "~")
+                    {
+                        _StdOut.putText("The file name cannot begin with ~");
+                    }
+                    else if ( _krnDiskDriver.fileCreate(args[0]) )
                     {
                         _StdOut.putText("File " + args[0] + " has been created");
                         Control.diskUpdateTable();

@@ -48,8 +48,8 @@ var TSOS;
             else {
                 let tsbName = this.nextTSBName();
                 let tsbData = this.nextTSBData();
-                let tsbNameData = sessionStorage.getItem(tsbName).split(" ");
-                let tsbDataData = sessionStorage.getItem(tsbData).split(" ");
+                let tsbNameData = this.createEmptyBlock();
+                let tsbDataData = this.createEmptyBlock();
                 tsbNameData[0] = "1";
                 tsbDataData[0] = "1";
                 let tsbDataSplit = tsbData.split(",");
@@ -147,16 +147,24 @@ var TSOS;
         }
         fileRead(fileLoc, fileData) {
             if (fileLoc != null) {
-                let tsbLocData = sessionStorage.getItem(fileLoc).split(" ");
-                for (let i = 4; i < tsbLocData.length; i++) {
-                    fileData += String.fromCharCode(TSOS.Utils.hexToDecimal(tsbLocData[i]));
-                }
-                if (tsbLocData[1] != "*") {
-                    let thisNext = tsbLocData[1] + "," + tsbLocData[2] + "," + tsbLocData[3];
-                    return this.fileRead(thisNext, fileData);
-                }
-                else {
-                    return fileData;
+                let tsbLocDataStr = sessionStorage.getItem(fileLoc);
+                if (tsbLocDataStr[0] == "1") {
+                    if (tsbLocDataStr[2] != "0") {
+                        let tsbLocData = tsbLocDataStr.split(" ");
+                        for (let i = 4; i < tsbLocData.length; i++) {
+                            fileData += String.fromCharCode(TSOS.Utils.hexToDecimal(tsbLocData[i]));
+                        }
+                        if (tsbLocData[1] != "*") {
+                            let thisNext = tsbLocData[1] + "," + tsbLocData[2] + "," + tsbLocData[3];
+                            return this.fileRead(thisNext, fileData);
+                        }
+                        else {
+                            return fileData;
+                        }
+                    }
+                    else {
+                        return "";
+                    }
                 }
             }
             else {
@@ -231,10 +239,11 @@ var TSOS;
             return null;
         }
         deleteFileTSB(fileName) {
-            let emptyBlockMemory = this.createEmptyBlock();
             let fileTSB = this.getFileTSB(fileName);
+            let prevData = sessionStorage.getItem(fileTSB).split(" ");
+            prevData[0] = "0";
             if (fileTSB != null) {
-                sessionStorage.setItem(fileTSB, emptyBlockMemory.join(" "));
+                sessionStorage.setItem(fileTSB, prevData.join(" "));
                 return true;
             }
             else {
@@ -245,13 +254,14 @@ var TSOS;
             let emptyBlockMemory = this.createEmptyBlock();
             if (fileLoc != null) {
                 let prevData = sessionStorage.getItem(fileLoc).split(" ");
+                prevData[0] = "0";
                 if (prevData[1] === "*") {
-                    sessionStorage.setItem(fileLoc, emptyBlockMemory.join(" "));
+                    sessionStorage.setItem(fileLoc, prevData.join(" "));
                     return true;
                 }
                 else {
                     let nextLoc = prevData[1] + "," + prevData[2] + "," + prevData[3];
-                    sessionStorage.setItem(fileLoc, emptyBlockMemory.join(" "));
+                    sessionStorage.setItem(fileLoc, prevData.join(" "));
                     return this.deleteFileData(nextLoc);
                 }
             }
