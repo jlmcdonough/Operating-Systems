@@ -341,7 +341,9 @@ var TSOS;
                         _StdOut.putText("FORMAT will initialize all blocks in all sectors in all tracks");
                         break;
                     case "ls":
-                        _StdOut.putText("LS will list all  the files currently stored on disk");
+                        _StdOut.putText("LS will list the files currently stored on disk");
+                        _StdOut.advanceLine();
+                        _StdOut.putText("LS -a will list all, including hidden, files currently stored on disk");
                         break;
                     case "setschedule":
                         _StdOut.putText("SETSCHEDULE will change the scheduling strategy to requested type. Acceptable inputs are rr (round robin scheduling), fcfs (first come firt serve scheduling), priority (non-preemptive priority scheduling)");
