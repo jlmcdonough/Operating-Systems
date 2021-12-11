@@ -250,9 +250,15 @@ module TSOS {
             }
         }
 
-        public fileList(): string[]
+        public fileList(suffix?: string): string[]
         {
             let list = [];
+            let hidden = false;
+
+            if (suffix === "-a")
+            {
+                hidden = true;
+            }
 
             for (let i = 0; i < _Disk.sectorCount; i++)
             {
@@ -268,7 +274,18 @@ module TSOS {
 
                             if (fileName.charAt(0) != "~")
                             {
-                                list[list.length] = fileName;
+                                if (fileName.charAt(0) === ".")
+                                {
+                                    if (hidden)
+                                    {
+                                        list[list.length] = fileName;
+                                    }
+                                }
+                                else
+                                {
+                                    list[list.length] = fileName;
+                                }
+
                             }
                         }
                     }

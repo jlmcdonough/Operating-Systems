@@ -957,18 +957,24 @@ module TSOS {
             {
                 if (args.length == 1)
                 {
-                    let fileData = _krnDiskDriver.fileShellRead(args[0]);
-                    if (fileData != null)
+                    if (!Control.swapFileSafety(args[0]))
                     {
-                        _StdOut.putText("Contents of file " + args[0] + ":");
-                        _StdOut.advanceLine();
-                        _StdOut.putText(fileData);
+                        _StdOut.putText("Cannot access a swap file");
                     }
                     else
                     {
-                        _StdOut.putText("The file " + args[0] + " does not exist");
+                        let fileData = _krnDiskDriver.fileShellRead(args[0]);
+                        if (fileData != null)
+                        {
+                            _StdOut.putText("Contents of file " + args[0] + ":");
+                            _StdOut.advanceLine();
+                            _StdOut.putText(fileData);
+                        }
+                        else
+                        {
+                            _StdOut.putText("The file " + args[0] + " does not exist");
+                        }
                     }
-
                 }
                 else
                 {
@@ -988,41 +994,49 @@ module TSOS {
                 if (args.length > 1)
                 {
                     let fileName = args[0];
-                    let writeFirst = args[1];
-                    let writeLast = args[args.length - 1];
-                    let toWrite = "";
 
-                    if ( (writeFirst.charAt(0) === "\"") && (writeLast.charAt(writeLast.length - 1) === "\"") )
+                    if (!Control.swapFileSafety(fileName))
                     {
-                        if (args.length == 2)
-                        {
-                            toWrite = writeFirst.substring(1, (writeFirst.length - 1) )
-                        }
-                        else
-                        {
-                            toWrite = writeFirst.substring(1, writeFirst.length) + " ";
-
-                            for (let i = 2; i < args.length - 1; i++)
-                            {
-                                toWrite += args[i] + " ";
-                            }
-
-                            toWrite += writeLast.substring(0, writeLast.length - 1);
-                        }
-
-                        if ( _krnDiskDriver.fileWrite(fileName, toWrite) )
-                        {
-                            _StdOut.putText("Writing to file " + fileName);
-                            Control.diskUpdateTable();
-                        }
-                        else
-                        {
-                            _StdOut.putText("File " + fileName + " does not exist, cannot write");
-                        }
+                        _StdOut.putText("Cannot access a swap file");
                     }
                     else
                     {
-                        _StdOut.putText("Must enter file name and text encompassed in quotation marks")
+                        let writeFirst = args[1];
+                        let writeLast = args[args.length - 1];
+                        let toWrite = "";
+
+                        if ( (writeFirst.charAt(0) === "\"") && (writeLast.charAt(writeLast.length - 1) === "\"") )
+                        {
+                            if (args.length == 2)
+                            {
+                                toWrite = writeFirst.substring(1, (writeFirst.length - 1) )
+                            }
+                            else
+                            {
+                                toWrite = writeFirst.substring(1, writeFirst.length) + " ";
+
+                                for (let i = 2; i < args.length - 1; i++)
+                                {
+                                    toWrite += args[i] + " ";
+                                }
+
+                                toWrite += writeLast.substring(0, writeLast.length - 1);
+                            }
+
+                            if ( _krnDiskDriver.fileWrite(fileName, toWrite) )
+                            {
+                                _StdOut.putText("Writing to file " + fileName);
+                                Control.diskUpdateTable();
+                            }
+                            else
+                            {
+                                _StdOut.putText("File " + fileName + " does not exist, cannot write");
+                            }
+                        }
+                        else
+                        {
+                            _StdOut.putText("Must enter file name and text encompassed in quotation marks")
+                        }
                     }
                 }
                 else
@@ -1040,14 +1054,21 @@ module TSOS {
         {
             if (_IsDiskFormatted)
             {
-                if ( _krnDiskDriver.fileDelete(args[0]) )
+                if (!Control.swapFileSafety(args[0]))
                 {
-                    _StdOut.putText("File " + args[0] + " has been deleted");
-                    Control.diskUpdateTable();
+                    _StdOut.putText("Cannot access a swap file");
                 }
                 else
                 {
-                    _StdOut.putText("File " + args[0] + " does not exist");
+                    if ( _krnDiskDriver.fileDelete(args[0]) )
+                    {
+                        _StdOut.putText("File " + args[0] + " has been deleted");
+                        Control.diskUpdateTable();
+                    }
+                    else
+                    {
+                        _StdOut.putText("File " + args[0] + " does not exist");
+                    }
                 }
             }
             else
@@ -1067,7 +1088,16 @@ module TSOS {
         {
             if (_IsDiskFormatted)
             {
-                let list = _krnDiskDriver.fileList();
+                let suffix = args[0]
+                let list;
+                if (suffix === "-a" || suffix === "-l")
+                {
+                    list = _krnDiskDriver.fileList(suffix);
+                }
+                else
+                {
+                    list = _krnDiskDriver.fileList();
+                }
 
                 if (list.length > 0)
                 {

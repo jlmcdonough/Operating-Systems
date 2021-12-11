@@ -300,6 +300,14 @@ var TSOS;
                 Control.memoryTableColor(oldPC, operandCount, _PCB.segment);
             }
         }
+        static swapFileSafety(fileName) {
+            if (fileName.charAt(0) === "~") {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
     }
     TSOS.Control = Control;
 })(TSOS || (TSOS = {}));

@@ -408,5 +408,18 @@ module TSOS {
                 Control.memoryTableColor(oldPC, operandCount, _PCB.segment );
             }
         }
+
+        public static swapFileSafety(fileName: string): boolean
+        {
+            if (fileName.charAt(0) === "~")
+            {
+                return false;
+            }
+            else
+            {
+                return  true;
+            }
+        }
+
     }
 }

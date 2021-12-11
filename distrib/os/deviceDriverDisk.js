@@ -171,8 +171,12 @@ var TSOS;
                 return null;
             }
         }
-        fileList() {
+        fileList(suffix) {
             let list = [];
+            let hidden = false;
+            if (suffix === "-a") {
+                hidden = true;
+            }
             for (let i = 0; i < _Disk.sectorCount; i++) {
                 for (let j = 0; j < _Disk.blockCount; j++) {
                     let thisData = sessionStorage.getItem("0," + i + "," + j).split(" ");
@@ -181,7 +185,14 @@ var TSOS;
                         if (thisData[0] === "1") {
                             let fileName = this.getFileName(thisData);
                             if (fileName.charAt(0) != "~") {
-                                list[list.length] = fileName;
+                                if (fileName.charAt(0) === ".") {
+                                    if (hidden) {
+                                        list[list.length] = fileName;
+                                    }
+                                }
+                                else {
+                                    list[list.length] = fileName;
+                                }
                             }
                         }
                     }
