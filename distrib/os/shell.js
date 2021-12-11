@@ -887,16 +887,29 @@ var TSOS;
         shellRename(args) {
             if (_IsDiskFormatted) {
                 if (args.length == 2) {
-                    if (args[0].charAt(0) === "~") {
+                    let oldName = args[0];
+                    let newName = args[1];
+                    if (oldName.charAt(0) === "~") {
                         _StdOut.putText("Cannot rename a swap file");
                     }
-                    if (args[1].charAt(0) === "~") {
+                    else if (newName.charAt(0) === "~") {
                         _StdOut.putText("The file name cannot begin with ~");
                     }
-                    /*else if ( _krnDiskDriver.fileCreate(args[0]) )
-                    {
-                        console.log
-                    } */
+                    else {
+                        if (_krnDiskDriver.getFileTSB(oldName) == null) {
+                            _StdOut.putText("File " + oldName + " does not exist");
+                        }
+                        else {
+                            let directoryData = sessionStorage.getItem(_krnDiskDriver.getFileTSB(oldName)).split(" ");
+                            console.log("DIR DATA: " + directoryData);
+                            for (let i = 0; i < args[1].length; i++) {
+                                directoryData[i + 4] = TSOS.Utils.decimalToHex(newName.charCodeAt(i));
+                            }
+                            console.log("NEW DIR DATA: " + directoryData);
+                            sessionStorage.setItem(_krnDiskDriver.getFileTSB(oldName), directoryData.join(" "));
+                            TSOS.Control.diskUpdateTable();
+                        }
+                    }
                 }
                 else {
                     _StdOut.putText("Old file name and new file name must be provided in order to copy");

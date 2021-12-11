@@ -1183,18 +1183,36 @@ module TSOS {
             {
                 if (args.length == 2)
                 {
-                    if ( args[0].charAt(0) === "~")
+                    let oldName = args[0];
+                    let newName = args[1];
+
+                    if ( oldName.charAt(0) === "~")
                     {
                         _StdOut.putText("Cannot rename a swap file");
                     }
-                    if ( args[1].charAt(0) === "~")
+                    else if ( newName.charAt(0) === "~")
                     {
                         _StdOut.putText("The file name cannot begin with ~");
                     }
-                    /*else if ( _krnDiskDriver.fileCreate(args[0]) )
+                    else
                     {
-                        console.log
-                    } */
+                        if ( _krnDiskDriver.getFileTSB(oldName) == null )
+                        {
+                            _StdOut.putText("File " + oldName + " does not exist");
+                        }
+                        else
+                        {
+                            let directoryData = sessionStorage.getItem(_krnDiskDriver.getFileTSB(oldName)).split(" ");
+
+                            for (let i = 0; i < args[1].length; i++)
+                            {
+                                directoryData[i + 4] = Utils.decimalToHex(newName.charCodeAt(i));
+                            }
+
+                            sessionStorage.setItem(_krnDiskDriver.getFileTSB(oldName), directoryData.join(" "));
+                            Control.diskUpdateTable();
+                        }
+                    }
                 }
                 else
                 {
