@@ -108,6 +108,12 @@ var TSOS;
             // getschedule
             sc = new TSOS.ShellCommand(this.shellGetSchedule, "getschedule", "- Displays current scheduler");
             this.commandList[this.commandList.length] = sc;
+            // rename
+            sc = new TSOS.ShellCommand(this.shellRename, "rename", "<oldfilename> <newfilename> - Renames a file");
+            this.commandList[this.commandList.length] = sc;
+            // copy
+            sc = new TSOS.ShellCommand(this.shellCopy, "copy", "<oldfilename> <newfilename> - copies a file");
+            this.commandList[this.commandList.length] = sc;
             // Display the initial prompt.
             this.putPrompt();
         }
@@ -346,10 +352,16 @@ var TSOS;
                         _StdOut.putText("LS -a will list all, including hidden, files currently stored on disk");
                         break;
                     case "setschedule":
-                        _StdOut.putText("SETSCHEDULE will change the scheduling strategy to requested type. Acceptable inputs are rr (round robin scheduling), fcfs (first come firt serve scheduling), priority (non-preemptive priority scheduling)");
+                        _StdOut.putText("SETSCHEDULE will change the scheduling strategy to requested type. Acceptable inputs are rr (round robin scheduling), fcfs (first come first serve scheduling), priority (non-preemptive priority scheduling)");
                         break;
                     case "getschedule":
                         _StdOut.putText("GETSCHEDULE will return the currently selected scheduling algorithm");
+                        break;
+                    case "rename":
+                        _StdOut.putText("RENAME will change the old file name to the new one that is provided");
+                        break;
+                    case "copy":
+                        _StdOut.putText("COPY will create a new file with a new name, with the same contents of the old file");
                         break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0]);
@@ -871,6 +883,63 @@ var TSOS;
         }
         shellGetSchedule(args) {
             _StdOut.putText("Current scheduling algorithm is " + _Scheduler.schedulingSystem);
+        }
+        shellRename(args) {
+            if (_IsDiskFormatted) {
+                if (args.length == 2) {
+                    if (args[0].charAt(0) === "~") {
+                        _StdOut.putText("Cannot rename a swap file");
+                    }
+                    if (args[1].charAt(0) === "~") {
+                        _StdOut.putText("The file name cannot begin with ~");
+                    }
+                    /*else if ( _krnDiskDriver.fileCreate(args[0]) )
+                    {
+                        console.log
+                    } */
+                }
+                else {
+                    _StdOut.putText("Old file name and new file name must be provided in order to copy");
+                }
+            }
+        }
+        shellCopy(args) {
+            if (_IsDiskFormatted) {
+                if (args.length == 2) {
+                    if (args[0].charAt(0) === "~") {
+                        _StdOut.putText("Cannot copy a swap file");
+                    }
+                    else if (args[1].charAt(0) === "~") {
+                        _StdOut.putText("The file name cannot begin with ~");
+                    }
+                    else {
+                        let oldFileContents = _krnDiskDriver.fileShellRead(args[0]);
+                        if (oldFileContents == null) {
+                            _StdOut.putText("File " + args[0] + " does not exist and cannot been copied from");
+                        }
+                        else {
+                            if (_krnDiskDriver.fileCreate(args[1])) {
+                                _StdOut.putText("File " + args[1] + " does not exist, creating a new file to copy into");
+                                _StdOut.advanceLine();
+                            }
+                            else {
+                                _StdOut.putText("File " + args[1] + " already exists, copy will overwrite");
+                                _StdOut.advanceLine();
+                            }
+                            if (_krnDiskDriver.fileWrite(args[1], oldFileContents)) {
+                                TSOS.Control.diskUpdateTable();
+                                _StdOut.putText("File " + args[0] + " has been successfully copied into " + args[1]);
+                            }
+                            else {
+                                _StdOut.putText("Error writing to file " + args[1]);
+                            }
+                        }
+                    }
+                }
+                else {
+                    _StdOut.putText("Original file and new file name must be provided in order to copy");
+                }
+            }
         }
     }
     TSOS.Shell = Shell;
