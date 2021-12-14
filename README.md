@@ -16,7 +16,7 @@ Allows for a user to:
 <p align="center">
     Can run rhinOS here
     <br>
-    <img src="https://i.imgur.com/ZVRK8lL.png" alt="rhinOS dark"/>
+    <img src="https://i.imgur.com/jQ2Gy7u.png" alt="rhinOS dark"/>
 </p>
 </a>
 
