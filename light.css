@@ -76,8 +76,6 @@ h2 {
     color: #222222
 }
 
-
-
 .hostLog {
     color: #222222;
 }
@@ -110,12 +108,12 @@ tr:nth-child(even) {
     color: #222222;
     background: #ECEFF1;
     border: 1px solid #484b6a;
-    width: 470px;
+    width: 474px;
     text-align: center;
 }
 
 #divMemoryTable {
-    width: 470px;
+    width: 475px;
     max-height: 211px;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -128,8 +126,8 @@ tr:nth-child(even) {
 }
 
 #divPCBTable {
-    width: 580px;
-    max-height: 211px;
+    width: 590px;
+    max-height: 135px;
     overflow-x: hidden;
     overflow-y: hidden;
     border-bottom: 1px solid #484b6a;
@@ -144,7 +142,7 @@ tr:nth-child(even) {
     color: #222222;
     background: #ECEFF1;
     border: 1px solid #484b6a;
-    width: 580px;
+    width: 589px;
     text-align: center;
 }
 
@@ -179,4 +177,11 @@ tr:nth-child(even) {
 
 input:disabled {
     background: #3b3b3b;
+}
+
+.center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+    text-align: center;
 }

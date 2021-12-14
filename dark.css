@@ -141,7 +141,7 @@ input:disabled {
 
 #divPCBTable {
     width: 590px;
-    max-height: 130px;
+    max-height: 135px;
     overflow-x: hidden;
     overflow-y: hidden;
     border-bottom: 1px solid #018786;
@@ -156,7 +156,7 @@ input:disabled {
     color: #ffffff;
     background: #2c2c2c;
     border: 1px solid #018786;
-    width: 591 px;
+    width: 589px;
     text-align: center;
 }
 
@@ -164,12 +164,12 @@ input:disabled {
     color: #ffffff;
     background: #2c2c2c;
     border: 1px solid #018786;
-    width: 850px;
+    width: 900px;
     text-align: center;
 }
 
 #divDiskTable {
-    width: 850px;
+    width: 900px;
     max-height: 211px;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -180,7 +180,6 @@ input:disabled {
     overflow-x: hidden;
     overflow-y: scroll;
 }
-
 
 .center {
     margin: auto;
