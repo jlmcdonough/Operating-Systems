@@ -61,12 +61,7 @@ h2 {
     filter: invert(0);
 }
 
-#dateTime
-{
-    color: #ffffff;
-}
-
-#status
+.info
 {
     color: #ffffff;
 }
@@ -140,7 +135,7 @@ input:disabled {
 
 
 #divPCBTable {
-    width: 590px;
+    width: 591px;
     max-height: 135px;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -166,6 +161,7 @@ input:disabled {
     border: 1px solid #018786;
     width: 900px;
     text-align: center;
+    margin: auto;
 }
 
 #divDiskTable {
@@ -173,7 +169,6 @@ input:disabled {
     max-height: 211px;
     overflow-x: hidden;
     overflow-y: hidden;
-    border-bottom: 1px solid #018786;
 }
 
 #divDiskTable:hover {

@@ -61,12 +61,7 @@ h2 {
     filter: invert(1);
 }
 
-#dateTime
-{
-    color: #222222;
-}
-
-#status
+.info
 {
     color: #222222;
 }
@@ -126,7 +121,7 @@ tr:nth-child(even) {
 }
 
 #divPCBTable {
-    width: 590px;
+    width: 591px;
     max-height: 135px;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -159,7 +154,6 @@ tr:nth-child(even) {
     max-height: 211px;
     overflow-x: hidden;
     overflow-y: hidden;
-    border-bottom: 1px solid #484b6a;
 }
 
 #divDiskTable:hover {

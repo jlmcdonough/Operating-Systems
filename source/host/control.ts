@@ -226,11 +226,12 @@ module TSOS {
             if (_MemoryTracking)
             {
                 _MemoryTracking = false;
+                document.getElementById("btnMemoryTrack").style.backgroundColor = "red";
             }
             else
             {
                 _MemoryTracking = true;
-                //(<HTMLButtonElement>document.getElementById("btnMemoryTrack")).disabled = true;
+                document.getElementById("btnMemoryTrack").style.backgroundColor = "green";
             }
         }
 
