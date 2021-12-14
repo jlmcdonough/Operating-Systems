@@ -1209,6 +1209,8 @@ module TSOS {
                                 directoryData[i + 4] = Utils.decimalToHex(newName.charCodeAt(i));
                             }
 
+                            _StdOut.putText("File " + oldName + " has been renamed to " + newName);
+
                             sessionStorage.setItem(_krnDiskDriver.getFileTSB(oldName), directoryData.join(" "));
                             Control.diskUpdateTable();
                         }

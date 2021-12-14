@@ -904,6 +904,7 @@ var TSOS;
                             for (let i = 0; i < args[1].length; i++) {
                                 directoryData[i + 4] = TSOS.Utils.decimalToHex(newName.charCodeAt(i));
                             }
+                            _StdOut.putText("File " + oldName + " has been renamed to  " + newName);
                             sessionStorage.setItem(_krnDiskDriver.getFileTSB(oldName), directoryData.join(" "));
                             TSOS.Control.diskUpdateTable();
                         }
