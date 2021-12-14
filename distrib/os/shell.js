@@ -866,22 +866,27 @@ var TSOS;
         }
         shellSetSchedule(args) {
             if (!(_CPU.isExecuting)) {
-                if (args[0].toLocaleUpperCase() === "FCFS") {
-                    _Scheduler.quanta = _FCFSQuantum;
-                    _Scheduler.schedulingSystem = "FCFS";
-                    _StdOut.putText("Scheduling algorithm set to First Come First Serve (FCFS)");
-                }
-                else if (args[0].toLocaleUpperCase() === "RR") {
-                    _Scheduler.quanta = _RRQuantum;
-                    _Scheduler.schedulingSystem = "RR";
-                    _StdOut.putText("Scheduling algorithm set to Round Robin (RR) with a quantum of " + _Scheduler.quanta);
-                }
-                else if (args[0].toLocaleUpperCase() === "PRIORITY") {
-                    _Scheduler.schedulingSystem = "PRIORITY";
-                    _StdOut.putText("Scheduling algorithm set to Non-Preemptive Priority (PRIORITY)");
+                if (args.length != 1) {
+                    _StdOut.putText("One and only one argument is required");
                 }
                 else {
-                    _StdOut.putText("Please make sure you are only entering the correct abbreviation for the valid scheduling types. See manual for help");
+                    if (args[0].toLocaleUpperCase() === "FCFS") {
+                        _Scheduler.quanta = _FCFSQuantum;
+                        _Scheduler.schedulingSystem = "FCFS";
+                        _StdOut.putText("Scheduling algorithm set to First Come First Serve (FCFS)");
+                    }
+                    else if (args[0].toLocaleUpperCase() === "RR") {
+                        _Scheduler.quanta = _RRQuantum;
+                        _Scheduler.schedulingSystem = "RR";
+                        _StdOut.putText("Scheduling algorithm set to Round Robin (RR) with a quantum of " + _Scheduler.quanta);
+                    }
+                    else if (args[0].toLocaleUpperCase() === "PRIORITY") {
+                        _Scheduler.schedulingSystem = "PRIORITY";
+                        _StdOut.putText("Scheduling algorithm set to Non-Preemptive Priority (PRIORITY)");
+                    }
+                    else {
+                        _StdOut.putText("Please make sure you are only entering the correct abbreviation for the valid scheduling types. See manual for help");
+                    }
                 }
             }
             else {
