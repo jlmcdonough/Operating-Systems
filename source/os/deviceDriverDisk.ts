@@ -29,6 +29,8 @@ module TSOS {
 
         public format(): void
         {
+            _Kernel.krnTrace("Beginning disk format");
+
             let emptyBlockMemory = this.createEmptyBlock();
 
             for (let x = 0; x < _Disk.trackCount; x++)
@@ -53,15 +55,21 @@ module TSOS {
                 }
             }
 
+            _Kernel.krnTrace("Disk formatted");
+
             Control.diskUpdateTable();
         }
 
         public fileCreate(fileName: string): boolean
         {
+            _Kernel.krnTrace("Beginning file " + fileName + " create");
+
             let nameCheck = this.getFileTSB(fileName);
 
             if (nameCheck != null)
             {
+                _Kernel.krnTrace("File " + fileName + " already exists and cannot be created");
+
                 return false;
             }
             else
@@ -88,6 +96,8 @@ module TSOS {
                 sessionStorage.setItem(tsbName, tsbNameData.join(" "));
                 sessionStorage.setItem(tsbData, tsbDataData.join(" "));
 
+                _Kernel.krnTrace("File " + fileName + " created");
+
                 return true;
             }
         }
@@ -95,6 +105,9 @@ module TSOS {
         public fileCreateSwap(pid: number, fileData: string[]): boolean
         {
             let fileName = "~" + pid;
+
+            _Kernel.krnTrace("Beginning swap file " + fileName + " create");
+
             if ( this.fileCreate(fileName) )
             {
                 if ( this.fileWrite(fileName, fileData.join(" ")) )
@@ -103,11 +116,15 @@ module TSOS {
                 }
                 else
                 {
+                    _Kernel.krnTrace("File " + fileName + " had issues writing");
+
                     return false;
                 }
             }
             else
             {
+                _Kernel.krnTrace("File " + fileName + " cannot be created");
+
                 return false;
             }
 
@@ -116,11 +133,12 @@ module TSOS {
 
         public fileWrite(fileName: string, fileData: string, nextTSB?: string): boolean
         {
+            _Kernel.krnTrace("Beginning file " + fileName + " write");
+
             let tsbLocToWrite = this.dataTSBFromFileName(fileName);
 
             if (tsbLocToWrite != null)
             {
-                //let tsbLocData = sessionStorage.getItem(tsbLocToWrite).split(" ");
                 let tsbLocData = this.createEmptyBlock();
 
                 if (fileData.length <= 60)
@@ -147,6 +165,7 @@ module TSOS {
                     tsbLocData[3] = "*";
 
                     sessionStorage.setItem(newLoc, tsbLocData.join(" "));
+                    _Kernel.krnTrace("File " + fileName + " has been written to completion");
                 }
                 else
                 {
@@ -180,34 +199,46 @@ module TSOS {
 
                     let dataLeft = fileData.substring(60, fileData.length);
 
+                    _Kernel.krnTrace("File " + fileName + " has is being written, more to go");
+
                     this.fileWrite(fileName, dataLeft, goNext);
                 }
                 return true;
             }
             else
             {
+                _Kernel.krnTrace("File " + fileName + " cannot be written to");
+
                 return false;
             }
         }
 
         public fileDelete(fileName: string): boolean
         {
+            _Kernel.krnTrace("Beginning file " + fileName + " delete");
+
             let tsbToDelete = this.dataTSBFromFileName(fileName);
 
             if ( ( this.deleteFileData(tsbToDelete) ) && ( this.deleteFileTSB(fileName) ) )
             {
+                _Kernel.krnTrace("File " + fileName + " deleted");
+
                 return true;
             }
             else
             {
+                _Kernel.krnTrace("File " + fileName + " cannot be deleted");
+
                 return false;
             }
         }
 
         public fileShellRead(fileName: string): string
         {
+            _Kernel.krnTrace("Beginning file " + fileName + " read");
             let tsbLocToWrite = this.dataTSBFromFileName(fileName);
             let ans = this.fileRead(tsbLocToWrite, "");
+            _Kernel.krnTrace("File " + fileName + " read");
             return ans;
         }
 
@@ -231,21 +262,30 @@ module TSOS {
                         if (tsbLocData[1] != "*")
                         {
                             let thisNext = tsbLocData[1] + "," + tsbLocData[2] + "," + tsbLocData[3];
+
+                            _Kernel.krnTrace("File location " + fileLoc + " read, onto next");
+
                             return this.fileRead(thisNext, fileData);
                         }
                         else
                         {
+                            _Kernel.krnTrace("Last file location " + fileLoc + " read");
+
                             return fileData;
                         }
                     }
                     else
                     {
+                        _Kernel.krnTrace("Trying to read from directory, failing");
+
                         return "";
                     }
                 }
             }
             else
             {
+                _Kernel.krnTrace("File location " + fileLoc + " doesn't exist and cannot be read");
+
                 return null;
             }
         }
@@ -360,12 +400,24 @@ module TSOS {
                 for (let j = 0; j < _Disk.blockCount; j++)
                 {
                     let thisData = sessionStorage.getItem("0," + i + "," + j).split(" ");
+                    let usedBit = thisData[0];
                     let thisFileName = this.getFileName(thisData);
 
                     if (thisFileName == fileName)
                     {
-                        return "0" + "," + i + "," + j;
-                        break;
+                        if (usedBit == "1")
+                        {
+                            return "0" + "," + i + "," + j;
+                            break;
+                        }
+                        else if (usedBit == "0")
+                        {
+                            return null;
+                        }
+                        else
+                        {
+                            console.log("USED BIT HAS ERROR AND IS: " + usedBit);
+                        }
                     }
 
                 }
@@ -392,14 +444,12 @@ module TSOS {
 
         public deleteFileData(fileLoc: string): boolean
         {
-            let emptyBlockMemory = this.createEmptyBlock();
-
             if (fileLoc != null)
             {
                 let prevData = sessionStorage.getItem(fileLoc).split(" ");
                 prevData[0] = "0";
 
-                if ( prevData[1] === "*")
+                if ( prevData[1] === "*" || prevData[1] === "0")
                 {
                     sessionStorage.setItem(fileLoc, prevData.join(" "));
                     return true;

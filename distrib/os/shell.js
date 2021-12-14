@@ -833,24 +833,31 @@ var TSOS;
         }
         shellLs(args) {
             if (_IsDiskFormatted) {
-                let suffix = args[0];
-                let list;
-                if (suffix === "-a" || suffix === "-l") {
-                    list = _krnDiskDriver.fileList(suffix);
+                console.log("ARGS COUNT: " + args.length);
+                console.log("ARGS: " + args);
+                if ((args.length > 1) || ((args.length == 1) && (args[0] != "-a"))) {
+                    _StdOut.putText("The only acceptable suffix is '-a'");
                 }
                 else {
-                    list = _krnDiskDriver.fileList();
-                }
-                if (list.length > 0) {
-                    _StdOut.putText("Current files:");
-                    _StdOut.advanceLine();
-                    for (let i = 0; i < list.length; i++) {
-                        _StdOut.putText("   -> " + list[i]);
-                        _StdOut.advanceLine();
+                    let suffix = args[0];
+                    let list;
+                    if (suffix === "-a" || suffix === "-l") {
+                        list = _krnDiskDriver.fileList(suffix);
                     }
-                }
-                else {
-                    _StdOut.putText("There are currently no files on disk");
+                    else {
+                        list = _krnDiskDriver.fileList();
+                    }
+                    if (list.length > 0) {
+                        _StdOut.putText("Current files:");
+                        _StdOut.advanceLine();
+                        for (let i = 0; i < list.length; i++) {
+                            _StdOut.putText("   -> " + list[i]);
+                            _StdOut.advanceLine();
+                        }
+                    }
+                    else {
+                        _StdOut.putText("There are currently no files on disk");
+                    }
                 }
             }
             else {
