@@ -901,11 +901,9 @@ var TSOS;
                         }
                         else {
                             let directoryData = sessionStorage.getItem(_krnDiskDriver.getFileTSB(oldName)).split(" ");
-                            console.log("DIR DATA: " + directoryData);
                             for (let i = 0; i < args[1].length; i++) {
                                 directoryData[i + 4] = TSOS.Utils.decimalToHex(newName.charCodeAt(i));
                             }
-                            console.log("NEW DIR DATA: " + directoryData);
                             sessionStorage.setItem(_krnDiskDriver.getFileTSB(oldName), directoryData.join(" "));
                             TSOS.Control.diskUpdateTable();
                         }
