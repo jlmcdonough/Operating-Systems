@@ -1,4 +1,4 @@
-# RhinOS
+# rhinOS
 Operting Systems Course Work - Fall 2021
 
 Allows for a user to:
