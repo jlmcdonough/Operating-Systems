@@ -111,8 +111,9 @@ var TSOS;
             document.getElementById("btnSingleStepStep").disabled = false;
             // .. disable the Single Step Off button
             document.getElementById("btnSingleStepOff").disabled = true;
-            // .. disable the Memory tracker
+            // .. enable the Memory tracker
             document.getElementById("btnMemoryTrack").disabled = false;
+            document.getElementById("btnMemoryTrack").style.backgroundColor = "green";
             // .. set focus on the OS console display ...
             document.getElementById("display").focus();
             // ... Create and initialize the CPU (because it's part of the hardware)  ...

@@ -146,8 +146,9 @@ module TSOS {
             // .. disable the Single Step Off button
             (<HTMLButtonElement>document.getElementById("btnSingleStepOff")).disabled = true;
 
-            // .. disable the Memory tracker
+            // .. enable the Memory tracker
             (<HTMLButtonElement>document.getElementById("btnMemoryTrack")).disabled = false;
+            document.getElementById("btnMemoryTrack").style.backgroundColor = "green";
 
             // .. set focus on the OS console display ...
             document.getElementById("display").focus();

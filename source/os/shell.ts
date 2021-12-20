@@ -1115,9 +1115,6 @@ module TSOS {
         {
             if (_IsDiskFormatted)
             {
-                console.log("ARGS COUNT: " + args.length);
-                console.log("ARGS: " + args);
-
                 if ( (args.length > 1) || ( (args.length == 1) && (args[0] != "-a") ) )
                 {
                     _StdOut.putText("The only acceptable suffix is '-a'")

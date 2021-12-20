@@ -9,9 +9,7 @@ module TSOS
 
         public rollIn(diskPCB: Pcb, segment: number): void
         {
-            console.log("ABOUT TO ROLL IN");
             this.rolledInData = _krnDiskDriver.fileShellRead("~" + diskPCB.pid, true);
-            console.log("ROLLED IN DATA: " + this.rolledInData);
             let byteToWrite = "";
             let addressCounter = 0;
 

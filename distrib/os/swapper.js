@@ -6,9 +6,7 @@ var TSOS;
             this.rolledInData = rolledInData;
         }
         rollIn(diskPCB, segment) {
-            console.log("ABOUT TO ROLL IN");
             this.rolledInData = _krnDiskDriver.fileShellRead("~" + diskPCB.pid, true);
-            console.log("ROLLED IN DATA: " + this.rolledInData);
             let byteToWrite = "";
             let addressCounter = 0;
             diskPCB.segmentData(segment);

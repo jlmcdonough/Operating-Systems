@@ -89,8 +89,6 @@ var TSOS;
         }
         fileWrite(fileName, fileData, hexFile, nextTSB) {
             _Kernel.krnTrace("Beginning file " + fileName + " write");
-            console.log("WRITING WITH HEXFILE: " + hexFile);
-            console.log("WRITING DATA: " + fileData);
             let tsbLocToWrite = this.dataTSBFromFileName(fileName);
             if (tsbLocToWrite != null) {
                 let tsbLocData = this.createEmptyBlock();
@@ -174,11 +172,9 @@ var TSOS;
             let tsbLocToWrite = this.dataTSBFromFileName(fileName);
             let ans;
             if (hexFile) {
-                console.log("READING IN  A HEX FILE");
                 ans = this.fileRead(tsbLocToWrite, "", true);
             }
             else {
-                console.log("READING IN NOT A HEX FILE");
                 ans = this.fileRead(tsbLocToWrite, "");
             }
             _Kernel.krnTrace("File " + fileName + " read");
@@ -188,13 +184,11 @@ var TSOS;
             if (hexFile == undefined) {
                 hexFile = false;
             }
-            console.log("HEX FILE? : " + hexFile);
             if (fileLoc != null) {
                 let tsbLocDataStr = sessionStorage.getItem(fileLoc);
                 if (tsbLocDataStr[0] == "1") {
                     if (tsbLocDataStr[2] != "0") {
                         let tsbLocData = tsbLocDataStr.split(" ");
-                        console.log("HEX FILE? : " + hexFile + " THEREFORE: " + tsbLocData);
                         for (let i = 4; i < tsbLocData.length; i++) {
                             if (hexFile) {
                                 fileData += tsbLocData[i];

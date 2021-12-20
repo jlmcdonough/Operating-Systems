@@ -134,8 +134,7 @@ module TSOS {
         public fileWrite(fileName: string, fileData: string, hexFile: boolean, nextTSB?: string): boolean
         {
             _Kernel.krnTrace("Beginning file " + fileName + " write");
-            console.log("WRITING WITH HEXFILE: " + hexFile);
-            console.log("WRITING DATA: " + fileData);
+
             let tsbLocToWrite = this.dataTSBFromFileName(fileName);
 
             if (tsbLocToWrite != null)
@@ -261,13 +260,10 @@ module TSOS {
 
             if (hexFile)
             {
-                console.log("READING IN  A HEX FILE");
                 ans = this.fileRead(tsbLocToWrite, "", true);
             }
             else
             {
-                console.log("READING IN NOT A HEX FILE");
-
                 ans = this.fileRead(tsbLocToWrite, "");
             }
 
@@ -281,7 +277,7 @@ module TSOS {
             {
                 hexFile = false;
             }
-            console.log("HEX FILE? : " + hexFile);
+
             if (fileLoc != null)
             {
                 let tsbLocDataStr = sessionStorage.getItem(fileLoc);
@@ -292,7 +288,6 @@ module TSOS {
                     {
                         let tsbLocData = tsbLocDataStr.split(" ");
 
-                        console.log("HEX FILE? : " + hexFile + " THEREFORE: " + tsbLocData);
                         for (let i = 4; i < tsbLocData.length; i++)
                         {
                             if (hexFile)
