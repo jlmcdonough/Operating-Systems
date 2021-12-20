@@ -846,7 +846,8 @@ var TSOS;
                 else {
                     let suffix = args[0];
                     let list;
-                    if (suffix === "-a" || suffix === "-l") {
+                    if (suffix === "-a") // || suffix === "-l")
+                     {
                         list = _krnDiskDriver.fileList(suffix);
                     }
                     else {
@@ -917,18 +918,23 @@ var TSOS;
                             _StdOut.putText("File " + oldName + " does not exist");
                         }
                         else {
-                            console.log("OLDNAME: " + _krnDiskDriver.getFileTSB(oldName));
-                            let oldDirectoryData = sessionStorage.getItem(_krnDiskDriver.getFileTSB(oldName)).split(" ");
-                            let newDirectoryData = _krnDiskDriver.createEmptyBlock();
-                            for (let i = 0; i < 4; i++) {
-                                newDirectoryData[i] = oldDirectoryData[i];
+                            let currentFileNames = _krnDiskDriver.fileList("-a");
+                            if (currentFileNames.includes(newName)) {
+                                _StdOut.putText("File " + newName + " already exists and cannot rename to that");
                             }
-                            for (let j = 0; j < args[1].length; j++) {
-                                newDirectoryData[j + 4] = TSOS.Utils.decimalToHex(newName.charCodeAt(j));
+                            else {
+                                let oldDirectoryData = sessionStorage.getItem(_krnDiskDriver.getFileTSB(oldName)).split(" ");
+                                let newDirectoryData = _krnDiskDriver.createEmptyBlock();
+                                for (let i = 0; i < 4; i++) {
+                                    newDirectoryData[i] = oldDirectoryData[i];
+                                }
+                                for (let j = 0; j < args[1].length; j++) {
+                                    newDirectoryData[j + 4] = TSOS.Utils.decimalToHex(newName.charCodeAt(j));
+                                }
+                                _StdOut.putText("File " + oldName + " has been renamed to " + newName);
+                                sessionStorage.setItem(_krnDiskDriver.getFileTSB(oldName), newDirectoryData.join(" "));
+                                TSOS.Control.diskUpdateTable();
                             }
-                            _StdOut.putText("File " + oldName + " has been renamed to " + newName);
-                            sessionStorage.setItem(_krnDiskDriver.getFileTSB(oldName), newDirectoryData.join(" "));
-                            TSOS.Control.diskUpdateTable();
                         }
                     }
                 }
