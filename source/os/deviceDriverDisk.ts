@@ -110,7 +110,7 @@ module TSOS {
 
             if ( this.fileCreate(fileName) )
             {
-                if ( this.fileWrite(fileName, fileData.join(" ")) )
+                if ( this.fileWrite(fileName, fileData.join(""), true) )
                 {
                     _Kernel.krnTrace("Swap file " + fileName + " created");
                 }
@@ -131,7 +131,7 @@ module TSOS {
             return true;
         }
 
-        public fileWrite(fileName: string, fileData: string, nextTSB?: string): boolean
+        public fileWrite(fileName: string, fileData: string, hexFile: boolean, nextTSB?: string): boolean
         {
             _Kernel.krnTrace("Beginning file " + fileName + " write");
 
@@ -145,7 +145,14 @@ module TSOS {
                 {
                     for (let i = 0; i < fileData.length; i++)
                     {
-                        tsbLocData[i + 4] = Utils.decimalToHex(fileData.charCodeAt(i));
+                        if (hexFile)
+                        {
+                            tsbLocData[i + 4] = fileData.charAt(i);
+                        }
+                        else
+                        {
+                            tsbLocData[i + 4] = Utils.decimalToHex(fileData.charCodeAt(i));
+                        }
                     }
                     tsbLocData[0] = "1";
 
@@ -173,7 +180,14 @@ module TSOS {
 
                     for (let j = 0; j < 60; j++)
                     {
-                        tsbLocData[j + 4] = Utils.decimalToHex(fileData.charCodeAt(j));
+                        if (hexFile)
+                        {
+                            tsbLocData[j + 4] = fileData.charAt(j);
+                        }
+                        else
+                        {
+                            tsbLocData[j + 4] = Utils.decimalToHex(fileData.charCodeAt(j));
+                        }
                     }
                     tsbLocData[0] = "1";
 
@@ -201,7 +215,7 @@ module TSOS {
 
                     _Kernel.krnTrace("File " + fileName + " has is being written, more to go");
 
-                    this.fileWrite(fileName, dataLeft, goNext);
+                    this.fileWrite(fileName, dataLeft, hexFile, goNext);
                 }
                 return true;
             }
@@ -233,17 +247,37 @@ module TSOS {
             }
         }
 
-        public fileShellRead(fileName: string): string
+        public fileShellRead(fileName: string, hexFile?: boolean): string
         {
+            if (hexFile == undefined)
+            {
+                hexFile = false;
+            }
+
             _Kernel.krnTrace("Beginning file " + fileName + " read");
             let tsbLocToWrite = this.dataTSBFromFileName(fileName);
-            let ans = this.fileRead(tsbLocToWrite, "");
+            let ans;
+
+            if (hexFile)
+            {
+                ans = this.fileRead(tsbLocToWrite, "", true);
+            }
+            else
+            {
+                ans = this.fileRead(tsbLocToWrite, "");
+            }
+
             _Kernel.krnTrace("File " + fileName + " read");
             return ans;
         }
 
-        public fileRead(fileLoc: string, fileData: string): string
+        public fileRead(fileLoc: string, fileData: string, hexFile?: boolean): string
         {
+            if (hexFile == undefined)
+            {
+                hexFile = false;
+            }
+
             if (fileLoc != null)
             {
                 let tsbLocDataStr = sessionStorage.getItem(fileLoc);
@@ -256,7 +290,14 @@ module TSOS {
 
                         for (let i = 4; i < tsbLocData.length; i++)
                         {
-                            fileData += String.fromCharCode(Utils.hexToDecimal(tsbLocData[i]));
+                            if (hexFile)
+                            {
+                                fileData += tsbLocData[i];
+                            }
+                            else
+                            {
+                                fileData += String.fromCharCode(Utils.hexToDecimal(tsbLocData[i]));
+                            }
                         }
 
                         if (tsbLocData[1] != "*")
@@ -265,7 +306,7 @@ module TSOS {
 
                             _Kernel.krnTrace("File location " + fileLoc + " read, onto next");
 
-                            return this.fileRead(thisNext, fileData);
+                            return this.fileRead(thisNext, fileData, hexFile);
                         }
                         else
                         {

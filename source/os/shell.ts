@@ -1043,7 +1043,7 @@ module TSOS {
                                 toWrite += writeLast.substring(0, writeLast.length - 1);
                             }
 
-                            if ( _krnDiskDriver.fileWrite(fileName, toWrite) )
+                            if ( _krnDiskDriver.fileWrite(fileName, toWrite, false) )
                             {
                                 _StdOut.putText("Writing to file " + fileName);
                                 Control.diskUpdateTable();
@@ -1099,18 +1099,22 @@ module TSOS {
 
         public shellFormat(args: string[])
         {
-            _krnDiskDriver.format();
-            _IsDiskFormatted = true;
-            _StdOut.putText("Disk has been formatted");
+            if (_CPU.isExecuting)
+            {
+                _StdOut.putText("Cannot format disk with a running CPU")
+            }
+            else
+            {
+                _krnDiskDriver.format();
+                _IsDiskFormatted = true;
+                _StdOut.putText("Disk has been formatted");
+            }
         }
 
         public shellLs(args: string[])
         {
             if (_IsDiskFormatted)
             {
-                console.log("ARGS COUNT: " + args.length);
-                console.log("ARGS: " + args);
-
                 if ( (args.length > 1) || ( (args.length == 1) && (args[0] != "-a") ) )
                 {
                     _StdOut.putText("The only acceptable suffix is '-a'")
@@ -1120,7 +1124,7 @@ module TSOS {
                     let suffix = args[0]
                     let list;
 
-                    if (suffix === "-a" || suffix === "-l")
+                    if (suffix === "-a")  // || suffix === "-l")
                     {
                         list = _krnDiskDriver.fileList(suffix);
                     }
@@ -1220,17 +1224,31 @@ module TSOS {
                         }
                         else
                         {
-                            let directoryData = sessionStorage.getItem(_krnDiskDriver.getFileTSB(oldName)).split(" ");
-
-                            for (let i = 0; i < args[1].length; i++)
+                            let currentFileNames = _krnDiskDriver.fileList("-a")
+                            if (currentFileNames.includes(newName))
                             {
-                                directoryData[i + 4] = Utils.decimalToHex(newName.charCodeAt(i));
+                                _StdOut.putText("File " + newName + " already exists and cannot rename to that");
                             }
+                            else
+                            {
+                                let oldDirectoryData = sessionStorage.getItem(_krnDiskDriver.getFileTSB(oldName)).split(" ");
+                                let newDirectoryData = _krnDiskDriver.createEmptyBlock();
 
-                            _StdOut.putText("File " + oldName + " has been renamed to " + newName);
+                                for (let i = 0; i < 4; i++)
+                                {
+                                    newDirectoryData[i] = oldDirectoryData[i];
+                                }
 
-                            sessionStorage.setItem(_krnDiskDriver.getFileTSB(oldName), directoryData.join(" "));
-                            Control.diskUpdateTable();
+                                for (let j = 0; j < args[1].length; j++)
+                                {
+                                    newDirectoryData[j + 4] = Utils.decimalToHex(newName.charCodeAt(j));
+                                }
+
+                                _StdOut.putText("File " + oldName + " has been renamed to " + newName);
+
+                                sessionStorage.setItem(_krnDiskDriver.getFileTSB(oldName), newDirectoryData.join(" "));
+                                Control.diskUpdateTable();
+                            }
                         }
                     }
                 }
@@ -1277,7 +1295,7 @@ module TSOS {
                                 _StdOut.advanceLine();
                             }
 
-                            if ( _krnDiskDriver.fileWrite(args[1], oldFileContents) )
+                            if ( _krnDiskDriver.fileWrite(args[1], oldFileContents, false) )
                             {
                                 Control.diskUpdateTable();
                                 _StdOut.putText("File " + args[0] + " has been successfully copied into " + args[1]);

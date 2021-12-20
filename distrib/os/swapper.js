@@ -6,14 +6,14 @@ var TSOS;
             this.rolledInData = rolledInData;
         }
         rollIn(diskPCB, segment) {
-            this.rolledInData = _krnDiskDriver.fileShellRead("~" + diskPCB.pid);
+            this.rolledInData = _krnDiskDriver.fileShellRead("~" + diskPCB.pid, true);
             let byteToWrite = "";
             let addressCounter = 0;
             diskPCB.segmentData(segment);
             _PCB = diskPCB;
             _MemoryAccessor.nukeMemory(diskPCB.segment);
-            for (let i = 0; i < ((diskPCB.limit - diskPCB.base) * 3); i += 3) {
-                if (i < (this.rolledInData.length - 3)) {
+            for (let i = 0; i < ((diskPCB.limit - diskPCB.base) * 2); i += 2) {
+                if (i < (this.rolledInData.length - 2)) {
                     byteToWrite = this.rolledInData.charAt(i) + this.rolledInData.charAt(i + 1);
                     if (!((byteToWrite.charCodeAt(0) == 0) && (byteToWrite.charCodeAt(1) == 0))) {
                         _MemoryAccessor.write(diskPCB.segment, TSOS.Utils.decimalToHex(addressCounter), byteToWrite);

@@ -76,7 +76,7 @@ var _PCBdisplay;
 var _IsSingleStep = false;
 var _IsSingleStepStep = false;
 // For Memory Tracking
-var _MemoryTracking = false;
+var _MemoryTracking = true;
 // For testing (and enrichment)...
 var Glados = null; // This is the function Glados() in glados-ip*.js http://alanclasses.github.io/TSOS/test/ .
 var _GLaDOS = null; // If the above is linked in, this is the instantiated instance of Glados.

@@ -9,8 +9,7 @@ module TSOS
 
         public rollIn(diskPCB: Pcb, segment: number): void
         {
-            this.rolledInData = _krnDiskDriver.fileShellRead("~" + diskPCB.pid);
-
+            this.rolledInData = _krnDiskDriver.fileShellRead("~" + diskPCB.pid, true);
             let byteToWrite = "";
             let addressCounter = 0;
 
@@ -19,9 +18,9 @@ module TSOS
 
             _MemoryAccessor.nukeMemory(diskPCB.segment);
 
-            for (let i = 0; i < ( (diskPCB.limit - diskPCB.base) * 3); i+=3)
+            for (let i = 0; i < ( (diskPCB.limit - diskPCB.base) * 2); i+=2)
             {
-                if ( i < (this.rolledInData.length - 3) )
+                if ( i < (this.rolledInData.length - 2) )
                 {
                     byteToWrite = this.rolledInData.charAt(i) + this.rolledInData.charAt(i+1);
 
