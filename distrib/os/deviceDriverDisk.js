@@ -73,7 +73,7 @@ var TSOS;
             let fileName = "~" + pid;
             _Kernel.krnTrace("Beginning swap file " + fileName + " create");
             if (this.fileCreate(fileName)) {
-                if (this.fileWrite(fileName, fileData.join(" "))) {
+                if (this.fileWrite(fileName, fileData.join(""), true)) {
                     _Kernel.krnTrace("Swap file " + fileName + " created");
                 }
                 else {
@@ -87,14 +87,21 @@ var TSOS;
             }
             return true;
         }
-        fileWrite(fileName, fileData, nextTSB) {
+        fileWrite(fileName, fileData, hexFile, nextTSB) {
             _Kernel.krnTrace("Beginning file " + fileName + " write");
+            console.log("WRITING WITH HEXFILE: " + hexFile);
+            console.log("WRITING DATA: " + fileData);
             let tsbLocToWrite = this.dataTSBFromFileName(fileName);
             if (tsbLocToWrite != null) {
                 let tsbLocData = this.createEmptyBlock();
                 if (fileData.length <= 60) {
                     for (let i = 0; i < fileData.length; i++) {
-                        tsbLocData[i + 4] = TSOS.Utils.decimalToHex(fileData.charCodeAt(i));
+                        if (hexFile) {
+                            tsbLocData[i + 4] = fileData.charAt(i);
+                        }
+                        else {
+                            tsbLocData[i + 4] = TSOS.Utils.decimalToHex(fileData.charCodeAt(i));
+                        }
                     }
                     tsbLocData[0] = "1";
                     let newLoc;
@@ -113,7 +120,12 @@ var TSOS;
                 else {
                     let tsbLocData = this.createEmptyBlock();
                     for (let j = 0; j < 60; j++) {
-                        tsbLocData[j + 4] = TSOS.Utils.decimalToHex(fileData.charCodeAt(j));
+                        if (hexFile) {
+                            tsbLocData[j + 4] = fileData.charAt(j);
+                        }
+                        else {
+                            tsbLocData[j + 4] = TSOS.Utils.decimalToHex(fileData.charCodeAt(j));
+                        }
                     }
                     tsbLocData[0] = "1";
                     let newLoc;
@@ -133,7 +145,7 @@ var TSOS;
                     sessionStorage.setItem(newLoc, tempStorage.join(" "));
                     let dataLeft = fileData.substring(60, fileData.length);
                     _Kernel.krnTrace("File " + fileName + " has is being written, more to go");
-                    this.fileWrite(fileName, dataLeft, goNext);
+                    this.fileWrite(fileName, dataLeft, hexFile, goNext);
                 }
                 return true;
             }
@@ -162,9 +174,11 @@ var TSOS;
             let tsbLocToWrite = this.dataTSBFromFileName(fileName);
             let ans;
             if (hexFile) {
+                console.log("READING IN  A HEX FILE");
                 ans = this.fileRead(tsbLocToWrite, "", true);
             }
             else {
+                console.log("READING IN NOT A HEX FILE");
                 ans = this.fileRead(tsbLocToWrite, "");
             }
             _Kernel.krnTrace("File " + fileName + " read");
@@ -174,18 +188,25 @@ var TSOS;
             if (hexFile == undefined) {
                 hexFile = false;
             }
+            console.log("HEX FILE? : " + hexFile);
             if (fileLoc != null) {
                 let tsbLocDataStr = sessionStorage.getItem(fileLoc);
                 if (tsbLocDataStr[0] == "1") {
                     if (tsbLocDataStr[2] != "0") {
                         let tsbLocData = tsbLocDataStr.split(" ");
+                        console.log("HEX FILE? : " + hexFile + " THEREFORE: " + tsbLocData);
                         for (let i = 4; i < tsbLocData.length; i++) {
-                            fileData += String.fromCharCode(TSOS.Utils.hexToDecimal(tsbLocData[i]));
+                            if (hexFile) {
+                                fileData += tsbLocData[i];
+                            }
+                            else {
+                                fileData += String.fromCharCode(TSOS.Utils.hexToDecimal(tsbLocData[i]));
+                            }
                         }
                         if (tsbLocData[1] != "*") {
                             let thisNext = tsbLocData[1] + "," + tsbLocData[2] + "," + tsbLocData[3];
                             _Kernel.krnTrace("File location " + fileLoc + " read, onto next");
-                            return this.fileRead(thisNext, fileData);
+                            return this.fileRead(thisNext, fileData, hexFile);
                         }
                         else {
                             _Kernel.krnTrace("Last file location " + fileLoc + " read");

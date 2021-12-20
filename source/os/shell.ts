@@ -1043,7 +1043,7 @@ module TSOS {
                                 toWrite += writeLast.substring(0, writeLast.length - 1);
                             }
 
-                            if ( _krnDiskDriver.fileWrite(fileName, toWrite) )
+                            if ( _krnDiskDriver.fileWrite(fileName, toWrite, false) )
                             {
                                 _StdOut.putText("Writing to file " + fileName);
                                 Control.diskUpdateTable();
@@ -1099,9 +1099,16 @@ module TSOS {
 
         public shellFormat(args: string[])
         {
-            _krnDiskDriver.format();
-            _IsDiskFormatted = true;
-            _StdOut.putText("Disk has been formatted");
+            if (_CPU.isExecuting)
+            {
+                _StdOut.putText("Cannot format disk with a running CPU")
+            }
+            else
+            {
+                _krnDiskDriver.format();
+                _IsDiskFormatted = true;
+                _StdOut.putText("Disk has been formatted");
+            }
         }
 
         public shellLs(args: string[])
@@ -1277,7 +1284,7 @@ module TSOS {
                                 _StdOut.advanceLine();
                             }
 
-                            if ( _krnDiskDriver.fileWrite(args[1], oldFileContents) )
+                            if ( _krnDiskDriver.fileWrite(args[1], oldFileContents, false) )
                             {
                                 Control.diskUpdateTable();
                                 _StdOut.putText("File " + args[0] + " has been successfully copied into " + args[1]);
