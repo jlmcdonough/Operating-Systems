@@ -1227,16 +1227,22 @@ module TSOS {
                         }
                         else
                         {
-                            let directoryData = sessionStorage.getItem(_krnDiskDriver.getFileTSB(oldName)).split(" ");
+                            let oldDirectoryData = sessionStorage.getItem(_krnDiskDriver.getFileTSB(oldName)).split(" ");
+                            let newDirectoryData = _krnDiskDriver.createEmptyBlock();
 
-                            for (let i = 0; i < args[1].length; i++)
+                            for (let i = 0; i < 4; i++)
                             {
-                                directoryData[i + 4] = Utils.decimalToHex(newName.charCodeAt(i));
+                                newDirectoryData[i] = oldDirectoryData[i];
+                            }
+
+                            for (let j = 0; j < args[1].length; j++)
+                            {
+                                newDirectoryData[j + 4] = Utils.decimalToHex(newName.charCodeAt(j));
                             }
 
                             _StdOut.putText("File " + oldName + " has been renamed to " + newName);
 
-                            sessionStorage.setItem(_krnDiskDriver.getFileTSB(oldName), directoryData.join(" "));
+                            sessionStorage.setItem(_krnDiskDriver.getFileTSB(oldName), newDirectoryData.join(" "));
                             Control.diskUpdateTable();
                         }
                     }
