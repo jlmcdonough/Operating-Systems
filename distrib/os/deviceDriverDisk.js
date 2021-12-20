@@ -154,14 +154,26 @@ var TSOS;
                 return false;
             }
         }
-        fileShellRead(fileName) {
+        fileShellRead(fileName, hexFile) {
+            if (hexFile == undefined) {
+                hexFile = false;
+            }
             _Kernel.krnTrace("Beginning file " + fileName + " read");
             let tsbLocToWrite = this.dataTSBFromFileName(fileName);
-            let ans = this.fileRead(tsbLocToWrite, "");
+            let ans;
+            if (hexFile) {
+                ans = this.fileRead(tsbLocToWrite, "", true);
+            }
+            else {
+                ans = this.fileRead(tsbLocToWrite, "");
+            }
             _Kernel.krnTrace("File " + fileName + " read");
             return ans;
         }
-        fileRead(fileLoc, fileData) {
+        fileRead(fileLoc, fileData, hexFile) {
+            if (hexFile == undefined) {
+                hexFile = false;
+            }
             if (fileLoc != null) {
                 let tsbLocDataStr = sessionStorage.getItem(fileLoc);
                 if (tsbLocDataStr[0] == "1") {

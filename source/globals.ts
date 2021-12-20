@@ -96,7 +96,7 @@ var _IsSingleStep: boolean = false;
 var _IsSingleStepStep: boolean = false;
 
 // For Memory Tracking
-var _MemoryTracking: boolean = false;
+var _MemoryTracking: boolean = true;
 
 // For testing (and enrichment)...
 var Glados: any = null;  // This is the function Glados() in glados-ip*.js http://alanclasses.github.io/TSOS/test/ .

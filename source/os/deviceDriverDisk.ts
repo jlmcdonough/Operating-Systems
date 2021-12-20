@@ -233,17 +233,37 @@ module TSOS {
             }
         }
 
-        public fileShellRead(fileName: string): string
+        public fileShellRead(fileName: string, hexFile?: boolean): string
         {
+            if (hexFile == undefined)
+            {
+                hexFile = false;
+            }
+
             _Kernel.krnTrace("Beginning file " + fileName + " read");
             let tsbLocToWrite = this.dataTSBFromFileName(fileName);
-            let ans = this.fileRead(tsbLocToWrite, "");
+            let ans;
+
+            if (hexFile)
+            {
+                ans = this.fileRead(tsbLocToWrite, "", true);
+            }
+            else
+            {
+                ans = this.fileRead(tsbLocToWrite, "");
+            }
+
             _Kernel.krnTrace("File " + fileName + " read");
             return ans;
         }
 
-        public fileRead(fileLoc: string, fileData: string): string
+        public fileRead(fileLoc: string, fileData: string, hexFile?: boolean): string
         {
+            if (hexFile == undefined)
+            {
+                hexFile = false;
+            }
+
             if (fileLoc != null)
             {
                 let tsbLocDataStr = sessionStorage.getItem(fileLoc);
