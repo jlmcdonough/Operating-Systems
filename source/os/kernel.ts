@@ -30,10 +30,16 @@ module TSOS {
             _StdOut = _Console;
 
             // Load the Keyboard Device Driver
-            this.krnTrace("Loading the keyboard device driver.");
+            this.krnTrace("Loading the keyboard device driver");
             _krnKeyboardDriver = new DeviceDriverKeyboard();     // Construct it.
             _krnKeyboardDriver.driverEntry();                    // Call the driverEntry() initialization routine.
             this.krnTrace(_krnKeyboardDriver.status);
+
+            // Load the Disk Device Driver
+            this.krnTrace("Loading the disk device driver");
+            _krnDiskDriver = new DeviceDriverDisk();     // Construct it.
+            _krnDiskDriver.driverEntry();                    // Call the driverEntry() initialization routine.
+            this.krnTrace(_krnDiskDriver.status);
 
             //
             // ... more?
@@ -42,11 +48,11 @@ module TSOS {
             _MemoryManager = new MemoryManager();
 
             // Enable the OS Interrupts.  (Not the CPU clock interrupt, as that is done in the hardware sim.)
-            this.krnTrace("Enabling the interrupts.");
+            this.krnTrace("Enabling the interrupts");
             this.krnEnableInterrupts();
 
             // Launch the shell.
-            this.krnTrace("Creating and Launching the shell.");
+            this.krnTrace("Creating and Launching the shell");
             _OsShell = new Shell();
             _OsShell.init();
 
@@ -69,7 +75,7 @@ module TSOS {
             }
 
             // ... Disable the Interrupts.
-            this.krnTrace("Disabling the interrupts.");
+            this.krnTrace("Disabling the interrupts");
             this.krnDisableInterrupts();
             //
             // Unload the Device Drivers?
@@ -92,18 +98,24 @@ module TSOS {
                 // TODO (maybe): Implement a priority queue based on the IRQ number/id to enforce interrupt priority.
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
-            } else if (_SingleStep)
+            } else if (_IsSingleStep)
             {
-              if(_CPU.isExecuting && _SingleStepStep)
+              if(_CPU.isExecuting && _IsSingleStepStep)
               {
                   _CPU.cycle();
-                  _SingleStepStep = false;
-                  _Scheduler.quantaCheck();
+                  _IsSingleStepStep = false;
+                  if (_Scheduler.schedulingSystem === "FCFS" || _Scheduler.schedulingSystem === "RR")
+                  {
+                      _Scheduler.quantaCheck();
+                  }
               }
             }
             else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed.
                 _CPU.cycle();
-                _Scheduler.quantaCheck();
+                if (_Scheduler.schedulingSystem === "FCFS" || _Scheduler.schedulingSystem === "RR")
+                {
+                    _Scheduler.quantaCheck();
+                }
             } else {                       // If there are no interrupts and there is nothing being executed then just be idle.
                 this.krnTrace("Idle");
             }

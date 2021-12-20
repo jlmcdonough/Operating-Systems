@@ -11,7 +11,7 @@
 // Global CONSTANTS (TypeScript 1.5 introduced const. Very cool.)
 //
 const APP_NAME = "RhinOS";
-const APP_VERSION = "0.3";
+const APP_VERSION = "0.4";
 const CPU_CLOCK_INTERVAL = 100; // This is in ms (milliseconds) so 1000 = 1 second.
 const TIMER_IRQ = 0; // Pages 23 (timer), 9 (interrupts), and 561 (interrupt priority).
 // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
@@ -25,15 +25,19 @@ const CONTEXT_SWITCH_IRQ = 2;
 var _CPU; // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class.
 var _Memory;
 var _MemoryAccessor;
+var _Disk;
+var _IsDiskFormatted = false;
 //Software
 var _MemoryManager;
 var _PCB;
 var _ProcessID = 0;
 var _PCBList = [];
 var operandCount;
-var _Quantum = 6;
+var _RRQuantum = 6;
+var _FCFSQuantum = Number.MAX_SAFE_INTEGER;
 var _Scheduler;
 var _Dispatcher;
+var _Swapper;
 var _CycleCount = 0;
 var _OSclock = 0; // Page 23.
 var _Mode = 0; // (currently unused)  0 = Kernel Mode, 1 = User Mode.  See page 21.
@@ -61,6 +65,7 @@ var _OsShell;
 var _SarcasticMode = false;
 // Global Device Driver Objects - page 12
 var _krnKeyboardDriver = null;
+var _krnDiskDriver = null;
 var _hardwareClockID = null;
 // Sections to show on HTML
 var _taProgramInput;
@@ -68,8 +73,8 @@ var _cpuDisplay;
 var _memoryDisplay;
 var _PCBdisplay;
 // For Single Step
-var _SingleStep = false;
-var _SingleStepStep = false;
+var _IsSingleStep = false;
+var _IsSingleStepStep = false;
 // For Memory Tracking
 var _MemoryTracking = false;
 // For testing (and enrichment)...

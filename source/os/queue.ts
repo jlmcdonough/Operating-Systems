@@ -52,7 +52,6 @@ module TSOS {
 
         public remove(removePcbPid: number) //not a queue function but is this really even more than just a fancy list?
         {
-
             this.q.forEach((element,index)=>{
                 if(element.pid==removePcbPid)
                     this.q.splice(index,1);
@@ -63,6 +62,16 @@ module TSOS {
                 _Scheduler.runningPCB = null;
                 _Scheduler.doScheduling();
             }
+        }
+
+        public prioritySort()
+        {
+            this.q = this.q.sort((a, b) => (a.priority > b.priority) ? 1 : -1);
+        }
+
+        public getTail(): Pcb
+        {
+            return this.q[this.q.length - 1];
         }
     }
 }

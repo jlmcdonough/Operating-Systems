@@ -67,7 +67,7 @@ module TSOS {
                         Control.pcbUpdateTable(_PCB.pc);
 
                         this.advanceLine();
-                        this.putText("Running process " + _PCB.pid + " stopped by user.");
+                        this.putText("Running process " + _PCB.pid + " stopped by user");
                         this.advanceLine();
                         Utils.displayPCBAllData();
 
@@ -241,7 +241,7 @@ module TSOS {
             this.currentXPosition = 50;
             this.currentYPosition = 50;
 
-            this.putText("An error has occured. Shutting down...");
+            this.putText("An error has occured. Shutting down..");
 
             _OsShell.promptStr = ""; //remove cursor
         }

@@ -1,4 +1,25 @@
+# RhinOS
 Operting Systems Course Work - Fall 2021
+
+Allows for a user to:
+* Load 6502a machine language op codes (up to 256 bytes)
+    * View up to 3 programs in memory
+    * Store "unlimited" programs in disk space that can be swapped into memory
+    * Execute one or multiple programs continously through scheduling types such as Round Robin (custom quantum), First-Come First-Serve, and Non-Preemptive Priority 
+* Create, read, write, delete, execute, copy, rename, and list text files
+    * Automatically create swap files as needed but cannot be accessed or modified by user
+    * Allow user to create and use hidden files
+    
+* Dark and light mode available
+
+<a href = https://jlmcdonough.github.io/Operating-Systems/>
+<p align="center">
+    Can run rhinOS here
+    <br>
+    <img src="https://i.imgur.com/jQ2Gy7u.png" alt="rhinOS dark" width="75%" height = "auto"/>
+</p>
+</a>
+
 
 2019 - 2021 Browser-based Operating System in TypeScript
 ========================================================

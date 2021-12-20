@@ -12,7 +12,7 @@
 // Global CONSTANTS (TypeScript 1.5 introduced const. Very cool.)
 //
 const APP_NAME: string    = "RhinOS";
-const APP_VERSION: string = "0.3";
+const APP_VERSION: string = "0.4";
 
 const CPU_CLOCK_INTERVAL: number = 100;   // This is in ms (milliseconds) so 1000 = 1 second.
 
@@ -31,6 +31,8 @@ const CONTEXT_SWITCH_IRQ: number = 2;
 var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class.
 var _Memory: TSOS.Memory;
 var _MemoryAccessor: TSOS.MemoryAccessor;
+var _Disk: TSOS.Disk;
+var _IsDiskFormatted: boolean = false;
 
 //Software
 var _MemoryManager: TSOS.MemoryManager;
@@ -38,9 +40,11 @@ var _PCB: TSOS.Pcb;
 var _ProcessID: number = 0;
 var _PCBList: TSOS.Pcb[] = [];
 var operandCount: number;
-var _Quantum: number = 6;
+var _RRQuantum: number = 6;
+var _FCFSQuantum: number = Number.MAX_SAFE_INTEGER;
 var _Scheduler: TSOS.Scheduler;
 var _Dispatcher: TSOS.Dispatcher;
+var _Swapper: TSOS.Swapper;
 
 var _CycleCount: number = 0;
 
@@ -78,7 +82,7 @@ var _SarcasticMode: boolean = false;
 
 // Global Device Driver Objects - page 12
 var _krnKeyboardDriver: TSOS.DeviceDriverKeyboard  = null;
-
+var _krnDiskDriver: TSOS.DeviceDriverDisk = null;
 var _hardwareClockID: number = null;
 
 // Sections to show on HTML
@@ -88,8 +92,8 @@ var _memoryDisplay: HTMLTextAreaElement;
 var _PCBdisplay: HTMLTextAreaElement;
 
 // For Single Step
-var _SingleStep: boolean = false;
-var _SingleStepStep: boolean = false;
+var _IsSingleStep: boolean = false;
+var _IsSingleStepStep: boolean = false;
 
 // For Memory Tracking
 var _MemoryTracking: boolean = false;

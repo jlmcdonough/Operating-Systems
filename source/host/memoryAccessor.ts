@@ -18,10 +18,21 @@ module TSOS {
             }
         }
 
-        public read(segment: number, atAddress: number) : string
+        public read(segment: number, atAddress: number, pcb?: Pcb) : string
         {
             let valueToRead = _MemoryManager.segmentOffset(segment, atAddress);
-            if ( (_PCB.base <= valueToRead) && (valueToRead <= _PCB.limit) )
+            let useThisPcb;
+
+            if (pcb != undefined)
+            {
+                useThisPcb = pcb;
+            }
+            else
+            {
+                useThisPcb = _PCB;
+            }
+
+            if ( (useThisPcb.base <= valueToRead) && (valueToRead <= useThisPcb.limit) )
             {
                 return _Memory.getAt(valueToRead);
             }
@@ -29,27 +40,33 @@ module TSOS {
             {
                 Utils.memoryOutOfBoundsError();
             }
-
         }
 
-        public loadMemory(userEntry: string, segmentNumber: number): void
+        public loadMemory(userEntry: string, segmentNumber: number, pid?: number): void
         {
             let userArr = userEntry.split(" ");
 
-            let points = Utils.segmentStuff(segmentNumber);
-            let startingPoint = points[0];
-            let maxPoint = points[1];
-
-            for(let i = 0; i < userArr.length; i++)
+            if ( (segmentNumber > 0) && (segmentNumber < 4) )
             {
-                if (i <= maxPoint - startingPoint)
+                let points = Utils.segmentStuff(segmentNumber);
+                let startingPoint = points[0];
+                let maxPoint = points[1];
+
+                for(let i = 0; i < userArr.length; i++)
                 {
-                    _Memory.memoryBlock[i + startingPoint] = userArr[i];
+                    if (i <= maxPoint - startingPoint)
+                    {
+                        _Memory.memoryBlock[i + startingPoint] = userArr[i];
+                    }
+                    else
+                    {
+                        Utils.memoryOutOfBoundsError();
+                    }
                 }
-                else
-                {
-                    Utils.memoryOutOfBoundsError();
-                }
+            }
+            else
+            {
+                _krnDiskDriver.fileCreateSwap(pid, userArr);
             }
         }
 

@@ -61,12 +61,7 @@ h2 {
     filter: invert(0);
 }
 
-#dateTime
-{
-    color: #ffffff;
-}
-
-#status
+.info
 {
     color: #ffffff;
 }
@@ -108,12 +103,12 @@ tr:nth-child(even) {
     color: #ffffff;
     background: #2c2c2c;
     border: 1px solid #018786;
-    width: 470px;
+    width: 474px;
     text-align: center;
 }
 
 #divMemoryTable {
-    width: 470px;
+    width: 475px;
     max-height: 211px;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -140,8 +135,8 @@ input:disabled {
 
 
 #divPCBTable {
-    width: 585px;
-    max-height: 211px;
+    width: 591px;
+    max-height: 135px;
     overflow-x: hidden;
     overflow-y: hidden;
     border-bottom: 1px solid #018786;
@@ -150,5 +145,40 @@ input:disabled {
 #divPCBTable:hover {
     overflow-x: hidden;
     overflow-y: scroll;
+}
 
+.pcbDisplayTable {
+    color: #ffffff;
+    background: #2c2c2c;
+    border: 1px solid #018786;
+    width: 589px;
+    text-align: center;
+}
+
+.diskDisplayTable {
+    color: #ffffff;
+    background: #2c2c2c;
+    border: 1px solid #018786;
+    width: 900px;
+    text-align: center;
+    margin: auto;
+}
+
+#divDiskTable {
+    width: 900px;
+    max-height: 211px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+#divDiskTable:hover {
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+    text-align: center;
 }

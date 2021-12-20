@@ -22,11 +22,12 @@ module TSOS {
                     public outputData: string = "") {
         }
 
-        public init(priorityNum: number, segment: number): void
+        public init(priorityNum: number, segment?: number): void
         {
-            let points = Utils.segmentStuff(segment);
-            let startingPoint = points[0];
-            let maxPoint = points[1];
+            if (segment != undefined)
+            {
+                this.segmentData(segment);
+            }
 
             this.pid = _ProcessID;
             _ProcessID++;
@@ -40,10 +41,18 @@ module TSOS {
             this.state = "Resident";
             this.location = "Memory";
             this.runningQuanta = 0,
+            this.startingCycle = _CycleCount;
+        }
+
+
+        public segmentData(segment: number)
+        {
+            let points = Utils.segmentStuff(segment);
+            let startingPoint = points[0];
+            let maxPoint = points[1];
             this.segment = segment;
             this.base = startingPoint;
             this.limit = maxPoint;
-            this.startingCycle = _CycleCount;
         }
     }
 }

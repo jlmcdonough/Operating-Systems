@@ -28,68 +28,68 @@ module TSOS {
 
             // ver
             sc = new ShellCommand(this.shellVer,
-                                  "ver",
-                                  "- Displays the current version data.");
+                "ver",
+                "- Displays the current version data");
             this.commandList[this.commandList.length] = sc;
 
             // help
             sc = new ShellCommand(this.shellHelp,
-                                  "help",
-                                  "- This is the help command. Seek help.");
+                "help",
+                "- This is the help command. Seek help");
             this.commandList[this.commandList.length] = sc;
 
             // shutdown
             sc = new ShellCommand(this.shellShutdown,
-                                  "shutdown",
-                                  "- Shuts down the virtual OS but leaves the underlying host / hardware simulation running.");
+                "shutdown",
+                "- Shuts down the virtual OS but leaves the underlying host / hardware simulation running");
             this.commandList[this.commandList.length] = sc;
 
             // cls
             sc = new ShellCommand(this.shellCls,
-                                  "cls",
-                                  "- Clears the screen and resets the cursor position.");
+                "cls",
+                "- Clears the screen and resets the cursor position");
             this.commandList[this.commandList.length] = sc;
 
             // man <topic>
             sc = new ShellCommand(this.shellMan,
-                                  "man",
-                                  "<topic> - Displays the MANual page for <topic>.");
+                "man",
+                "<topic> - Displays the MANual page for <topic>");
             this.commandList[this.commandList.length] = sc;
 
             // trace <on | off>
             sc = new ShellCommand(this.shellTrace,
-                                  "trace",
-                                  "<on | off> - Turns the OS trace on or off.");
+                "trace",
+                "<on | off> - Turns the OS trace on or off");
             this.commandList[this.commandList.length] = sc;
 
             // rot13 <string>
             sc = new ShellCommand(this.shellRot13,
-                                  "rot13",
-                                  "<string> - Does rot13 obfuscation on <string>.");
+                "rot13",
+                "<string> - Does rot13 obfuscation on <string>");
             this.commandList[this.commandList.length] = sc;
 
             // prompt <string>
             sc = new ShellCommand(this.shellPrompt,
-                                  "prompt",
-                                  "<string> - Sets the prompt.");
+                "prompt",
+                "<string> - Sets the prompt");
             this.commandList[this.commandList.length] = sc;
 
             // date
             sc = new ShellCommand(this.shellDate,
                 "date",
-                "- Displays the date and time.");
+                "- Displays the date and time");
             this.commandList[this.commandList.length] = sc;
 
             // whereAmI
             sc = new ShellCommand(this.shellWhereAmI,
                 "whereami",
-                "- Displays the users current location.");
+                "- Displays the users current location");
             this.commandList[this.commandList.length] = sc;
 
             // diceRoll
             sc = new ShellCommand(this.shellDiceRoll,
                 "diceroll",
-                "- Rolls two six-sided dice.");
+                "- Rolls two six-sided dice");
             this.commandList[this.commandList.length] = sc;
 
             // status
@@ -101,56 +101,117 @@ module TSOS {
             // BSOD
             sc = new ShellCommand(this.shellBSOD,
                 "bsod",
-                "- Triggers blue screen of death.");
+                "- Triggers blue screen of death");
             this.commandList[this.commandList.length] = sc;
 
             // load
             sc = new ShellCommand(this.shellLoad,
                 "load",
-                "<priority> - Loads the specified user program.");
+                "<priority> - Loads the specified user program");
             this.commandList[this.commandList.length] = sc;
 
             // run
             sc = new ShellCommand(this.shellRun,
                 "run",
-                "<pid> - Runs the specified user program.");
+                "<pid> - Runs the specified user program");
             this.commandList[this.commandList.length] = sc;
 
             // ps  - list the running processes and their IDs
             sc = new ShellCommand(this.shellPs,
                 "ps",
-                "displays the PID and state of all current processes.");
+                "- Displays the PID and state of all current processes");
             this.commandList[this.commandList.length] = sc;
 
             // clearmem
             sc = new ShellCommand(this.shellClearMem,
                 "clearmem",
-                "resets all memory");
+                "- Resets all memory");
             this.commandList[this.commandList.length] = sc;
 
             // runall
             sc = new ShellCommand(this.shellRunAll,
                 "runall",
-                "runs every program");
+                "- Runs every program");
             this.commandList[this.commandList.length] = sc;
 
             // kill
             sc = new ShellCommand(this.shellKill,
                 "kill",
-                "<id> - kills the specified process id.");
+                "<id> - Kills the specified process id");
             this.commandList[this.commandList.length] = sc;
 
             // killall
             sc = new ShellCommand(this.shellKillAll,
                 "killall",
-                "kills all processes.");
+                "- Kills all processes");
             this.commandList[this.commandList.length] = sc;
 
-            // kill
+            // quantum
             sc = new ShellCommand(this.shellQuantum,
                 "quantum",
-                "<number> - sets the quantum to number.");
+                "<number> - Sets the quantum to number");
             this.commandList[this.commandList.length] = sc;
+
+            // create
+            sc = new ShellCommand(this.shellCreate,
+                "create",
+                "<filename> - Creates new file");
+            this.commandList[this.commandList.length] = sc;
+
+            // read
+            sc = new ShellCommand(this.shellRead,
+                "read",
+                "<filename> - Reads the file");
+            this.commandList[this.commandList.length] = sc;
+
+            // write
+            sc = new ShellCommand(this.shellWrite,
+                "write",
+                "<filename> \"<data>\" - Writes to the following file");
+            this.commandList[this.commandList.length] = sc;
+
+            // delete
+            sc = new ShellCommand(this.shellDelete,
+                "delete",
+                "<filename> - Removes the specified file");
+            this.commandList[this.commandList.length] = sc;
+
+            // format
+            sc = new ShellCommand(this.shellFormat,
+                "format",
+                "- Initializes disks");
+            this.commandList[this.commandList.length] = sc;
+
+            // ls
+            sc = new ShellCommand(this.shellLs,
+                "ls",
+                "- Displays files");
+            this.commandList[this.commandList.length] = sc;
+
+            // setschedule
+            sc = new ShellCommand(this.shellSetSchedule,
+                "setschedule",
+                "<type> - Sets the scheduling algorithm");
+            this.commandList[this.commandList.length] = sc;
+
+            // getschedule
+            sc = new ShellCommand(this.shellGetSchedule,
+                "getschedule",
+                "- Displays current scheduler");
+            this.commandList[this.commandList.length] = sc;
+
+            // rename
+            sc = new ShellCommand(this.shellRename,
+                "rename",
+                "<oldfilename> <newfilename> - Renames a file");
+            this.commandList[this.commandList.length] = sc;
+
+            // copy
+            sc = new ShellCommand(this.shellCopy,
+                "copy",
+                "<oldfilename> <newfilename> - copies a file");
+            this.commandList[this.commandList.length] = sc;
+
 
             // Display the initial prompt.
             this.putPrompt();
@@ -173,7 +234,7 @@ module TSOS {
             // Determine the command and execute it.
             //
             // TypeScript/JavaScript may not support associative arrays in all browsers so we have to iterate over the
-            // command list in attempt to find a match. 
+            // command list in attempt to find a match.
             // TODO: Is there a better way? Probably. Someone work it out and tell me in class.
             var index: number = 0;
             var found: boolean = false;
@@ -271,31 +332,31 @@ module TSOS {
             if (_SarcasticMode) {
                 _StdOut.putText("Unbelievable. You, [subject name here],");
                 _StdOut.advanceLine();
-                _StdOut.putText("must be the pride of [subject hometown here].");
+                _StdOut.putText("must be the pride of [subject hometown here]");
             } else {
-                _StdOut.putText("Type 'help' for, well... help.");
+                _StdOut.putText("Type 'help' for, well... help");
             }
         }
 
         public shellCurse() {
-            _StdOut.putText("Oh, so that's how it's going to be, eh? Fine.");
+            _StdOut.putText("Oh, so that's how it's going to be, eh? Fine");
             _StdOut.advanceLine();
-            _StdOut.putText("Bitch.");
+            _StdOut.putText("Bitch");
             _SarcasticMode = true;
         }
 
         public shellApology() {
-           if (_SarcasticMode) {
-              _StdOut.putText("I think we can put our differences behind us.");
-              _StdOut.advanceLine();
-              _StdOut.putText("For science . . . You monster.");
-              _SarcasticMode = false;
-           } else {
-              _StdOut.putText("For what?");
-           }
+            if (_SarcasticMode) {
+                _StdOut.putText("I think we can put our differences behind us");
+                _StdOut.advanceLine();
+                _StdOut.putText("For science . . . You monster");
+                _SarcasticMode = false;
+            } else {
+                _StdOut.putText("For what?");
+            }
         }
 
-        // Although args is unused in some of these functions, it is always provided in the 
+        // Although args is unused in some of these functions, it is always provided in the
         // actual parameter list when this function is called, so I feel like we need it.
 
         public shellVer(args: string[]) {
@@ -311,14 +372,14 @@ module TSOS {
         }
 
         public shellShutdown(args: string[]) {
-             _StdOut.putText("Shutting down...");
-             // Call Kernel shutdown routine.
+            _StdOut.putText("Shutting down..");
+            // Call Kernel shutdown routine.
             _Kernel.krnShutdown();
             // TODO: Stop the final prompt from being displayed. If possible. Not a high priority. (Damn OCD!)
         }
 
-        public shellCls(args: string[]) {         
-            _StdOut.clearScreen();     
+        public shellCls(args: string[]) {
+            _StdOut.clearScreen();
             _StdOut.resetXY();
         }
 
@@ -327,73 +388,105 @@ module TSOS {
                 var topic = args[0];
                 switch (topic) {
                     case "help":
-                        _StdOut.putText("Help displays a list of (hopefully) valid commands.");
+                        _StdOut.putText("Help displays a list of (hopefully) valid commands");
                         break;
 
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
                     case "ver":
-                        _StdOut.putText("VER displays the current version for " + APP_NAME + ".");
+                        _StdOut.putText("VER displays the current version for " + APP_NAME );
                         break;
                     case "shutdown":
-                        _StdOut.putText("SHUTDOWN will shutdown " + APP_NAME + " while leaving the hardware running.");
+                        _StdOut.putText("SHUTDOWN will shutdown " + APP_NAME + " while leaving the hardware running");
                         break;
                     case "cls":
-                        _StdOut.putText("CLS will clear the canvas window and sets the cursor back to the start.");
+                        _StdOut.putText("CLS will clear the canvas window and sets the cursor back to the start");
                         break;
                     case "trace":
-                        _StdOut.putText("TRACE can be toggled ON or OFF. TRACE ON allows the host log to update and trace user inputs. TRACE OFF freezes the host log.");
+                        _StdOut.putText("TRACE can be toggled ON or OFF. TRACE ON allows the host log to update and trace user inputs. TRACE OFF freezes the host log");
                         break;
                     case "rot13":
-                        _StdOut.putText("ROT13 will shift all characters in the following string to the right by 13 characters.");
+                        _StdOut.putText("ROT13 will shift all characters in the following string to the right by 13 characters");
                         break;
                     case "prompt":
-                        _StdOut.putText("PROMPT will replace the current prompt (i.e. \">\" by default) with the following string.");
+                        _StdOut.putText("PROMPT will replace the current prompt (i.e. \">\" by default) with the following string");
                         break;
                     case "date":
-                        _StdOut.putText("DATE displays the users current date and time based off their system location.");
+                        _StdOut.putText("DATE displays the users current date and time based off their system location");
                         break;
                     case "whereami":
-                        _StdOut.putText("WHEREAMI displays the users current physical location, not location in the OS.");
+                        _StdOut.putText("WHEREAMI displays the users current physical location, not location in the OS");
                         break;
                     case "diceroll":
-                        _StdOut.putText("DICEROLL rolls two six sided dice and then displays the result of each one and their sum.");
+                        _StdOut.putText("DICEROLL rolls two six sided dice and then displays the result of each one and their sum");
                         break;
                     case "status":
-                        _StdOut.putText("STATUS customizes the status message to the following string.");
+                        _StdOut.putText("STATUS customizes the status message to the following string");
                         break;
                     case "bsod":
-                        _StdOut.putText("BSOD triggers a blue screen of death, the same way it would trap an OS error.");
+                        _StdOut.putText("BSOD triggers a blue screen of death, the same way it would trap an OS error");
                         break;
                     case "load":
-                        _StdOut.putText("LOAD will load the specified user program and will be verified such that only hex code and spaces are valid.");
+                        _StdOut.putText("LOAD will load the specified user program and will be verified such that only hex code and spaces are valid");
                         break;
                     case "run":
-                        _StdOut.putText("RUN will run the specified user program, denoted by the process ID that was assigned when loaded.");
+                        _StdOut.putText("RUN will run the specified user program, denoted by the process ID that was assigned when loaded");
                         break;
                     case "ps":
-                        _StdOut.putText("PS will print a list of all the PCBs that are currently stored as well as their Process IDs.");
+                        _StdOut.putText("PS will print a list of all the PCBs that are currently stored as well as their Process IDs");
                         break;
                     case "clearmem":
-                        _StdOut.putText("CLEARMEM will empty out all the memory partitions and essentially reset all memory.");
+                        _StdOut.putText("CLEARMEM will empty out all the memory partitions and essentially reset all memory");
                         break;
                     case "runall":
-                        _StdOut.putText("RUNALL will begin to execute all programs at once.");
+                        _StdOut.putText("RUNALL will begin to execute all programs at once");
                         break;
                     case "kill":
-                        _StdOut.putText("KILL will the program specified by the entered process ID.");
+                        _StdOut.putText("KILL will the program specified by the entered process ID");
                         break;
                     case "killall":
-                        _StdOut.putText("KILLALL will kill every process that is running.");
+                        _StdOut.putText("KILLALL will kill every process that is running");
                         break;
                     case "quantum":
-                        _StdOut.putText("QUANTUM will set the quantum for round robin scheduling by the user entered number.");
+                        _StdOut.putText("QUANTUM will set the quantum for round robin scheduling by the user entered number");
+                        break;
+                    case "create":
+                        _StdOut.putText("CREATE will use the given name to create and store an empty file with the name");
+                        break;
+                    case "read":
+                        _StdOut.putText("READ will display the contents of the file with the given name");
+                        break;
+                    case "write":
+                        _StdOut.putText("WRITE will use the given name to write the following data to the file.");
+                        break;
+                    case "delete":
+                        _StdOut.putText("DELETE will remove the file with the given name from disk");
+                        break;
+                    case "format":
+                        _StdOut.putText("FORMAT will initialize all blocks in all sectors in all tracks");
+                        break;
+                    case "ls":
+                        _StdOut.putText("LS will list the files currently stored on disk");
+                        _StdOut.advanceLine();
+                        _StdOut.putText("LS -a will list all, including hidden, files currently stored on disk");
+                        break;
+                    case "setschedule":
+                        _StdOut.putText("SETSCHEDULE will change the scheduling strategy to requested type. Acceptable inputs are rr (round robin scheduling), fcfs (first come first serve scheduling), priority (non-preemptive priority scheduling)");
+                        break;
+                    case "getschedule":
+                        _StdOut.putText("GETSCHEDULE will return the currently selected scheduling algorithm");
+                        break;
+                    case "rename":
+                        _StdOut.putText("RENAME will change the old file name to the new one that is provided");
+                        break;
+                    case "copy":
+                        _StdOut.putText("COPY will create a new file with a new name, with the same contents of the old file");
                         break;
 
                     default:
-                        _StdOut.putText("No manual entry for " + args[0] + ".");
+                        _StdOut.putText("No manual entry for " + args[0] );
                 }
             } else {
-                _StdOut.putText("Usage: man <topic>  Please supply a topic.");
+                _StdOut.putText("Usage: man <topic>  Please supply a topic");
             }
         }
 
@@ -403,7 +496,7 @@ module TSOS {
                 switch (setting) {
                     case "on":
                         if (_Trace && _SarcasticMode) {
-                            _StdOut.putText("Trace is already on, doofus.");
+                            _StdOut.putText("Trace is already on, doofus");
                         } else {
                             _Trace = true;
                             _StdOut.putText("Trace ON");
@@ -414,7 +507,7 @@ module TSOS {
                         _StdOut.putText("Trace OFF");
                         break;
                     default:
-                        _StdOut.putText("Invalid arguement.  Usage: trace <on | off>.");
+                        _StdOut.putText("Invalid arguement.  Usage: trace <on | off>");
                 }
             } else {
                 _StdOut.putText("Usage: trace <on | off>");
@@ -426,7 +519,7 @@ module TSOS {
                 // Requires Utils.ts for rot13() function.
                 _StdOut.putText(args.join(' ') + " = '" + Utils.rot13(args.join(' ')) +"'");
             } else {
-                _StdOut.putText("Usage: rot13 <string>  Please supply a string.");
+                _StdOut.putText("Usage: rot13 <string>  Please supply a string");
             }
         }
 
@@ -434,7 +527,7 @@ module TSOS {
             if (args.length > 0) {
                 _OsShell.promptStr = args[0];
             } else {
-                _StdOut.putText("Usage: prompt <string>  Please supply a string.");
+                _StdOut.putText("Usage: prompt <string>  Please supply a string");
             }
         }
 
@@ -456,17 +549,17 @@ module TSOS {
             if(args.length > 0) {
                 let status = "";
                 args.forEach(function (char) {
-                   status += char;
+                    status += char;
                 });
                 _StdOut.putText("Status updated to: " + status);
                 Control.hostStatus(status)
             } else {
-                _StdOut.putText("Status must contain at least one character.");
+                _StdOut.putText("Status must contain at least one character");
             }
         }
 
         public shellBSOD(args: string[]) {
-            _Kernel.krnTrapError("Manual trigger of BSOD.")
+            _Kernel.krnTrapError("Manual trigger of BSOD")
         }
 
         public shellLoad(args: string[])
@@ -543,7 +636,42 @@ module TSOS {
                         ( !segmentOneAvailable ) && ( !segmentTwoAvailable) && ( !segmentThreeAvailable) )
                     )
                     {
-                        _StdOut.putText("There is already 3 programs stored in memory. Cannot load another");
+                        if (_IsDiskFormatted)
+                        {
+                            let priority;
+                            //ensures that the load priority is a number
+                            if (isNaN(Number(args[0])))
+                            {
+                                _StdOut.putText("It is recommended to include a priority after the load command. Priority was given 32 to this instance");
+                                priority = 32;
+                            }
+                            else
+                            {
+                                priority = Number(args[0]);
+                            }
+
+                            let newPCB = new Pcb();
+                            newPCB.init(priority);
+
+                            newPCB.location = "Disk";
+                            newPCB.base = 768;
+                            newPCB.limit = 768;
+                            newPCB.segment = -1;
+
+                            _PCBList[_PCBList.length] = newPCB;
+
+                            _MemoryAccessor.loadMemory(trimmedInput, newPCB.segment, newPCB.pid);
+                            Control.updateVisuals(0, newPCB.segment);
+
+                            _StdOut.putText("Successfully loaded user program with priority " + priority);
+                            _StdOut.advanceLine();
+                            _StdOut.putText("Your program is stored at process ID " + (_ProcessID - 1) );
+                        }
+                        else
+                        {
+                            _StdOut.putText("There is already 3 programs stored in memory. Cannot load another");
+                            _StdOut.putText("Format the disk to allow for more programs to be stored")
+                        }
                     }
                     else
                     {
@@ -551,7 +679,7 @@ module TSOS {
                         //ensures that the load priority is a number
                         if (isNaN(Number(args[0])))
                         {
-                            _StdOut.putText("It is recommended to include a priority after the load command. Priority was given 32 to this instance.");
+                            _StdOut.putText("It is recommended to include a priority after the load command. Priority was given 32 to this instance");
                             priority = 32;
                         }
                         else
@@ -595,7 +723,7 @@ module TSOS {
                 }
                 else
                 {
-                    _StdOut.putText("Please enter valid hex in the program input area.");
+                    _StdOut.putText("Please enter valid hex in the program input area");
                 }
             }
             else
@@ -638,7 +766,7 @@ module TSOS {
             }
             else
             {
-                _StdOut.putText("A positive integer must follow the run command.");
+                _StdOut.putText("A positive integer must follow the run command");
             }
         }
 
@@ -662,7 +790,7 @@ module TSOS {
         {
             if (_CPU.isExecuting)
             {
-                _StdOut.putText("Cannot clear the memory while there are running processes.")
+                _StdOut.putText("Cannot clear the memory while there are running processes")
             }
             else
             {
@@ -672,25 +800,25 @@ module TSOS {
                     _MemoryAccessor.nukeMemory(2);
                     _MemoryAccessor.nukeMemory(3);
                     Control.memoryUpdateTable();
-                    _StdOut.putText("Memory has been reset.");
+                    _StdOut.putText("Memory has been reset");
                 }
                 else if (args.length == 1 && !isNaN(Number(args[0])))
                 {
                     let segment = Number(args[0]);
-                    if (0 < segment && segment < 4)
+                    if ( (segment > 0) && (segment < 4) )
                     {
                         _MemoryAccessor.nukeMemory(segment);
                         Control.memoryUpdateTable();
-                        _StdOut.putText("Memory in segment " + segment + " has been reset.");
+                        _StdOut.putText("Memory in segment " + segment + " has been reset");
                     }
                     else
                     {
-                        _StdOut.putText("Segment must be between 1 and 3 (inclusive).")
+                        _StdOut.putText("Segment must be between 1 and 3 (inclusive)")
                     }
                 }
                 else
                 {
-                    _StdOut.putText("Quantum command must have nothing follow it, or just a valid positive integer.")
+                    _StdOut.putText("Quantum command must have nothing follow it, or just a valid positive integer")
                 }
             }
         }
@@ -715,7 +843,7 @@ module TSOS {
             }
             else
             {
-                _StdOut.putText("There are no programs to run.");
+                _StdOut.putText("There are no programs to run");
             }
         }
 
@@ -738,13 +866,13 @@ module TSOS {
                             _PCBList[i].state = "Stopped";
                             _PCBList[i].endingCycle = _CycleCount;
                             _Scheduler.readyQueue.remove(_PCBList[i].pid);
-                            _StdOut.putText("Process " + thisPID + " terminated.");
+                            _StdOut.putText("Process " + thisPID + " terminated");
                             _StdOut.advanceLine();
                             Utils.displayPCBAllData(_PCBList[i]);
                         }
                         else
                         {
-                            _StdOut.putText("Process " + thisPID + " is not resident or running.");
+                            _StdOut.putText("Process " + thisPID + " is not resident or running");
                         }
 
 
@@ -754,7 +882,7 @@ module TSOS {
 
                 if (notFound)
                 {
-                    _StdOut.putText("Process " + thisPID + " does not exist in the current queue.");
+                    _StdOut.putText("Process " + thisPID + " does not exist in the current queue");
                 }
             }
             else
@@ -770,7 +898,8 @@ module TSOS {
             for (let i = 0; i < _PCBList.length; i++)
             {
                 _PCBList[i].state = "Stopped";
-                _StdOut.putText("Process " + _PCBList[i].pid + " terminated.");
+                _PCBList[i].endingCycle = _CycleCount;
+                _StdOut.putText("Process " + _PCBList[i].pid + " terminated");
                 _StdOut.advanceLine();
                 Utils.displayPCBAllData(_PCBList[i]);
             }
@@ -782,28 +911,389 @@ module TSOS {
         {
             if (args.length == 0)
             {
-                _StdOut.putText("Current quantum is " + _Quantum);
+                _StdOut.putText("Current quantum is " + _RRQuantum);
                 _StdOut.advanceLine();
-                _StdOut.putText("To change this, add a number to the quantum command.");
+                _StdOut.putText("To change this, add a number to the quantum command");
             }
             else if (args.length == 1 && !isNaN(Number(args[0])))
             {
                 let userQuantum = Number(args[0]);
                 if (userQuantum > 0)
                 {
-                    _Quantum = userQuantum;
-                    _StdOut.putText("Quantum updated to " + _Quantum);
+                    _RRQuantum = userQuantum;
+                    _StdOut.putText("Quantum updated to " + _RRQuantum);
+
+                    if (_Scheduler.schedulingSystem === "RR")
+                    {
+                        _Scheduler.quanta = _RRQuantum;
+                    }
                 }
                 else
                 {
-                    _StdOut.putText("Quantum must be greater than 0.")
+                    _StdOut.putText("Quantum must be greater than 0")
                 }
             }
             else
             {
-                _StdOut.putText("Quantum command must have nothing follow it, or just a valid positive integer.")
+                _StdOut.putText("Quantum command must have nothing follow it, or just a valid positive integer")
             }
 
+        }
+
+        public shellCreate(args: string[])
+        {
+            if (_IsDiskFormatted)
+            {
+                if (args.length == 1)
+                {
+                    if ( args[0].charAt(0) === "~")
+                    {
+                        _StdOut.putText("The file name cannot begin with ~");
+                    }
+                    else if ( _krnDiskDriver.fileCreate(args[0]) )
+                    {
+                        _StdOut.putText("File " + args[0] + " has been created");
+                        Control.diskUpdateTable();
+                    }
+                    else
+                    {
+                        _StdOut.putText("The file name " + args[0] + " is already in use");
+                    }
+                }
+                else
+                {
+                    _StdOut.putText("Must enter the name for file after the create command");
+                }
+            }
+            else
+            {
+                _StdOut.putText("Disk must be formatted before performing any disk actions");
+            }
+        }
+
+        public shellRead(args: string[])
+        {
+            if (_IsDiskFormatted)
+            {
+                if (args.length == 1)
+                {
+                    if (!Control.swapFileSafety(args[0]))
+                    {
+                        _StdOut.putText("Cannot access a swap file");
+                    }
+                    else
+                    {
+                        let fileData = _krnDiskDriver.fileShellRead(args[0]);
+                        if (fileData != null)
+                        {
+                            _StdOut.putText("Contents of file " + args[0] + ":");
+                            _StdOut.advanceLine();
+                            _StdOut.putText(fileData);
+                        }
+                        else
+                        {
+                            _StdOut.putText("The file " + args[0] + " does not exist");
+                        }
+                    }
+                }
+                else
+                {
+                    _StdOut.putText("Must enter the name for file after the read command");
+                }
+            }
+            else
+            {
+                _StdOut.putText("Disk must be formatted before performing any disk actions");
+            }
+        }
+
+        public shellWrite(args: string[])
+        {
+            if (_IsDiskFormatted)
+            {
+                if (args.length > 1)
+                {
+                    let fileName = args[0];
+
+                    if (!Control.swapFileSafety(fileName))
+                    {
+                        _StdOut.putText("Cannot access a swap file");
+                    }
+                    else
+                    {
+                        let writeFirst = args[1];
+                        let writeLast = args[args.length - 1];
+                        let toWrite = "";
+
+                        if ( (writeFirst.charAt(0) === "\"") && (writeLast.charAt(writeLast.length - 1) === "\"") )
+                        {
+                            if (args.length == 2)
+                            {
+                                toWrite = writeFirst.substring(1, (writeFirst.length - 1) )
+                            }
+                            else
+                            {
+                                toWrite = writeFirst.substring(1, writeFirst.length) + " ";
+
+                                for (let i = 2; i < args.length - 1; i++)
+                                {
+                                    toWrite += args[i] + " ";
+                                }
+
+                                toWrite += writeLast.substring(0, writeLast.length - 1);
+                            }
+
+                            if ( _krnDiskDriver.fileWrite(fileName, toWrite) )
+                            {
+                                _StdOut.putText("Writing to file " + fileName);
+                                Control.diskUpdateTable();
+                            }
+                            else
+                            {
+                                _StdOut.putText("File " + fileName + " does not exist, cannot write");
+                            }
+                        }
+                        else
+                        {
+                            _StdOut.putText("Must enter file name and text encompassed in quotation marks")
+                        }
+                    }
+                }
+                else
+                {
+                    _StdOut.putText("Must enter the name for file after the create command");
+                }
+            }
+            else
+            {
+                _StdOut.putText("Disk must be formatted before performing any disk actions");
+            }
+        }
+
+        public shellDelete(args: string[])
+        {
+            if (_IsDiskFormatted)
+            {
+                if (!Control.swapFileSafety(args[0]))
+                {
+                    _StdOut.putText("Cannot access a swap file");
+                }
+                else
+                {
+                    if ( _krnDiskDriver.fileDelete(args[0]) )
+                    {
+                        _StdOut.putText("File " + args[0] + " has been deleted");
+                        Control.diskUpdateTable();
+                    }
+                    else
+                    {
+                        _StdOut.putText("File " + args[0] + " does not exist");
+                    }
+                }
+            }
+            else
+            {
+                _StdOut.putText("Disk must be formatted before performing any disk actions");
+            }
+        }
+
+        public shellFormat(args: string[])
+        {
+            _krnDiskDriver.format();
+            _IsDiskFormatted = true;
+            _StdOut.putText("Disk has been formatted");
+        }
+
+        public shellLs(args: string[])
+        {
+            if (_IsDiskFormatted)
+            {
+                console.log("ARGS COUNT: " + args.length);
+                console.log("ARGS: " + args);
+
+                if ( (args.length > 1) || ( (args.length == 1) && (args[0] != "-a") ) )
+                {
+                    _StdOut.putText("The only acceptable suffix is '-a'")
+                }
+                else
+                {
+                    let suffix = args[0]
+                    let list;
+
+                    if (suffix === "-a" || suffix === "-l")
+                    {
+                        list = _krnDiskDriver.fileList(suffix);
+                    }
+                    else
+                    {
+                        list = _krnDiskDriver.fileList();
+                    }
+
+                    if (list.length > 0)
+                    {
+                        _StdOut.putText("Current files:");
+                        _StdOut.advanceLine();
+                        for (let i = 0; i < list.length; i++)
+                        {
+                            _StdOut.putText("   -> " + list[i]);
+                            _StdOut.advanceLine();
+                        }
+                    }
+                    else
+                    {
+                        _StdOut.putText("There are currently no files on disk");
+                    }
+                }
+            }
+            else
+            {
+                _StdOut.putText("Disk must be formatted before performing any disk actions");
+            }
+        }
+
+        public shellSetSchedule(args: string[])
+        {
+            if (! (_CPU.isExecuting) )
+            {
+                if (args.length != 1)
+                {
+                    _StdOut.putText("One and only one argument is required");
+                }
+                else
+                {
+                    if (args[0].toLocaleUpperCase() === "FCFS")
+                    {
+                        _Scheduler.quanta = _FCFSQuantum;
+                        _Scheduler.schedulingSystem = "FCFS";
+                        _StdOut.putText("Scheduling algorithm set to First Come First Serve (FCFS)");
+                    }
+                    else if (args[0].toLocaleUpperCase() === "RR")
+                    {
+                        _Scheduler.quanta = _RRQuantum;
+                        _Scheduler.schedulingSystem = "RR";
+                        _StdOut.putText("Scheduling algorithm set to Round Robin (RR) with a quantum of " + _Scheduler.quanta);
+                    }
+                    else if (args[0].toLocaleUpperCase() === "PRIORITY")
+                    {
+                        _Scheduler.schedulingSystem = "PRIORITY";
+                        _StdOut.putText("Scheduling algorithm set to Non-Preemptive Priority (PRIORITY)");
+                    }
+                    else
+                    {
+                        _StdOut.putText("Please make sure you are only entering the correct abbreviation for the valid scheduling types. See manual for help")
+                    }
+                }
+            }
+            else
+            {
+                _StdOut.putText("Changing scheduler whilst programs are running is not permitted");
+            }
+        }
+
+        public shellGetSchedule(args: string[])
+        {
+            _StdOut.putText("Current scheduling algorithm is " + _Scheduler.schedulingSystem);
+        }
+
+        public shellRename(args: string[])
+        {
+            if (_IsDiskFormatted)
+            {
+                if (args.length == 2)
+                {
+                    let oldName = args[0];
+                    let newName = args[1];
+
+                    if ( oldName.charAt(0) === "~")
+                    {
+                        _StdOut.putText("Cannot rename a swap file");
+                    }
+                    else if ( newName.charAt(0) === "~")
+                    {
+                        _StdOut.putText("The file name cannot begin with ~");
+                    }
+                    else
+                    {
+                        if ( _krnDiskDriver.getFileTSB(oldName) == null )
+                        {
+                            _StdOut.putText("File " + oldName + " does not exist");
+                        }
+                        else
+                        {
+                            let directoryData = sessionStorage.getItem(_krnDiskDriver.getFileTSB(oldName)).split(" ");
+
+                            for (let i = 0; i < args[1].length; i++)
+                            {
+                                directoryData[i + 4] = Utils.decimalToHex(newName.charCodeAt(i));
+                            }
+
+                            _StdOut.putText("File " + oldName + " has been renamed to " + newName);
+
+                            sessionStorage.setItem(_krnDiskDriver.getFileTSB(oldName), directoryData.join(" "));
+                            Control.diskUpdateTable();
+                        }
+                    }
+                }
+                else
+                {
+                    _StdOut.putText("Old file name and new file name must be provided in order to copy");
+                }
+            }
+        }
+
+        public shellCopy(args: string[])
+        {
+            if (_IsDiskFormatted)
+            {
+                if (args.length == 2)
+                {
+                    if ( args[0].charAt(0) === "~")
+                    {
+                        _StdOut.putText("Cannot copy a swap file");
+                    }
+                    else if ( args[1].charAt(0) === "~")
+                    {
+                        _StdOut.putText("The file name cannot begin with ~");
+                    }
+                    else
+                    {
+                        let oldFileContents = _krnDiskDriver.fileShellRead(args[0]);
+
+                        if (oldFileContents == null)
+                        {
+                            _StdOut.putText("File " + args[0] + " does not exist and cannot been copied from");
+                        }
+                        else
+                        {
+
+                            if ( _krnDiskDriver.fileCreate(args[1]) )
+                            {
+                                _StdOut.putText("File " + args[1] + " does not exist, creating a new file to copy into");
+                                _StdOut.advanceLine();
+                            }
+                            else
+                            {
+                                _StdOut.putText("File " + args[1] + " already exists, copy will overwrite");
+                                _StdOut.advanceLine();
+                            }
+
+                            if ( _krnDiskDriver.fileWrite(args[1], oldFileContents) )
+                            {
+                                Control.diskUpdateTable();
+                                _StdOut.putText("File " + args[0] + " has been successfully copied into " + args[1]);
+                            }
+                            else
+                            {
+                                _StdOut.putText("Error writing to file " + args[1]);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    _StdOut.putText("Original file and new file name must be provided in order to copy");
+                }
+            }
         }
 
     }

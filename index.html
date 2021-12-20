@@ -23,7 +23,7 @@
    <script type="text/javascript" src="distrib/host/control.js"></script>
    <script type="text/javascript" src="distrib/host/devices.js"></script>
    <script type="text/javascript" src="distrib/host/cpu.js"></script>
-   <script type="text/javascript" src="distrib/host/dispatcher.js"></script>
+   <script type="text/javascript" src="distrib/host/disk.js"></script>
 
    <!-- Virtual OS Routines: Make sure Kernel code is last, since it needs those above it. -->
    <script type="text/javascript" src="distrib/os/pcb.js"></script>
@@ -34,18 +34,22 @@
    <script type="text/javascript" src="distrib/os/console.js"></script>
    <script type="text/javascript" src="distrib/os/deviceDriver.js"></script>
    <script type="text/javascript" src="distrib/os/deviceDriverKeyboard.js"></script>
+   <script type="text/javascript" src="distrib/os/deviceDriverDisk.js"></script>
    <script type="text/javascript" src="distrib/os/queue.js"></script>
    <script type="text/javascript" src="distrib/os/shell.js"></script>
    <script type="text/javascript" src="distrib/os/shellCommand.js"></script>
    <script type="text/javascript" src="distrib/os/userCommand.js"></script>
    <script type="text/javascript" src="distrib/os/kernel.js"></script>
    <script type="text/javascript" src="distrib/os/scheduler.js"></script>
+   <script type="text/javascript" src="distrib/os/dispatcher.js"></script>
+   <script type="text/javascript" src="distrib/os/swapper.js"></script>
 
    <!-- Other Routines -->
    <script type="text/javascript" src="distrib/utils.js"></script>
    <!-- Uncomment the line below to enable GLaDOS testing. -->
 
-   <script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip3.js"></script>
+
+   <script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip4.js"></script>
 
 
    <script type="module" src="https://unpkg.com/dark-mode-toggle"></script>
@@ -64,18 +68,16 @@
    ></dark-mode-toggle>
 </aside>
 
-<div id="divMain" style="width:100%;">
-  <!-- <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> -->
+<div id="divMain" style="width:100%">
+   <!-- <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> -->
 
-   <div>
-      <img id = "logo" src="rhino.png" style="vertical-align: middle; width:100px; float:left;"/>
-      <br>
-      <p id = "dateTime" >  Date -  Time - </p>
-      <p id = "status"> Status - Running RhinOS Version 0.3</p>
+   <div class = center>
+      <a href="https://github.com/jlmcdonough/Operating-Systems"><img id = "logo" src="rhino.png" style="vertical-align: middle; width:100px;"/></a><p class = "info">rhinOS</p>
+      <p id = "dateTime" class = "info">  Date -  Time - </p>
+      <p id = "status" class = "info"> Status - Running RhinOS Version 0.4</p>
    </div>
-   <br>
 
-   <div id="divButtonBar" style="margin:4px;">
+   <div id="divButtonBar" class = center>
       <input type="button"
              id = "btnStartOS"
              name="brnStartOS"
@@ -139,58 +141,23 @@
              onclick="TSOS.Control.hostBtnMemoryTrack_click(this);">
 
    </div>
+</div>
 
-   <div id="divConsole" style="margin:4px; width:500px; height:500px; float:left;">
+<div  id = "divCenter" style="width: 30%" class = center>
+   <div id="divConsole" style="width:500px; height:500px; margin-left: auto; margin-right: auto;">
       <canvas id="display"
               width="500px"
               height="500px"
               tabindex="3">
       </canvas>
    </div>
+</div>
 
-   <div id="divLog" style="margin-left:520px;" class="hostLog">
+<div id = "divLeft" style="width: 25%; float: left; margin-left: 5%">
+
+   <div id="divCPUDisplay" style="margin-top: -500px" class="hostDisplay">
       <label>
-         Host Log
-         <br>
-         <textarea name="taHostLog"
-                   id  ="taHostLog"
-                   rows="26"
-                   cols="48"
-                   class="hostLogText"
-         ></textarea>
-      </label>
-   </div>
-
-   <br>
-
-   <div id="divUserProgramInput" style="margin-left:520px;" class="userProgramInput">
-      <label>
-         User Program Input
-         <br>
-         <textarea name="taProgramInput"
-                   id  ="taProgramInput"
-                   rows="8"
-                   cols="48"
-                   class="userProgramInputText"
-         ></textarea>
-      </label>
-   </div>
-
-   <br>
-
-   <div id="divMemoryDisplay" style="margin-left: 520px;" class="hostDisplay">
-      <label>
-         Memory
-         <div id="divMemoryTable">
-            <table class="hostDisplayTable" id="memoryTable">
-            </table>
-         </div>
-      </label>
-   </div>
-
-   <div id="divCPUDisplay" style="margin-left: 4px; margin-top: -100px" class="hostDisplay">
-      <label>
-         CPU
+         Central Processing Unit
          <div id="divCPUTable">
             <table class="hostDisplayTable">
                <tr>
@@ -214,28 +181,74 @@
       </label>
    </div>
 
+
+   <div id="divMemoryDisplay" style="margin-top: 20px" class="hostDisplay">
+      <label>
+         Memory
+         <div id="divMemoryTable">
+            <table class="hostDisplayTable" id="memoryTable">
+            </table>
+         </div>
+      </label>
+   </div>
+
+
+   <div id="divPCBDisplay" style="margin-top: 20px" class="hostDisplay">
+      <label>
+         Process Control Board
+         <div id="divPCBTable">
+            <table class="pcbDisplayTable" id="pcbTable">
+            </table>
+         </div>
+      </label>
+   </div>
+
 </div>
 
-<br>
+<div id = "divRight" style="width: 25%; float: right; margin-right: 5%">
 
 
+   <div id="divUserProgramInput" style="margin-top: -500px" class="userProgramInput">
+      <label>
+         User Program Input
+         <br>
+         <textarea name="taProgramInput"
+                   id  ="taProgramInput"
+                   rows="8"
+                   cols="48"
+                   class="userProgramInputText"
+         ></textarea>
+      </label>
+   </div>
 
-<br>
-<div id="divPCBDisplay" style="margin-left: 4px;" class="hostDisplay">
-   <label>
-      PCB
-      <div id="divPCBTable">
-         <table class="hostDisplayTable" id="pcbTable">
-         </table>
-      </div>
-   </label>
+   <div id="divLog" style="margin-top: 20px" class="hostLog">
+      <label>
+         Host Log
+         <br>
+         <textarea name="taHostLog"
+                   id  ="taHostLog"
+                   rows="20"
+                   cols="48"
+                   class="hostLogText"
+         ></textarea>
+      </label>
+   </div>
+
 </div>
 
-<br>
+<div class = "center">
+   <div id="divDiskDisplay" style="margin-top: 5px;" class="hostDisplay">
+      <label>
+         Disk
+         <div id="divDiskTable" class = "center" style = "margin-left: auto; margin-right: auto;">
+            <table class="diskDisplayTable" id="diskTable" style="margin-left: auto; margin-right: auto;">
+            </table>
+         </div>
+      </label>
+   </div>
 
+</div>
 
-
-<br>
 
 
 

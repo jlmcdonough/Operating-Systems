@@ -25,20 +25,25 @@ var TSOS;
             _StdIn = _Console;
             _StdOut = _Console;
             // Load the Keyboard Device Driver
-            this.krnTrace("Loading the keyboard device driver.");
+            this.krnTrace("Loading the keyboard device driver");
             _krnKeyboardDriver = new TSOS.DeviceDriverKeyboard(); // Construct it.
             _krnKeyboardDriver.driverEntry(); // Call the driverEntry() initialization routine.
             this.krnTrace(_krnKeyboardDriver.status);
+            // Load the Disk Device Driver
+            this.krnTrace("Loading the disk device driver");
+            _krnDiskDriver = new TSOS.DeviceDriverDisk(); // Construct it.
+            _krnDiskDriver.driverEntry(); // Call the driverEntry() initialization routine.
+            this.krnTrace(_krnDiskDriver.status);
             //
             // ... more?
             //
             // Memory
             _MemoryManager = new TSOS.MemoryManager();
             // Enable the OS Interrupts.  (Not the CPU clock interrupt, as that is done in the hardware sim.)
-            this.krnTrace("Enabling the interrupts.");
+            this.krnTrace("Enabling the interrupts");
             this.krnEnableInterrupts();
             // Launch the shell.
-            this.krnTrace("Creating and Launching the shell.");
+            this.krnTrace("Creating and Launching the shell");
             _OsShell = new TSOS.Shell();
             _OsShell.init();
             // Finally, initiate student testing protocol.
@@ -56,7 +61,7 @@ var TSOS;
                 TSOS.Control.pcbUpdateTable(_PCB.pc);
             }
             // ... Disable the Interrupts.
-            this.krnTrace("Disabling the interrupts.");
+            this.krnTrace("Disabling the interrupts");
             this.krnDisableInterrupts();
             //
             // Unload the Device Drivers?
@@ -77,16 +82,20 @@ var TSOS;
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             }
-            else if (_SingleStep) {
-                if (_CPU.isExecuting && _SingleStepStep) {
+            else if (_IsSingleStep) {
+                if (_CPU.isExecuting && _IsSingleStepStep) {
                     _CPU.cycle();
-                    _SingleStepStep = false;
-                    _Scheduler.quantaCheck();
+                    _IsSingleStepStep = false;
+                    if (_Scheduler.schedulingSystem === "FCFS" || _Scheduler.schedulingSystem === "RR") {
+                        _Scheduler.quantaCheck();
+                    }
                 }
             }
             else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed.
                 _CPU.cycle();
-                _Scheduler.quantaCheck();
+                if (_Scheduler.schedulingSystem === "FCFS" || _Scheduler.schedulingSystem === "RR") {
+                    _Scheduler.quantaCheck();
+                }
             }
             else { // If there are no interrupts and there is nothing being executed then just be idle.
                 this.krnTrace("Idle");

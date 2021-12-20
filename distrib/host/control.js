@@ -121,10 +121,12 @@ var TSOS;
             _Memory = new TSOS.Memory();
             _Memory.init();
             _MemoryAccessor = new TSOS.MemoryAccessor();
+            _Disk = new TSOS.Disk();
             _PCB = new TSOS.Pcb();
             _Scheduler = new TSOS.Scheduler();
             _Scheduler.init();
             _Dispatcher = new TSOS.Dispatcher();
+            _Swapper = new TSOS.Swapper();
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(TSOS.Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.
@@ -133,7 +135,7 @@ var TSOS;
         }
         static hostBtnHaltOS_click(btn) {
             Control.hostLog("Emergency halt", "host");
-            Control.hostLog("Attempting Kernel shutdown.", "host");
+            Control.hostLog("Attempting Kernel shutdown", "host");
             // Call the OS shutdown routine.
             _Kernel.krnShutdown();
             // Stop the interval that's simulating our clock pulse.
@@ -148,27 +150,28 @@ var TSOS;
             // page from its cache, which is not what we want.
         }
         static hostBtnSSOff_click(btn) {
-            _SingleStep = false;
+            _IsSingleStep = false;
             document.getElementById("btnSingleStepOff").disabled = true;
             document.getElementById("btnSingleStepOn").disabled = false;
             document.getElementById("btnSingleStepStep").disabled = true;
         }
         static hostBtnSSOn_click(btn) {
-            _SingleStep = true;
+            _IsSingleStep = true;
             document.getElementById("btnSingleStepOff").disabled = false;
             document.getElementById("btnSingleStepOn").disabled = true;
             document.getElementById("btnSingleStepStep").disabled = false;
         }
         static hostBtnSSStep_click(btn) {
-            _SingleStepStep = true;
+            _IsSingleStepStep = true;
         }
         static hostBtnMemoryTrack_click(btn) {
             if (_MemoryTracking) {
                 _MemoryTracking = false;
+                document.getElementById("btnMemoryTrack").style.backgroundColor = "red";
             }
             else {
                 _MemoryTracking = true;
-                //(<HTMLButtonElement>document.getElementById("btnMemoryTrack")).disabled = true;
+                document.getElementById("btnMemoryTrack").style.backgroundColor = "green";
             }
         }
         static cpuUpdateTable(oldPC) {
@@ -207,21 +210,23 @@ var TSOS;
             table.innerHTML = tableBody;
         }
         static memoryTableColor(pc, operandCount, segment) {
-            let offset = (segment - 1) * 256;
-            let mainHighlight, secondaryHighlight;
-            if (_APPEARANCE === "dark") {
-                mainHighlight = "#3700B3";
-                secondaryHighlight = "#BB86FC";
-            }
-            else if (_APPEARANCE === "light") {
-                mainHighlight = "#1E88E5";
-                secondaryHighlight = "#BBDEFB";
-            }
-            document.getElementById("mem" + (pc + offset)).style.backgroundColor = mainHighlight;
-            for (let i = 1; i <= operandCount; i++) {
-                document.getElementById("mem" + ((pc + offset) + i)).style.backgroundColor = secondaryHighlight;
-                if (_MemoryTracking) {
-                    document.getElementById("mem" + ((pc + offset) + i)).scrollIntoView({ block: 'nearest' });
+            if ((segment > 0) && (segment < 4)) {
+                let offset = (segment - 1) * 256;
+                let mainHighlight, secondaryHighlight;
+                if (_APPEARANCE === "dark") {
+                    mainHighlight = "#3700B3";
+                    secondaryHighlight = "#BB86FC";
+                }
+                else if (_APPEARANCE === "light") {
+                    mainHighlight = "#1E88E5";
+                    secondaryHighlight = "#BBDEFB";
+                }
+                document.getElementById("mem" + (pc + offset)).style.backgroundColor = mainHighlight;
+                for (let i = 1; i <= operandCount; i++) {
+                    document.getElementById("mem" + ((pc + offset) + i)).style.backgroundColor = secondaryHighlight;
+                    if (_MemoryTracking) {
+                        document.getElementById("mem" + ((pc + offset) + i)).scrollIntoView({ block: 'nearest' });
+                    }
                 }
             }
         }
@@ -254,27 +259,54 @@ var TSOS;
                     `<td> ${_PCBList[i].runningQuanta} </td>` +
                     "</tr>";
             }
-            /*  document.getElementById("pcbPC").innerHTML = Utils.padHex(Utils.decimalToHex(_PCB.pc));
-              document.getElementById("pcbAcc").innerHTML = _PCB.acc;
-              document.getElementById("pcbX").innerHTML = _PCB.xReg;
-              document.getElementById("pcbY").innerHTML = _PCB.yReg;
-              document.getElementById("pcbZ").innerHTML = _PCB.zFlag.toString();
-              document.getElementById("pcbPriority").innerHTML = _PCB.priority.toString();
-              document.getElementById("pcbState").innerHTML = _PCB.state;
-              document.getElementById("pcbLocation").innerHTML = _PCB.location;
-  */
+            tableBody += "</tbody>";
+            table.innerHTML = tableBody;
+        }
+        static diskUpdateTable() {
+            let table = document.getElementById("diskTable");
+            let tableBody = "<tbody>" + "<tr>" +
+                "<th>T:S:B</th><th>Used</th><th>Next</th><th>Data</th>" +
+                "</tr>";
+            for (let i = 0; i < _Disk.trackCount; i++) {
+                for (let j = 0; j < _Disk.sectorCount; j++) {
+                    for (let k = 0; k < _Disk.blockCount; k++) {
+                        let data = sessionStorage.getItem(i + "," + j + "," + k).split(" ");
+                        let thisData = "";
+                        for (let x = 4; x < data.length; x++) {
+                            thisData += (data[x] + " ");
+                        }
+                        thisData.trim();
+                        tableBody += "<tr>" +
+                            `<td> ${i + ',' + j + ',' + k} </td>` +
+                            `<td> ${data[0]} </td>` +
+                            `<td> ${data[1] + ',' + data[2] + ',' + data[3]} </td>` +
+                            `<td> ${thisData} </td>`;
+                    }
+                }
+            }
             tableBody += "</tbody>";
             table.innerHTML = tableBody;
         }
         static updateVisuals(oldPC, segment) {
             Control.cpuUpdateTable(oldPC);
             Control.pcbUpdateTable(oldPC);
+            if (_IsDiskFormatted) {
+                Control.diskUpdateTable();
+            }
             Control.memoryUpdateTable();
             if (typeof segment !== 'undefined') {
                 Control.memoryTableColor(oldPC, operandCount, segment);
             }
             else {
                 Control.memoryTableColor(oldPC, operandCount, _PCB.segment);
+            }
+        }
+        static swapFileSafety(fileName) {
+            if (fileName.charAt(0) === "~") {
+                return false;
+            }
+            else {
+                return true;
             }
         }
     }
